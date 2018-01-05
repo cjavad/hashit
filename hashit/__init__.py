@@ -38,16 +38,6 @@ def file_as_blockiter(afile, blocksize=65536):
             block = afile.read(blocksize)
 
 
-def fhashit(fnamelst, hashit = hashlib.md5()):
-    out = list()
-    for fname in fnamelst:
-        try:
-            out.append(str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hashit)) + " " + str(fname))
-        except:
-            pass
-    
-    return out
-
 def check(path, hashit):
     x = open(path, "r").readlines()
     for i in x:
@@ -138,10 +128,16 @@ def main(args = None):
         else:
             hasha = hashlib.md5()
 
-        
-    OUT = fhashit(FILES, hasha)
     M_path = M_path.replace("\\", "/")
-    for i in OUT:
+
+    for fname in FILES:
+        try:
+            i = str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hasha)) + " " + str(fname)
+        except:
+            # skip
+            continue
+        
+
         if len(args) >= 1:
             if args[len(args) - 1] == "True":
                 print(i.replace(M_path, "."))
