@@ -7,6 +7,10 @@ such a program using python.
 
 ## Change log.
 
+1.0.1 - Fixed printing bug
+
+1.0.0 - Major version
+
 0.0.3 - Added documentation and license
 
 0.0.2 - Fixing script bugs

@@ -76,6 +76,7 @@ def check(path, hashit):
         if chash != hashis:
             # if the file has changed print notice
             print(fname, "is changed from", hashis, "to", chash)
+    exit()
 
 def main(args = None):
     # Varibles
@@ -109,6 +110,7 @@ def main(args = None):
             # and check
             check(args[1], hashit)
             exit()
+        
         # select path
         if args[0].count("/") > 0 or args[0].count("\\") > 0:
             M_path = args[0]
