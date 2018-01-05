@@ -14,6 +14,7 @@ setup(
             "hashit = hashit:main"
         ]
     },
+    url="https://github.com/JavadSM/hashit",
     packages=["hashit"],
     description = "Hashing Application",
     long_description = LONG_DES,
