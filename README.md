@@ -7,6 +7,8 @@ such a program using python.
 
 ## Change log.
 
+0.0.2 - Fixing script bugs
+
 0.0.1 - Initial release, ready for use
 
 Works with python2 and python3.

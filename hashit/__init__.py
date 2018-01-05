@@ -54,8 +54,6 @@ def check(path, hashit):
         if chash != hashis:
             print(fname, "is changed from", hashis, "to", chash)
 
-
-
 def main(args = None):
     FILES = list()
     OUT = list()
