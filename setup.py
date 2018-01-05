@@ -8,7 +8,8 @@ setup(
     author = "Javad Shafique",
     author_email = "javadshafique@hotmail.com",
     version=__version__,
-    license="MIT"
+    license="MIT",
+    include_package_data=True,
     entry_points = {
         "console_scripts":[
             "hashit = hashit:main"

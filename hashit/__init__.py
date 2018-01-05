@@ -1,5 +1,5 @@
 from __future__ import print_function, with_statement
-from version import __version__ # version
+from .version import __version__ # version
 import hashlib, os
 
 
@@ -52,9 +52,11 @@ def check(path, hashit):
     x = open(path, "r").readlines()
     for i in x:
         m = i.split(" ")
-        # wrong format
+        
+        # Wrong format
         if len(m) != 2:
             continue
+
         hashis = m[0].replace("\n", "").replace("\0", "")
         fname = m[1].replace("\n", "").replace("\0", "")
         chash = str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hashit))
