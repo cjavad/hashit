@@ -39,9 +39,14 @@ def file_as_blockiter(afile, blocksize=65536):
 
 
 def fhashit(fnamelst, hashit = hashlib.md5()):
-    return [
-        str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hashit)) + " " + str(fname) for fname in fnamelst
-        ]
+    out = list()
+    for fname in fnamelst:
+        try:
+            out.append(str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hashit)) + " " + str(fname))
+        except:
+            pass
+    
+    return out
 
 def check(path, hashit):
     x = open(path, "r").readlines()
