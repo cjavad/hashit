@@ -76,7 +76,7 @@ def check(path, hashit):
         if chash != hashis:
             # if the file has changed print notice
             print(fname, "is changed from", hashis, "to", chash)
-    exit()
+    
 
 def main(args = None):
     # Varibles
