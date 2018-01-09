@@ -25,6 +25,8 @@ __help__ = [
     "   -h --hash $type: sets hash either md5 (default) or sha256",
     "   -c --check $filepath: reads output from this program and checks for change",
     "   -o --output $filepath: writes output to file same as '>' operator",
+    "   ",
+    "   Use 'True' at the end for only outputting the releative path not the fullpath",
     "",
     "Notice: this program was made by Javad Shafique, and uses argc another package by me"
 ]
