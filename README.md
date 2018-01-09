@@ -7,6 +7,12 @@ such a program using python.
 
 ## Change log.
 
+1.2.0 - Full Release
+
+1.1.0 - Added support for python2 and 
+
+1.0.2 - Double exits' fixed
+
 1.0.1 - Fixed printing bug
 
 1.0.0 - Major version

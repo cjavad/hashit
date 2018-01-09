@@ -1,6 +1,7 @@
 # import print and with for python2 support
 from __future__ import print_function, with_statement
 from .version import __version__ # global version
+from argc import argc
 import hashlib, os 
 
 
@@ -12,21 +13,20 @@ __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro pr
 # this list is the message that will be printed
 # when the user uses hashit --help
 
-HELP = [
+__help__ = [
+    "Usage:\n",
+    "   hashit $args",
     "",
-    "Usage:",
-    "   hashit $path $hash (md5, sha256, sha1)",
-    "Or:",
-    "   hashit $hash (md5, sha256, sha1)",
-    "Or just:",
-    "   hashit (uses current dir and md5 hashing)",
+    "Arguments:\n",
+    "   -v --version: prints current version",
+    "   -? --help: prints this message",
+    "   -l --license: prints license",
+    "   -p --path $path: sets path default $current",
+    "   -h --hash $type: sets hash either md5 (default) or sha256",
+    "   -c --check $filepath: reads output from this program and checks for change",
+    "   -o --output $filepath: writes output to file same as '>' operator",
     "",
-    "and the if the last argument is 'True' then the full path will be removed",
-    "but then you can only run check in the same path",
-    "",
-    "For checking use this scheme:",
-    "   hashit 'check' $pathtooutput $hash (optional, uses md5 by defuault)",
-    ""
+    "Notice: this program was made by Javad Shafique, and uses argc another package by me"
 ]
 
 # hash_bytestr_iter goes over an bytes string
@@ -76,124 +76,109 @@ def check(path, hashit):
         if chash != hashis:
             # if the file has changed print notice
             print(fname, "is changed from", hashis, "to", chash)
-    
 
 def main(args = None):
-    # Varibles
-    FILES = list() # list of all files
-    M_path = os.getcwd() # path to search in
-
     # switch args if needed
     if args == None:
         # to sys.args
         args = os.sys.argv[1:]
     
-    # Switch-index where the last argument is
-    SW_index = int()
+    # using argc module by me (support for python2)
+    argv = argc(args, False)
 
-    # first switch
-    if len(args) >= 1:
-        # if you want to check
-        if args[0] == "check" and len(args) >= 2:
-            # select hash
-            hashit = hashlib.md5()
-            if len(args) >= 3:
-                # md5
-                if args[2].lower() == "md5":
-                    hashit = hashlib.md5()
-                # sha256
-                elif args[2].lower() in ("sha256", "sha_256", "sha-256"):
-                    hashit = hashlib.sha256()
-                # sha1 (Do not use)
-                elif args[2].lower() in ("sha1", "sha_1", "sha-1"):
-                    hashit = hashlib.sha1()
-            # and check
-            check(args[1], hashit)
-            exit()
-        
-        # select path
-        if args[0].count("/") > 0 or args[0].count("\\") > 0:
-            M_path = args[0]
-            SW_index = 1
+    argv.add("?", __help__, True)
+    argv.add("-help", __help__, True)
 
-        # quick-select path thing
-        elif args[0] == ".":
-            M_path = "./"
-        # parent dir
-        elif args[0] == "..":
-            M_path = "../"
+    argv.add("v", __version__, True)
+    argv.add("-version", __version__, True)
+    
+    argv.add("l", __license__, True)
+    argv.add("-license", __license__, True)
 
-        # else reset SW_index
+    # run
+    argv.run()
+    # Varibles
+    FILES = list() # list of all files
+    M_path = os.getcwd() # path to search in
+
+    # get hash from arguments
+    # default is md5 for now
+    # it supports md5 and sha256
+
+    hashIs = hashlib.md5()
+    hasha = argv.get("h") or argv.get("-hash")
+
+    if hasha == "md5":
+        hashIs = hashlib.md5()
+
+    elif hasha == "sha256":
+        hashIs = hashlib.sha256()
+    
+    elif hasha == None:
+        hashIs = hashlib.md5()
+
+    else:
+        hashIs = hashlib.md5()
+    
+    toCheck = argv.get("-check") or argv.get("c")
+
+    if not toCheck in (None, True):
+        if os.path.exists(toCheck):
+            check(toCheck, hashIs)
+
         else:
-            SW_index = 0
-        
-    # walk directory
-    for path, subdirs, files in os.walk(M_path):
-        # for each file
-        for name in files:
-            # add it to FILES list() 
-            FILES.append((path  + "/" + name).replace("\\", "/").replace("//", "/"))
-    # select hash
-    hasha = hashlib.md5()
+            print("File does not exist")
+            exit() 
+    
+    else:
+        outfile = argv.get("o") or argv.get("-output")
+        useOut = False
+        output = None
 
-    # use SW_index to get its' index in the argument list
-    if len(args) >= SW_index + 1:
-        # md5
-        if args[SW_index].lower() == "md5":
-            hasha = hashlib.md5()
-        # sha256
-        elif args[SW_index].lower() in ("sha256", "sha_256", "sha-256"):
-            hasha = hashlib.sha256()
-        # sha1 (Do not use)
-        elif args[SW_index].lower() in ("sha1", "sha_1", "sha-1"):
-            print("DECPRECATED! Do not use sha1")
-            hasha = hashlib.sha1() # DECPRECATED
-
-        # Check for commands
-        # --help print help
-        elif args[SW_index] == "--help":
-            for i in HELP:
-                print(i)
-            exit()
-        # print version
-        elif args[SW_index] == "--version":
-            print(__version__)
-            exit()
-        # print author
-        elif args[SW_index] == "--author":
-            print(__author__)
-            exit()
-        # print license
-        elif args[SW_index] == "--license":
-            print(__license__)
-            exit()
-        
-        # else set hash to md5 (just to make sure)
+        if not outfile == None:
+            useOut = True
+            output = open(outfile, "w")
         else:
-            hasha = hashlib.md5()
-    # simplefy path
-    M_path = M_path.replace("\\", "/")
+            useOut = False
 
-    # go over files and hash them all
-    for fname in FILES:
-        try:
-            i = str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hasha)) + " " + str(fname)
-        except:
-            # skip
-            continue
+        # check path
+        N_path = argv.get("p") or argv.get("-path")
+
+        if not N_path == None:
+            M_path = N_path.replace("\\", "/")
+
+
+        # walk directory
+        for path, subdirs, files in os.walk(M_path):
+            # for each file
+            for name in files:
+                # add it to FILES list() 
+                FILES.append((path  + "/" + name).replace("\\", "/").replace("//", "/"))
         
-        # if the last arguemnt is true then remove fullpath
-        if len(args) >= 1:
-            if args[len(args) - 1] == "True":
-                print(i.replace(M_path, "."))
+        # go over files and hash them all
+        for fname in FILES:
+            try:
+                i = str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hashIs)) + " " + str(fname)
+            except Exception as e:
+                # skip
+                print(e)
+                continue
+
+            # if the last arguemnt is true then remove fullpath
+            if len(args) >= 1 and not useOut:
+                if args[len(args) - 1] == "True":
+                    print(i.replace(M_path, "."))
+                else:
+                    # if there if more than one argument
+                    print(i)
+                    pass
+            elif useOut and output != None:
+                output.write(i + "\n")
+                pass
+                
             else:
-                # if there if more than one argument
                 print(i)
                 pass
-        else:
-            print(i)
-            pass
 
-# main
-if __name__ == "__main__":  
+if __name__ == "__main__":
     main()

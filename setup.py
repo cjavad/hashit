@@ -1,4 +1,4 @@
-from setuptools import setup
+from distutils.core import setup
 from hashit.version import __version__
 
 LONG_DES = open("README.md", "r").read()
@@ -17,6 +17,7 @@ setup(
     },
     url="https://github.com/JavadSM/hashit",
     packages=["hashit"],
+    install_requires = ["argc"],
     description = "Hashing Application",
     long_description = LONG_DES,
     classifiers = [
