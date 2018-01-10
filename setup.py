@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 from hashit.version import __version__
 
 LONG_DES = open("README.md", "r").read()

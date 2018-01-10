@@ -7,6 +7,10 @@ such a program using python.
 
 ## Change log.
 
+2.1.0 - Updated to support newest version of argc
+
+2.0.1 - Bugfixes
+
 1.2.0 - Full Release
 
 1.1.0 - Added support for python2 and 

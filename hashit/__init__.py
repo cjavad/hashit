@@ -88,15 +88,14 @@ def main(args = None):
     # using argc module by me (support for python2)
     argv = argc(args, False)
 
-    argv.add("?", __help__, True)
-    argv.add("-help", __help__, True)
-
-    argv.add("v", __version__, True)
-    argv.add("-version", __version__, True)
+    argv.set("-?", "--help", "help", "Print help message", None, __help__, True)
+    argv.set("-v", "--version", "version", "Print version", None, __version__, True)
+    argv.set("-l", "--license", "license", "Prints licenses", None, __license__, True)
     
-    argv.add("l", __license__, True)
-    argv.add("-license", __license__, True)
-
+    argv.set("-h", "--hash", "hash", "Select hash", None)
+    argv.set("-p", "--path", "path", "Path to scan", None)
+    argv.set("-c", "--check", "check", "Check files", None)
+    argv.set("-o", "--output", "output", "Output file", None)
     # run
     argv.run()
     # Varibles
@@ -108,7 +107,7 @@ def main(args = None):
     # it supports md5 and sha256
 
     hashIs = hashlib.md5()
-    hasha = argv.get("h") or argv.get("-hash")
+    hasha = argv.get("hash")
 
     if hasha == "md5":
         hashIs = hashlib.md5()
@@ -122,7 +121,7 @@ def main(args = None):
     else:
         hashIs = hashlib.md5()
     
-    toCheck = argv.get("-check") or argv.get("c")
+    toCheck = argv.get("check")
 
     if not toCheck in (None, True):
         if os.path.exists(toCheck):
@@ -133,7 +132,7 @@ def main(args = None):
             exit() 
     
     else:
-        outfile = argv.get("o") or argv.get("-output")
+        outfile = argv.get("output")
         useOut = False
         output = None
 
@@ -144,7 +143,7 @@ def main(args = None):
             useOut = False
 
         # check path
-        N_path = argv.get("p") or argv.get("-path")
+        N_path = argv.get("path")
 
         if not N_path == None:
             M_path = N_path.replace("\\", "/")
