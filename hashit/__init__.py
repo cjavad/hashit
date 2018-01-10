@@ -5,7 +5,6 @@ from argc import argc
 import hashlib, os 
 
 
-
 __author__ = "Javad Shafique" # copyrigth holder
 __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro program
 
@@ -13,23 +12,42 @@ __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro pr
 # this list is the message that will be printed
 # when the user uses hashit --help
 
+# fix algo list
+__algorithems__ = [s for s in hashlib.algorithms_available if not (str(s)[:5] in ("sha3_", "shake") or str(s)[:3] in ("SHA", "MD5", "MD4") or str(s) in ("RIPEMD160"))]
+
 __help__ = [
     "Usage:\n",
     "   hashit $args",
     "",
     "Arguments:\n",
     "   -v --version: prints current version",
-    "   -? --help: prints this message",
+    "   -h --help: prints this message",
     "   -l --license: prints license",
     "   -p --path $path: sets path default $current",
-    "   -h --hash $type: sets hash either md5 (default) or sha256",
+    "   -H --hash $type: sets hash in this list \n\n      {}\n".format('\n      '.join(__algorithems__)),
     "   -c --check $filepath: reads output from this program and checks for change",
     "   -o --output $filepath: writes output to file same as '>' operator",
+    "   -C --color: enables colored output. Only for check (-c, --check)"
     "   ",
     "   Use 'True' at the end for only outputting the releative path not the fullpath",
     "",
     "Notice: this program was made by Javad Shafique, and uses argc another package by me"
 ]
+
+# check if terminal supports color from django
+def supports_color():
+    """
+    Returns True if the running system's terminal supports color, and False
+    otherwise.
+    """
+    plat = os.sys.platform
+    supported_platform = plat != 'Pocket PC' and (plat != 'win32' or
+                                                  'ANSICON' in os.environ)
+    # isatty is not always implemented, #6223.
+    is_a_tty = hasattr(os.sys.stdout, 'isatty') and os.sys.stdout.isatty()
+    if not supported_platform or not is_a_tty:
+        return False
+    return True
 
 # hash_bytestr_iter goes over an bytes string
 # block for block and updates the hash while
@@ -54,8 +72,20 @@ def file_as_blockiter(afile, blocksize=65536):
 # and compares the results by re-hashing the file
 # and print if there is a change
 
-def check(path, hashit):
+def check(path, hashit, color = False):
+    RED = b"\x1b[0;31m".decode("ascii")
+    GREEN = b"\x1b[0;32m".decode("ascii")
+    RESET = b"\x1b[0m".decode("ascii")
+
+    # check if system supports color
+    # with bitwise-exclusive or (XOR)
+    if supports_color() ^ color:
+        RED = ""
+        GREEN = ""
+        RESET = ""
+    
     x = open(path, "r").readlines()
+
     for i in x:
         m = i.split(" ")
         
@@ -76,8 +106,10 @@ def check(path, hashit):
             continue # ehmm file does seem not exist
 
         if chash != hashis:
-            # if the file has changed print notice
-            print(fname, "is changed from", hashis, "to", chash)
+            # if the file has changed print notice (md5 sum inpired)
+            print(fname + ":" + GREEN, hashis + RESET, ">", RED + chash, end=RESET + '\n')
+        else:
+            print(fname + ":" + GREEN, "OK", end=RESET + '\n')
 
 def main(args = None):
     # switch args if needed
@@ -87,16 +119,18 @@ def main(args = None):
     
     # using argc module by me (support for python2)
     argv = argc(args, False)
-
-    argv.set("-?", "--help", "help", "Print help message", None, __help__, True)
+    # set commands
+    argv.set("-h", "--help", "help", "Print help message", None, __help__, True)
     argv.set("-v", "--version", "version", "Print version", None, __version__, True)
     argv.set("-l", "--license", "license", "Prints licenses", None, __license__, True)
-    
-    argv.set("-h", "--hash", "hash", "Select hash", None)
+    # set arguments
+    argv.set("-H", "--hash", "hash", "Select hash", None)
     argv.set("-p", "--path", "path", "Path to scan", None)
     argv.set("-c", "--check", "check", "Check files", None)
     argv.set("-o", "--output", "output", "Output file", None)
-    # run
+    argv.set("-C", "--color", "color", "Set color true/false", False)
+
+    # run (can raise SystemExit)
     argv.run()
     # Varibles
     FILES = list() # list of all files
@@ -105,18 +139,15 @@ def main(args = None):
     # get hash from arguments
     # default is md5 for now
     # it supports md5 and sha256
-
     hashIs = hashlib.md5()
     hasha = argv.get("hash")
 
-    if hasha == "md5":
-        hashIs = hashlib.md5()
-
-    elif hasha == "sha256":
-        hashIs = hashlib.sha256()
-    
-    elif hasha == None:
-        hashIs = hashlib.md5()
+    # check if its an valid hashing
+    if hasha in hashlib.algorithms_available:
+        if not hasha in hashlib.algorithms_guaranteed:
+            # warning
+            pass
+        hashIs = hashlib.new(hasha)
 
     else:
         hashIs = hashlib.md5()
@@ -125,7 +156,8 @@ def main(args = None):
 
     if not toCheck in (None, True):
         if os.path.exists(toCheck):
-            check(toCheck, hashIs)
+            co = argv.get("color")
+            check(toCheck, hashIs, co)
 
         else:
             print("File does not exist")
@@ -173,6 +205,7 @@ def main(args = None):
                     # if there if more than one argument
                     print(i)
                     pass
+            
             elif useOut and output != None:
                 output.write(i + "\n")
                 pass
