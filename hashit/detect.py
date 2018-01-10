@@ -97,15 +97,15 @@ def generate_data_set(hashon = "Hello World!"):
     for algo in __algorithems__:
         hashed = hashlib.new(algo, hashon.encode()).hexdigest()
         # create dict in dict with all infomation stored in a table
-        data_dict.update({algo:{"data":hashed, "len":len(hashed), "size-as":list(), "connection":list()}})
+        data_dict.update({algo:{"data":hashed, "size":len(hashed), "size-as":list(), "connection":list()}})
 
     for key in data_dict.keys():
         # set default values
         hashed = data_dict[key]["data"]
-        length = data_dict[key]["len"]
+        length = data_dict[key]["size"]
 
         for second in data_dict.keys():
-            if length == data_dict[second]["len"] and not second == key:
+            if length == data_dict[second]["size"] and not second == key:
                 if hashed == data_dict[second]["data"]:
                     data_dict[key]["connection"].append(second)
                 else:
