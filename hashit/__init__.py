@@ -1,8 +1,10 @@
 # import print and with for python2 support
 from __future__ import print_function, with_statement
+import os
+import hashlib
 from .version import __version__ # global version
+from .detect import detect, generate_data_set
 from argc import argc
-import hashlib, os 
 
 
 __author__ = "Javad Shafique" # copyrigth holder
@@ -17,22 +19,35 @@ __algorithems__ = [s for s in hashlib.algorithms_available if not (str(s)[:5] in
 
 __help__ = [
     "Usage:\n",
-    "   hashit $args",
+    "   hashit [options] $extra",
     "",
     "Arguments:\n",
     "   -v --version: prints current version",
     "   -h --help: prints this message",
     "   -l --license: prints license",
     "   -p --path $path: sets path default $current",
-    "   -H --hash $type: sets hash in this list \n\n      {}\n".format('\n      '.join(__algorithems__)),
+    "   -H --hash $type: sets hash in a list use --hash-list or -hl",
     "   -c --check $filepath: reads output from this program and checks for change",
     "   -o --output $filepath: writes output to file same as '>' operator",
-    "   -C --color: enables colored output. Only for check (-c, --check)"
+    "   -C --color: enables colored output. Only for check (-c, --check)",
+    "   -q --quiet: prints the least output posible",
+    "   -f --file: hashes a single file",
+    "   -hl --hash-list: prints list of hashes",
     "   ",
     "   Use 'True' at the end for only outputting the releative path not the fullpath",
     "",
-    "Notice: this program was made by Javad Shafique, and uses argc another package by me"
+    "Notice: this program was made by Javad Shafique, and uses argc another package by me\n"
 ]
+
+# print to stderr
+def eprint(*args, **kwargs):
+    print(*args, file=os.sys.stderr, **kwargs)
+
+def einput(message):
+    eprint(message, end="")
+    m = str(os.sys.stdin.read())
+    eprint("\n", end="")
+    return m
 
 # check if terminal supports color from django
 def supports_color():
@@ -47,21 +62,53 @@ def supports_color():
     is_a_tty = hasattr(os.sys.stdout, 'isatty') and os.sys.stdout.isatty()
     if not supported_platform or not is_a_tty:
         return False
+
     return True
 
-# hash_bytestr_iter goes over an bytes string
+
+def choose_hash(hash1, hashit):
+    # check for valid 
+    if hasattr(hashit, "name"):
+        tup = detect(hash1, generate_data_set("Hallo", __algorithems__))
+
+        # but only use if not already choosen
+        if len(tup.certain) >= 1 and not (hashit.name in tup.certain or hashit.name in tup.maybe):
+            hashit = hashlib.new(tup.certain[0])
+        elif len(tup.maybe) >= 1:
+            eprint("Did you maybe mean:")
+            for c, h in enumerate(tup.maybe):
+                eprint(h, "(" + str(c) + ")")
+            ci = int(input())
+
+            if len(tup.maybe) - 1 >= ci:  
+                # choose maybe
+                hashit = hashlib.new(tup.maybe[ci])
+            else:
+                eprint("To big a value")
+        else:
+            # choose certain
+            eprint("Using", tup.certain[0])
+            pass
+    else:
+        # else pass
+        pass
+
+    return hashit
+
+
+# hashIter goes over an bytes string
 # block for block and updates the hash while
 # not having the intire file in memory
 
-def hash_bytestr_iter(bytesiter, hashit, ashexstr=True):
+def hashIter(bytesiter, hashit, ashexstr=True):
     for block in bytesiter:
         hashit.update(block)
     return (hashit.hexdigest() if ashexstr else hashit.digest())
 
-# file_as_blockiter creates bytestring-blocked
-# byte data for hash_bytestr_iter
+# blockIter creates bytestring-blocked
+# byte data for hashIter
 
-def file_as_blockiter(afile, blocksize=65536):
+def blockIter(afile, blocksize=65536):
     with afile:
         block = afile.read(blocksize)
         while len(block) > 0:
@@ -72,10 +119,10 @@ def file_as_blockiter(afile, blocksize=65536):
 # and compares the results by re-hashing the file
 # and print if there is a change
 
-def check(path, hashit, color = False):
-    RED = b"\x1b[0;31m".decode("ascii")
-    GREEN = b"\x1b[0;32m".decode("ascii")
-    RESET = b"\x1b[0m".decode("ascii")
+def check(path, hashit, color=False,  quiet=False):
+    RED = "\x1b[0;31m"
+    GREEN = "\x1b[0;32m"
+    RESET = "\x1b[0m"
 
     # check if system supports color
     # with bitwise-exclusive or (XOR)
@@ -86,29 +133,45 @@ def check(path, hashit, color = False):
     
     x = open(path, "r").readlines()
 
+    # choose hash if not already selected
+    # using new detection algorithem
+
+    try:
+        l1 = x[0].split(" ")
+        hash1 = l1[0].replace("\n", "").replace("\0", "")
+        hashit = choose_hash(hash1, hashit)
+    except:
+        # no data in file
+        if len(x) <= 0:
+            return
+
+    # go over filedata
     for i in x:
+        # split by spaces to get hash and filepath
         m = i.split(" ")
         
         # Wrong format
         if len(m) != 2:
+            # then continue to next line
             continue
         
         # get hash and file path
         hashis = m[0].replace("\n", "").replace("\0", "")
         fname = m[1].replace("\n", "").replace("\0", "")
 
-
         try:
             # try to hash it again
-            chash = str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hashit))
+            chash = str(hashIter(blockIter(open(fname, 'rb')), hashit))
         except:
-            print("Error while reading", fname)
+            # print error
+            print(RED + "Error while reading" + RESET, fname)
             continue # ehmm file does seem not exist
 
         if chash != hashis:
             # if the file has changed print notice (md5 sum inpired)
             print(fname + ":" + GREEN, hashis + RESET, ">", RED + chash, end=RESET + '\n')
-        else:
+        elif not quiet:
+            # else print OK
             print(fname + ":" + GREEN, "OK", end=RESET + '\n')
 
 def main(args = None):
@@ -123,12 +186,17 @@ def main(args = None):
     argv.set("-h", "--help", "help", "Print help message", None, __help__, True)
     argv.set("-v", "--version", "version", "Print version", None, __version__, True)
     argv.set("-l", "--license", "license", "Prints licenses", None, __license__, True)
+    argv.set("-hl", "--hash-list", "hashlist", "Prints list of hashes", None, "\nList of hashes:\n\n      "+  '\n      '.join(__algorithems__), True)
+    argv.set("-gh", "--generate-help", "ghelp", "Generates help from argc", None, argv.generate_docs, True)
     # set arguments
     argv.set("-H", "--hash", "hash", "Select hash", None)
     argv.set("-p", "--path", "path", "Path to scan", None)
     argv.set("-c", "--check", "check", "Check files", None)
     argv.set("-o", "--output", "output", "Output file", None)
     argv.set("-C", "--color", "color", "Set color true/false", False)
+    argv.set("-d", "--detect", "detect", "Detect hash by string", None)
+    argv.set("-f", "--file", "file", "Hash single file", None)
+    argv.set("-q", "--quiet", "quiet", "Minimal output", False)
 
     # run (can raise SystemExit)
     argv.run()
@@ -138,26 +206,63 @@ def main(args = None):
 
     # get hash from arguments
     # default is md5 for now
+    hasha = argv.get("hash")
     # it supports md5 and sha256
     hashIs = hashlib.md5()
-    hasha = argv.get("hash")
 
     # check if its an valid hashing
     if hasha in hashlib.algorithms_available:
         if not hasha in hashlib.algorithms_guaranteed:
-            # warning
+            eprint(hasha, "is not guaranteed to work on your system")
             pass
         hashIs = hashlib.new(hasha)
 
     else:
         hashIs = hashlib.md5()
-    
+
+    toDetect = argv.get("detect")
     toCheck = argv.get("check")
+    oneFile = argv.get("file")
+    quiet = argv.get("quiet")
+
+    if not oneFile in (None, True):
+        if os.path.exists(oneFile):
+            h = str(hashIter(blockIter(open(oneFile, 'rb')), hashIs)) + " " + str(oneFile)
+
+            outfile = argv.get("output")
+            useOut = False
+            output = None
+
+            if not outfile == None:
+                useOut = True
+                output = open(outfile, "w")
+            else:
+                useOut = False
+            if useOut:
+                output.write(h)
+            else:
+                if args[len(args) - 1] == "True":
+                   print(h.replace("M_path", ""))
+                else:
+                    print(h) 
+        else:
+            print("File does not exist")
+        exit()
+    
+    if not toDetect in (None, True):
+        hashes = detect(toDetect, generate_data_set("Hallo", __algorithems__))
+        for item in hashes.certain:
+            print("Same results as", item)
+        
+        for item in hashes.maybe:
+            print("Maybe", item)
+
+        exit()
 
     if not toCheck in (None, True):
         if os.path.exists(toCheck):
             co = argv.get("color")
-            check(toCheck, hashIs, co)
+            check(toCheck, hashIs, co, quiet)
 
         else:
             print("File does not exist")
@@ -191,7 +296,7 @@ def main(args = None):
         # go over files and hash them all
         for fname in FILES:
             try:
-                i = str(hash_bytestr_iter(file_as_blockiter(open(fname, 'rb')), hashIs)) + " " + str(fname)
+                i = str(hashIter(blockIter(open(fname, 'rb')), hashIs)) + " " + str(fname)
             except Exception as e:
                 # skip
                 print(e)

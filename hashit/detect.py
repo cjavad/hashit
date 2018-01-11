@@ -2,9 +2,8 @@
 # This 'Software' can't be used without permission
 # from Javad Shafique.
 
+import hashlib
 from collections import namedtuple
-import hashlib, json
-from .__init__ import __algorithems__
 
 # this module using length and connections to find a match 
 # for an hashing algorithem. It's basicly a matching algorigtem
@@ -87,15 +86,21 @@ def detect(string, table, maybe = True):
 """
 
 # compare hashes for hash-detection
-# for now has no method semmed vaiable
 # it can generate data that can compare
 # diffrences between the results
 
-def generate_data_set(hashon = "Hello World!"):
+# if works by categorizing the hashes into 
+# two categorizes. one for thoose who look alike
+# and one for thoose who generates the same output
+# given the same input. And with it a sorted result
+# is outputted and is ready to be used be the user.
+
+
+def generate_data_set(hashon, algos, hasher_that_takes_new = hashlib.new):
     data_dict = dict()
     # go overt algorithems
-    for algo in __algorithems__:
-        hashed = hashlib.new(algo, hashon.encode()).hexdigest()
+    for algo in algos:
+        hashed = hasher_that_takes_new(algo, hashon.encode()).hexdigest()
         # create dict in dict with all infomation stored in a table
         data_dict.update({algo:{"data":hashed, "size":len(hashed), "size-as":list(), "connection":list()}})
 
@@ -117,11 +122,9 @@ def generate_data_set(hashon = "Hello World!"):
         
 # return value for detect
 tup = namedtuple("Closest", ["certain", "maybe"])
-# global dataset
-data = generate_data_set()
 
 
-def detect(string, table = data, maybe = True):
+def detect(string, table, maybe=True):
     if not (type(string) == str):
         return None
     
