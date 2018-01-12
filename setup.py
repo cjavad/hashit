@@ -12,7 +12,7 @@ setup(
     include_package_data=True,
     entry_points = {
         "console_scripts":[
-            "hashit = hashit:main"
+            "hashit = hashit.__main__:main"
         ]
     },
     url="https://github.com/JavadSM/hashit",

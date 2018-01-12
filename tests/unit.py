@@ -1,6 +1,7 @@
 import unittest, hashlib, sys, subprocess
 sys.path.insert(0, "..")
 import hashit
+import hashit.__main__
 
 class Test(unittest.TestCase):
     def test_hasher(self):
@@ -8,7 +9,6 @@ class Test(unittest.TestCase):
         md5sum_of_self = subprocess.check_output(['md5sum', 'unit.py']).decode().split(" ")[0]
         h = hashit.hashIter(hashit.blockIter(open("unit.py", "rb")), hashlib.md5())
         self.assertEqual(h, md5sum_of_self)
-        self.hashis = h
 
     def test_detect(self):
         # generate data set
@@ -41,8 +41,33 @@ class Test(unittest.TestCase):
         # and work
         self.assertEqual(h3, hashit.hashIter(hashit.blockIter(open("unit.py", "rb")), hashlib.new(cl3.certain[0])))
 
+    def test_multi(self):
+        # test all hashing functions
+        algo = "md5"
+
+        md5sum_of_self = subprocess.check_output(['md5sum', 'unit.py']).decode().split(" ")[0]
+        h1 = hashit.easy_hash("unit.py", hashlib.new(algo))
+        h2 = hashit.hashFile("unit.py", hashlib.new(algo))
+        h3 = hashit.hashIter(hashit.blockIter(open("unit.py", "rb")), hashlib.new(algo))
+
+        # just checking
+        self.assertEqual(hashit.detect(hashit.hashFile("unit.py", hashlib.sha224(), False), hashit.generate_data_set("HALLO", hashit.__algorithems__, hashlib.new)).certain[0], "sha224")
+
+        self.assertTrue(h1 == h2 == h3 == md5sum_of_self)
+
     def test_other(self):
-        self.assertTrue(type(hashit.supports_color()) == bool)
+        self.assertIsInstance(hashit.supports_color(), bool)
+        
+        with self.assertRaises(SystemExit):
+            hashit.__main__.main(["--help"])
+        
+        with self.assertRaises(SystemExit):
+            hashit.__main__.main(["--check", "file_name"])
+
+        # just checking
+        self.assertEqual(hashit.__author__, "Javad Shafique")
+        # check the sfv parser
+        self.assertEqual(hashit.sfv_max("abc", "def", 4), "def  abc")
 
 if __name__ == "__main__":
     unittest.main()

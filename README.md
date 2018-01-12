@@ -31,6 +31,8 @@ print(hash)
 ## Changelog
 
 ------------------------------------------------------------
+    2.3.0 - Fixed a bunch of code, made it faster better more powerfull. Full support for sfv and more!
+
     2.1.3 - Fixed detect bugs added unit tests and some fixes
 
     2.1.2 - Done with detect.py working hash detection

@@ -95,6 +95,11 @@ def detect(string, table, maybe = True):
 # given the same input. And with it a sorted result
 # is outputted and is ready to be used be the user.
 
+# list of which algorithms is most likly used (WIP)
+priority = {
+    "md5":["md5"],
+    "sha1":["dsaEncryption", "DSA", "ecdsa-with-SHA1", "dsaWithSHA", "DSA-SHA"]
+}
 
 def generate_data_set(hashon, algos, hasher_that_takes_new = hashlib.new):
     data_dict = dict()
