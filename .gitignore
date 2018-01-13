@@ -5,3 +5,11 @@ __pycache__/
 dist/
 build/
 .vscode/
+
+# snap files and dirs
+parts/
+prime/
+snap/
+stage/
+
+*.snap

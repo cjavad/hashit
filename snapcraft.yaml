@@ -17,4 +17,5 @@ parts:
   hashit:
     plugin: python
     python-version: python3
+    python-packages: ["argc"]
     source: .
