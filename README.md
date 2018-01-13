@@ -1,3 +1,4 @@
+[![Snap Status](https://build.snapcraft.io/badge/JavadSM/hashit.svg)](https://build.snapcraft.io/user/JavadSM/hashit)
 Project is hosted on [pypi](https://pypi.org/project/hashit/)
 
 Hashit is an hashing program which can be uses to hash and verify muliple files on a system.
