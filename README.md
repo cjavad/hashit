@@ -14,18 +14,22 @@ and all shake hashes is disabled for now
 ------------------------------------
 Command line wise 
 ```bash
-(python3 -m) hashit [options] $disableFullPath
+(python3 -m) hashit [options] $path
 ```
 From python you can do it like this
 ```py
-from hashit import hashlib, blockIter, hashIter
+from hashit import hashlib, blockIter, hashIter, hashFile, new
 
 file = open("somefile", "rb")
 
 # memory efficent generator
-hash = hashIter(blockIter(file, blocksize=65536), hasher=hashlib.md5(), ashexstr=True)
+hash1 = hashIter(blockIter(file, blocksize=65536), hasher=new("md5"), ashexstr=True)
 
-print(hash)
+# easy access
+hash2 = hashFile("somefile", new("md5"), False) # enable memory effienct generator (False)
+
+assert hash1 == hash2
+print(hash1, hash2)
 
 ```
 
