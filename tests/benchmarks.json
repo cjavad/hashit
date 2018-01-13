@@ -1,104 +1,110 @@
 {
     "DSA": {
         "algo": "DSA",
-        "file-time": 22.274891091000427,
-        "number": 1000000,
-        "str-time": 1.5494048719992861
+        "file-time": 2.655126227000437,
+        "number": 100000,
+        "str-time": 0.18257429400182446
     },
     "DSA-SHA": {
         "algo": "DSA-SHA",
-        "file-time": 22.46116219799933,
-        "number": 1000000,
-        "str-time": 1.5382901729999503
+        "file-time": 2.685297283998807,
+        "number": 100000,
+        "str-time": 0.18983839900101884
     },
     "blake2b": {
         "algo": "blake2b",
-        "file-time": 19.442709670999648,
-        "number": 1000000,
-        "str-time": 1.626661346000219
+        "file-time": 2.5811427789994923,
+        "number": 100000,
+        "str-time": 0.22042284499912057
     },
     "blake2s": {
         "algo": "blake2s",
-        "file-time": 20.98181969699999,
-        "number": 1000000,
-        "str-time": 1.4624899629998254
+        "file-time": 2.7255075570028566,
+        "number": 100000,
+        "str-time": 0.16511948900006246
+    },
+    "crc32": {
+        "algo": "crc32",
+        "file-time": 3.3493102730026294,
+        "number": 100000,
+        "str-time": 0.2786590340001567
     },
     "dsaEncryption": {
         "algo": "dsaEncryption",
-        "file-time": 24.87139422600012,
-        "number": 1000000,
-        "str-time": 2.0509155849995295
+        "file-time": 2.5608025660003477,
+        "number": 100000,
+        "str-time": 0.24383254799977294
     },
     "dsaWithSHA": {
         "algo": "dsaWithSHA",
-        "file-time": 21.390354968000793,
-        "number": 1000000,
-        "str-time": 1.445062926999526
+        "file-time": 2.4855654230013897,
+        "number": 100000,
+        "str-time": 0.17918289599765558
     },
     "ecdsa-with-SHA1": {
         "algo": "ecdsa-with-SHA1",
-        "file-time": 24.318661948000226,
-        "number": 1000000,
-        "str-time": 1.662705681999796
+        "file-time": 2.4834580659990024,
+        "number": 100000,
+        "str-time": 0.19333825000285287
     },
     "md4": {
         "algo": "md4",
-        "file-time": 21.289859595999587,
-        "number": 1000000,
-        "str-time": 1.3553209789997709
+        "file-time": 2.3827028240011714,
+        "number": 100000,
+        "str-time": 0.1831362890006858
     },
     "md5": {
         "algo": "md5",
-        "file-time": 20.98413537899978,
-        "number": 1000000,
-        "str-time": 1.5906096190001335
+        "file-time": 2.5213872059975984,
+        "number": 100000,
+        "str-time": 0.17591828500007978
     },
     "ripemd160": {
         "algo": "ripemd160",
-        "file-time": 22.973678021000524,
-        "number": 1000000,
-        "str-time": 1.6646796630002427
+        "file-time": 3.662408570002299,
+        "number": 100000,
+        "str-time": 0.20604505699884612
     },
     "sha": {
         "algo": "sha",
-        "file-time": 21.22157162699932,
-        "number": 1000000,
-        "str-time": 1.4762116629999582
+        "file-time": 2.894117488001939,
+        "number": 100000,
+        "str-time": 0.19450623599914252
     },
     "sha1": {
         "algo": "sha1",
-        "file-time": 22.190846864999912,
-        "number": 1000000,
-        "str-time": 1.4645013900008053
+        "file-time": 2.5304575340014708,
+        "number": 100000,
+        "str-time": 0.17452852299902588
     },
     "sha224": {
         "algo": "sha224",
-        "file-time": 23.263401326999883,
-        "number": 1000000,
-        "str-time": 1.6453695359996345
+        "file-time": 2.957195218998095,
+        "number": 100000,
+        "str-time": 0.1845194449997507
     },
     "sha256": {
         "algo": "sha256",
-        "file-time": 21.871348839999882,
-        "number": 1000000,
-        "str-time": 1.5958610580000823
+        "file-time": 2.912678043001506,
+        "number": 100000,
+        "str-time": 0.19736081500013825
     },
     "sha384": {
         "algo": "sha384",
-        "file-time": 22.754833893000068,
-        "number": 1000000,
-        "str-time": 2.20250065899927
+        "file-time": 3.2282873189979,
+        "number": 100000,
+        "str-time": 0.22823443900051643
     },
     "sha512": {
         "algo": "sha512",
-        "file-time": 23.069907107999825,
-        "number": 1000000,
-        "str-time": 1.9807190519995856
+        "file-time": 2.7286913139978424,
+        "number": 100000,
+        "str-time": 0.23652296400177875
     },
     "whirlpool": {
         "algo": "whirlpool",
-        "file-time": 27.105406224000035,
-        "number": 1000000,
-        "str-time": 2.090767362999941
+        "file-time": 5.280140378999931,
+        "number": 100000,
+        "str-time": 0.34809441700053867
     }
 }

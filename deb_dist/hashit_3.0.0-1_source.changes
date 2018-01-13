@@ -1,0 +1,46 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Format: 1.8
+Date: Sat, 13 Jan 2018 19:13:38 +0100
+Source: hashit
+Binary: python-hashit
+Architecture: source
+Version: 3.0.0-1
+Distribution: unstable
+Urgency: low
+Maintainer: Javad Shafique <javadshafique@hotmail.com>
+Changed-By: Javad Shafique <javadshafique@hotmail.com>
+Description:
+ python-hashit - Hashing Application
+Changes:
+ hashit (3.0.0-1) unstable; urgency=low
+ .
+   * source package automatically created by stdeb 0.8.5
+Checksums-Sha1:
+ f6471fdc62164cd9b15aa4da80deb77a4c42c35d 1383 hashit_3.0.0-1.dsc
+ 647008a10a5469be43dcf1def29521ef6cd460c7 13383 hashit_3.0.0.orig.tar.gz
+ 6eabf194e1a45e942408fd9e83b25a9db5b0805e 1248 hashit_3.0.0-1.debian.tar.xz
+ c0bd70f63cf702210111191b92e7e412ce3a38d2 5875 hashit_3.0.0-1_source.buildinfo
+Checksums-Sha256:
+ b2bfe615f18def1bf22ec799c5d1f1f325fae2c24eae67b7d213210c8e090347 1383 hashit_3.0.0-1.dsc
+ d5f6b2ea99ad0e8c6430e605667296eeeaadfbf9b146107bcba4b5fb05573b5e 13383 hashit_3.0.0.orig.tar.gz
+ cf8b958c7fbc0542782d5c4a067839193f3ce26af49e8c66b0aff162878a9c00 1248 hashit_3.0.0-1.debian.tar.xz
+ 75697315fd7f4ee123481cba6a8d2e9f7335dd9bfdc00d593fe8bc1cf6242d0d 5875 hashit_3.0.0-1_source.buildinfo
+Files:
+ a3d14985dbfcdf338c109ff68f7f8214 1383 python optional hashit_3.0.0-1.dsc
+ 34c393813f600934379ad5cd9a57353d 13383 python optional hashit_3.0.0.orig.tar.gz
+ 28aceabf1ab639e51a9501b218dd471e 1248 python optional hashit_3.0.0-1.debian.tar.xz
+ 70df8af48276bc653f2814efd7db2a3c 5875 python optional hashit_3.0.0-1_source.buildinfo
+
+-----BEGIN PGP SIGNATURE-----
+
+iQE3BAEBCAAhBQJaWk0nGhxqYXZhZHNoYWZpcXVlQGhvdG1haWwuY29tAAoJEB0l
+7q6WJq8+OukH/0gcIvVB0JoAdmbANT33xSWA8KmyAm9Tikv67wINBJy98w6sXsH6
+YIdCYQ4TDu0GXt6+WnYuF0L12qKhnpD2galhgunJkbHKoM25IiDCCVl79rhlTgIs
+yB33JIJRoSham+/Hcz5odrxv+G+fFcDqRrCvRBRZtElxIcu+4hZuVt3tvO+Q0VKu
+nSU5uRc+d8sIBg34lHtSOOSZo13b9r/1PXbf6nvXdawL60CWcc16UuTQamp/GzPf
+vbOwNj5cduzC4Iz5tJQSOuVAS80mOXWmD7jl7VnAKKkbe6L8Wn6Nria6XjCBPYwn
+ZZFk1+MhE+vbhoUhqjS0x3c1QPZigYZ8ZG0=
+=E1Bu
+-----END PGP SIGNATURE-----
