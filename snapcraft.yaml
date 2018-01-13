@@ -1,5 +1,5 @@
 name: hashit
-version: 3.0.0
+version: 3.0.1
 summary: hashit
 description: |
   Hashit is an hashing program which can be uses to hash and verify muliple files on a system.
