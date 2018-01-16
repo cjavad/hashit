@@ -5,7 +5,7 @@ import os
 import re
 import hashlib
 
-from .extra import Crc32
+from .extra import Crc32, shake
 from .detect import detect, generate_data_set
 
 __author__ = "Javad Shafique" # copyrigth holder
@@ -134,12 +134,14 @@ def sfv_max(file_hash, file_path, longest, size=""):
 
 # creates new hash
 def new(hashname, data=b''):
-    if hashname in hashlib.algorithms_available:
-        return hashlib.new(hashname, data)
-
-    elif hashname == "crc32":
+    if hashname == "crc32":
         return Crc32(data)
+    elif hashname[:5] == "shake" and os.sys.version_info[0] == 3:
+        return shake(hashname, data)
 
+    elif hashname in hashlib.algorithms_available:
+        return hashlib.new(hashname, data)
+    
     else:
         raise ValueError(hashname + " is not a valid hash type")
 

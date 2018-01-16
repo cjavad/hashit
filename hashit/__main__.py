@@ -75,7 +75,7 @@ def main(args=None):
     hash_is = hashlib.md5()
 
     # check if its an valid hashing
-    if hasha in hashlib.algorithms_available or hasha in __algorithems__:
+    if hasha in hashlib.algorithms_available or hasha in __algorithems__ or hasha[:5] == "shake":
         # check if it's in guaranteed
         if not hasha in hashlib.algorithms_guaranteed and hasha in hashlib.algorithms_available:
             # if not print an warning

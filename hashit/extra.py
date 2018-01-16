@@ -1,5 +1,6 @@
 """Extra functions and classes for hashit"""
 import binascii
+import hashlib
 
 # create a crc32 hash
 def hex_crc32(buf):
@@ -16,7 +17,7 @@ class Crc32:
         self.name = "crc32"
         self.data = data
 
-    def update(self, data):
+    def update(self, data=b''):
         """Update self.data with new data"""
         self.data += data
 
@@ -27,3 +28,29 @@ class Crc32:
     def hexdigest(self):
         """Digest as hex"""
         return hex_crc32(self.data)
+
+# class for shake hash
+class shake:
+    def __init__(self, hashname, data=b''):
+        """Init class create hasher and data"""
+        if hashname[:5] == "shake":
+            self.hash = hashlib.shake_256()
+            self.name = hashname
+            self.data = data
+            self.length = int(hashname.split("_")[1])
+        else:
+            raise ValueError
+
+    def update(self, data=b''):
+        """Update self.data with new data"""
+        self.data += data
+
+    def digest(self, length=None):
+        """Digest binary"""
+        length = length or self.length
+        return self.hash.digest(length)
+    
+    def hexdigest(self, length=None):
+        """Digest hex"""
+        length = length or self.length
+        return self.hash.hexdigest(length)

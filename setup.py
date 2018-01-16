@@ -19,7 +19,7 @@ setup(
     url="https://github.com/JavadSM/hashit",
     packages=["hashit"],
     install_requires = ["argc"],
-    description = "Hashing Application",
+    description = "Hashing Application with muliple modes, settings and more!",
     long_description = LONG_DES,
     classifiers = [
         "Programming Language :: Python :: 2",

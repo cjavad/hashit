@@ -9,6 +9,9 @@ such a program using python.
 some hashes as blake2b and blake2s is not supported in python2
 and all shake hashes is disabled for now
 
+i would recommend python3 for this program as its version of hashlib
+supports sha3 (Keccak)
+
 ## Usage
 
 ------------------------------------
