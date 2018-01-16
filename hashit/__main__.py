@@ -34,6 +34,7 @@ def main(args=None):
     argv.set("-q", "--quiet", "quiet", "Minimal output", False)
     argv.set("-m", "--memory-optimatation", "memopt", "Enables memory optimatation only useful for large files", False)
     argv.set("-sfv", "--simple-file-verification", "sfv", "Outputs in a sfv compatible format", False)
+    argv.set("-s", "--size", "size", "Adds a size to output", False)
 
     if len(args) == 0:
         # if there is not arguments show help
@@ -68,6 +69,7 @@ def main(args=None):
     output_file = argv.get("output") # output output to output (in->do->out)
     use_sfv = argv.get("sfv") # use simple file verification compatible format
     use_mem = argv.get("memopt") # use memory optimatations
+    use_size = argv.get("size") # get size of file in bytes
 
     # it supports md5 and sha256
     hash_is = hashlib.md5()
@@ -154,7 +156,7 @@ def main(args=None):
         # check for file
         if os.path.exists(to_check):
             # then check
-            check(to_check, hash_is, use_colors, be_quiet, to_detect, use_sfv)
+            check(to_check, hash_is, use_colors, be_quiet, to_detect, use_sfv, use_size)
 
         else:
             # if the file does not exist
@@ -193,11 +195,15 @@ def main(args=None):
             
             # set print_str
             print_str = current_hash
+            size = ""
+
+            if use_size:
+                size = str(os.stat(fname).st_size) + " "
 
             if use_sfv:
-                print_str = sfv_max(current_hash, fname, len(longest_filename))
+                print_str = sfv_max(current_hash, fname, len(longest_filename), size)
             else:
-                print_str = current_hash + " " + str(fname)
+                print_str = current_hash + " " + str(size + fname)
 
             # check if fullpath path shall be stripped
             if to_strippath:

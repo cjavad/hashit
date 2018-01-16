@@ -32,6 +32,8 @@ print(hash)
 ## Changelog
 
 ------------------------------------------------------------
+    3.0.1 - Added --size option that allows the program to check file sizes to
+
     3.0.0 - New release, added tests full color-support and CRC32 hashing! (Also added an -a option)
 
     2.3.0 - Fixed a bunch of code, made it faster better more powerful. Full support for sfv and more!

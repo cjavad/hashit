@@ -121,13 +121,16 @@ def read_sfv(filename):
     return (' '.join([l for l in l.split(" ") if l != '']) for l in reader(filename, "r"))
 
 # calculates the amount of spaces needed in a sfv file
-def sfv_max(file_hash, file_path, longest):
+def sfv_max(file_hash, file_path, longest, size=""):
     """calculates the amount of spaces needed in a sfv file"""
+    if len(size) > 0:
+        size = size + " "
+
     spaces = " "
     if len(file_path) - 1 < longest:
         spaces = spaces*(longest - len(file_path) + 1)
     # return sfv compatible string
-    return file_path + spaces + file_hash
+    return file_path + spaces + (size + file_hash)
 
 # creates new hash
 def new(hashname, data=b''):
@@ -186,7 +189,7 @@ def hashFile(filename, hasher, memory_opt=False):
 # check reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
 
-def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False):
+def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum"""
 
     # set colors
@@ -219,6 +222,10 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     x_reader = None
     hash_index = 0
     path_index = 0
+    size_index = 1
+
+    max_elem = 2
+
 
     if sfv:
         x_reader = lambda: read_sfv(path)
@@ -233,7 +240,17 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         # set indexes
         hash_index = 0
         path_index = 1
-    
+
+    # check if you should add file sizes to the output
+    if size:
+        max_elem = 3    
+        size_index = 1
+
+        if sfv:
+            hash_index = 2
+        else:
+            path_index = 2
+
     # choose hash if not already selected
     # using new detection algorithem
     try:
@@ -260,7 +277,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         # convert string to data
         data = [s for s in line.replace("\n", "").replace("\0", "").split(" ") if s != '']
 
-        if len(data) != 2:
+        if len(data) != max_elem:
             # then there is something wrong with the format
             continue
         
@@ -277,8 +294,14 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             '''
             # current_hash = hashFile(filename, hashit, True)
             current_hash = new(hashit.name, open(filename, "rb").read()).hexdigest()
+            SizeCheck = True
 
-            if current_hash != last_hash:
+            if size:
+                last_size = data[size_index]
+                current_size = os.stat(filename).st_size
+                SizeCheck = last_size == current_size
+
+            if not (current_hash == last_hash or SizeCheck):
                 # if the file has changed print notice (md5sum inpired)
                 print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash, end=RESET + '\n')
 
