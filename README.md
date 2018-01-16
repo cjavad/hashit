@@ -36,6 +36,8 @@ print(hash1, hash2)
 ## Changelog
 
 ------------------------------------------------------------
+    3.0.2 - Fixed size positioning
+
     3.0.1 - Added --size option that allows the program to check file sizes to
 
     3.0.0 - New release, added tests full color-support and CRC32 hashing! (Also added an -a option)

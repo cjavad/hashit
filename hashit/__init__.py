@@ -124,13 +124,13 @@ def read_sfv(filename):
 def sfv_max(file_hash, file_path, longest, size=""):
     """calculates the amount of spaces needed in a sfv file"""
     if len(size) > 0:
-        size = size + " "
+        size = " " + size 
 
     spaces = " "
     if len(file_path) - 1 < longest:
         spaces = spaces*(longest - len(file_path) + 1)
     # return sfv compatible string
-    return file_path + spaces + (size + file_hash)
+    return file_path + spaces + (file_hash + size)
 
 # creates new hash
 def new(hashname, data=b''):
@@ -247,7 +247,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         size_index = 1
 
         if sfv:
-            hash_index = 2
+            size_index = 2
         else:
             path_index = 2
 
