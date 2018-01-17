@@ -16,7 +16,7 @@ __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro pr
 # when the user uses hashit --help
 
 # fix algo list by sorting it trough
-__algorithems__ = [s for s in hashlib.algorithms_available if not (s[:5] == "shake" or \
+__algorithems__ = [s for s in hashlib.algorithms_available if not (s[:5] in ("shake", "sha3_") or \
         s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"] # add crc32
 
 __help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", help_command, "", \
@@ -296,16 +296,23 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             '''
             # current_hash = hashFile(filename, hashit, True)
             current_hash = new(hashit.name, open(filename, "rb").read()).hexdigest()
+
+            current_size = int()
+            last_size = int()
+
             SizeCheck = True
 
             if size:
                 last_size = data[size_index]
                 current_size = os.stat(filename).st_size
-                SizeCheck = last_size == current_size
+                SizeCheck = int(last_size) == int(current_size)
 
-            if not (current_hash == last_hash or SizeCheck):
+            if not current_hash == last_hash or not SizeCheck:
                 # if the file has changed print notice (md5sum inpired)
-                print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash, end=RESET + '\n')
+                if not SizeCheck:
+                    print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash + RESET, YELLOW + str(last_size) + RESET + "->" + YELLOW + str(current_size) , end=RESET + '\n')
+                else: 
+                    print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash, end=RESET + '\n')
 
             elif not be_quiet:
                 # else print OK if not quiet

@@ -8,7 +8,7 @@ from .__init__ import os, hashlib, eprint, hashFile, new, \
 
 from .version import __version__
 
-def main(args=None):
+def _main(args=None):
     """Main function which is the cli parses arguments and runs appropriate commands"""
     # switch args if needed
     if args is None:
@@ -75,16 +75,18 @@ def main(args=None):
     hash_is = hashlib.md5()
 
     # check if its an valid hashing
-    if hasha in hashlib.algorithms_available or hasha in __algorithems__ or hasha[:5] == "shake":
+    if hasha in hashlib.algorithms_available or hasha in __algorithems__ or str(hasha)[:5] == "shake":
         # check if it's in guaranteed
         if not hasha in hashlib.algorithms_guaranteed and hasha in hashlib.algorithms_available:
             # if not print an warning
             if not be_quiet:
-                eprint(YELLOW + hasha, "is not guaranteed to work on your system" + RESET)
+                eprint(YELLOW + str(hasha), "is not guaranteed to work on your system" + RESET)
         # and use the hash
         hash_is = new(hasha)
 
     else:
+        if not hasha in (None, True) and not be_quiet:
+            eprint(RED + str(hasha), "is not a valid hash", RESET)
         # else set it to md5
         hash_is = hashlib.md5()
 
@@ -224,9 +226,10 @@ def main(args=None):
         # Else exit
         Exit()
 
-if __name__ == "__main__":
+def main(args=None):
+    """Main function that calls _main"""
     try:
-        main()
+        _main(args)
     except Exception as Error:
         # define colors
         RED = ""
@@ -244,5 +247,7 @@ if __name__ == "__main__":
             eprint(YELLOW + "Wrong type used (in cli-arguments) - please use a static programming language" + RESET)
         else:
             eprint(RED + str(Error) + RESET)
-
         Exit()
+
+if __name__ == "__main__":
+    main()

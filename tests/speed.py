@@ -79,14 +79,17 @@ def test2(algo, n=1000, bigfile="/home/javad/filename"):
  Easy: 880.830499345
  Filename: dataset_from_detect.json
 
-''' 
+'''
+
 #test2("md5", 1000000, path_to_large_file)
 
 if __name__ == "__main__":
     # hash with a bunch of algorigthms a million times each and compare results
     if not (os.path.exists("benchmarks.json") and os.path.exists("benchmarks2.json")):
-        test1(1000000, "benchmarks.json")
-        test1(1000000, "benchmarks2.json")
+        test1(100000, "benchmarks.json")
+        test1(100000, "benchmarks2.json")
 
     parse_test1("benchmarks.json")
     parse_test1("benchmarks2.json")
+
+    test2("sha3_256", bigfile="file.json")

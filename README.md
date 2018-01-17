@@ -39,6 +39,8 @@ print(hash1, hash2)
 ## Changelog
 
 ------------------------------------------------------------
+    3.1.0 - A bunch of bugfixes in comparing of hashes, shake and more
+
     3.0.2 - Fixed size positioning
 
     3.0.1 - Added --size option that allows the program to check file sizes to

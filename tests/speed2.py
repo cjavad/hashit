@@ -113,6 +113,7 @@ def ReadCnH(filename):
         print("Fastest", algo, "For strings", f_str)
 
 if __name__ == "__main__":
+    
     if not os.path.exists("pycrypto_vs_hashlib.json"):
         CompareCnH(output="pycrypto_vs_hashlib.json")
 

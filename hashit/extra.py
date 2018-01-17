@@ -22,7 +22,7 @@ class Crc32:
         self.data += data
 
     def copy(self):
-        return self
+        return Crc32(self.data)
 
     def digest(self):
         """Digest as int"""
@@ -49,7 +49,7 @@ class shake:
         self.hash.update(data)
 
     def copy(self):
-        return self
+        return shake(self.name, self.data)
 
     def digest(self, length=None):
         """Digest binary"""
