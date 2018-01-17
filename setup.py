@@ -1,7 +1,7 @@
 from setuptools import setup
 from hashit.version import __version__
 
-LONG_DES = open("README.md", "r").read()
+LONG_DES = open("README.rst", "r").read()
 
 setup(
     name = "hashit",
