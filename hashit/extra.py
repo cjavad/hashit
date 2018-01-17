@@ -21,6 +21,9 @@ class Crc32:
         """Update self.data with new data"""
         self.data += data
 
+    def copy(self):
+        return self
+
     def digest(self):
         """Digest as int"""
         return binascii.crc32(self.data) & 0xFFFFFFFF
@@ -31,19 +34,22 @@ class Crc32:
 
 # class for shake hash
 class shake:
+    """Top-level api for hashlib.shake"""
     def __init__(self, hashname, data=b''):
         """Init class create hasher and data"""
         if hashname[:5] == "shake":
-            self.hash = hashlib.shake_256()
+            self.hash = hashlib.shake_256(data)
             self.name = hashname
-            self.data = data
             self.length = int(hashname.split("_")[1])
         else:
             raise ValueError
 
     def update(self, data=b''):
         """Update self.data with new data"""
-        self.data += data
+        self.hash.update(data)
+
+    def copy(self):
+        return self
 
     def digest(self, length=None):
         """Digest binary"""

@@ -16,7 +16,7 @@ __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro pr
 # when the user uses hashit --help
 
 # fix algo list by sorting it trough
-__algorithems__ = [s for s in hashlib.algorithms_available if not (s[:5] in {"sha3_", "shake"} or \
+__algorithems__ = [s for s in hashlib.algorithms_available if not (s[:5] == "shake" or \
         s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"] # add crc32
 
 __help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", help_command, "", \
