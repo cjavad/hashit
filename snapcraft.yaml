@@ -6,7 +6,7 @@ description: |
   I got the idea from an ubuntu iso image which have this hash table, so i got the idea to make
   such a program using python.
 
-grade: stable
+grade: strict
 confinement: classic
 
 apps:
