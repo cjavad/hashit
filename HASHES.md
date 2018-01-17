@@ -30,7 +30,7 @@ And for python3 a special syntax for the shake hash
 
 where by default shake-256 is used like this
 
-skake_${amount_to_return}
+shake_${amount_to_return}
 
 so 
 
