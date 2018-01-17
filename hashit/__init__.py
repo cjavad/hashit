@@ -1,4 +1,30 @@
-"""hashit module for hashit command is contaning all the code for hashit"""
+"""hashit module for hashit command is contaning all the code for hashit
+
+
+MIT License                                                                      
+
+Copyright (c) 2018 Javad Shafique
+              
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.
+"""
 # import print and with for python2 support
 from __future__ import print_function, with_statement
 import os
@@ -16,8 +42,8 @@ __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro pr
 # when the user uses hashit --help
 
 # fix algo list by sorting it trough
-__algorithems__ = [s for s in hashlib.algorithms_available if not (s[:5] in ("shake", "sha3_") or \
-        s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"] # add crc32
+__algorithems__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake") or \
+        s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32
 
 __help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", help_command, "", \
      "Notice: this program was made by Javad Shafique, and uses argc another package by me\n"]
@@ -72,7 +98,7 @@ def choose_hash(hash1, hashit):
         # but only use if not already choosen
 
         # not valid hash
-        if tup == None:
+        if tup is None:
             return None
 
         if len(tup.certain) >= 1 and not (hashit.name in tup.certain or hashit.name in tup.maybe):
@@ -184,9 +210,10 @@ def hashFile(filename, hasher, memory_opt=False):
     if memory_opt:
         return hashIter(blockIter(open(filename, "rb")), hasher, True)
     else:
-        # dont use memory optimatation
-        return new(hasher.name, open(filename, "rb").read()).hexdigest()
-
+        # dont use memory optimatation but close file
+        with open(filename, "rb") as file:
+            hash = new(hasher.name, file.read()).hexdigest()
+        return hash
 
 # check reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes

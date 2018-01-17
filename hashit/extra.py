@@ -2,13 +2,6 @@
 import binascii
 import hashlib
 
-# create a crc32 hash
-def hex_crc32(buf):
-    """Hashes binary data with crc32 and returns hex"""
-    buf = (binascii.crc32(buf) & 0xFFFFFFFF)
-    return ("%08X" % buf).lower()
-
-
 # final class
 class Crc32:
     """This class is an api for the crc32 function that is compatible with mor"""
@@ -30,7 +23,8 @@ class Crc32:
 
     def hexdigest(self):
         """Digest as hex"""
-        return hex_crc32(self.data)
+        buf = (binascii.crc32(self.data) & 0xFFFFFFFF)
+        return ("%08X" % buf).lower()
 
 # class for shake hash
 class shake:

@@ -1,0 +1,134 @@
+{
+    "DSA": {
+        "algo": "DSA",
+        "file-time": 2.8450868749996516,
+        "number": 100000,
+        "str-time": 0.18207929300024261
+    },
+    "DSA-SHA": {
+        "algo": "DSA-SHA",
+        "file-time": 2.666441807999945,
+        "number": 100000,
+        "str-time": 0.22197757800040563
+    },
+    "blake2b": {
+        "algo": "blake2b",
+        "file-time": 2.8445470799997565,
+        "number": 100000,
+        "str-time": 0.20133252900041043
+    },
+    "blake2s": {
+        "algo": "blake2s",
+        "file-time": 3.2005310449999342,
+        "number": 100000,
+        "str-time": 0.20474589700006618
+    },
+    "crc32": {
+        "algo": "crc32",
+        "file-time": 3.0626791010004126,
+        "number": 100000,
+        "str-time": 0.19565401399995608
+    },
+    "dsaEncryption": {
+        "algo": "dsaEncryption",
+        "file-time": 3.06814845100007,
+        "number": 100000,
+        "str-time": 0.18941209899958267
+    },
+    "dsaWithSHA": {
+        "algo": "dsaWithSHA",
+        "file-time": 2.65577638700006,
+        "number": 100000,
+        "str-time": 0.18819310099979702
+    },
+    "ecdsa-with-SHA1": {
+        "algo": "ecdsa-with-SHA1",
+        "file-time": 2.604442813999867,
+        "number": 100000,
+        "str-time": 0.1899897069997678
+    },
+    "md4": {
+        "algo": "md4",
+        "file-time": 2.5014770049997423,
+        "number": 100000,
+        "str-time": 0.1810867640001561
+    },
+    "md5": {
+        "algo": "md5",
+        "file-time": 2.858168186000057,
+        "number": 100000,
+        "str-time": 0.20138439300035316
+    },
+    "ripemd160": {
+        "algo": "ripemd160",
+        "file-time": 3.7956181730000935,
+        "number": 100000,
+        "str-time": 0.2105701600003158
+    },
+    "sha": {
+        "algo": "sha",
+        "file-time": 3.1197131930002797,
+        "number": 100000,
+        "str-time": 0.1953218310000011
+    },
+    "sha1": {
+        "algo": "sha1",
+        "file-time": 2.605248396999741,
+        "number": 100000,
+        "str-time": 0.17578223699956652
+    },
+    "sha224": {
+        "algo": "sha224",
+        "file-time": 3.1550695630003247,
+        "number": 100000,
+        "str-time": 0.19930047200023182
+    },
+    "sha256": {
+        "algo": "sha256",
+        "file-time": 3.120442401999753,
+        "number": 100000,
+        "str-time": 0.2023992099998395
+    },
+    "sha384": {
+        "algo": "sha384",
+        "file-time": 3.145929054000135,
+        "number": 100000,
+        "str-time": 0.2327170609996756
+    },
+    "sha3_224": {
+        "algo": "sha3_224",
+        "file-time": 3.8057815829997708,
+        "number": 100000,
+        "str-time": 0.3033928019999621
+    },
+    "sha3_256": {
+        "algo": "sha3_256",
+        "file-time": 3.690774378000242,
+        "number": 100000,
+        "str-time": 0.2946057000003748
+    },
+    "sha3_384": {
+        "algo": "sha3_384",
+        "file-time": 4.387827305000428,
+        "number": 100000,
+        "str-time": 0.38775761599981706
+    },
+    "sha3_512": {
+        "algo": "sha3_512",
+        "file-time": 4.753955307000069,
+        "number": 100000,
+        "str-time": 0.3283711169997332
+    },
+    "sha512": {
+        "algo": "sha512",
+        "file-time": 2.940883205999853,
+        "number": 100000,
+        "str-time": 0.22776917900000626
+    },
+    "whirlpool": {
+        "algo": "whirlpool",
+        "file-time": 4.990728630999911,
+        "number": 100000,
+        "str-time": 0.25389273800010415
+    }
+}

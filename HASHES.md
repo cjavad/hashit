@@ -24,7 +24,7 @@ For python3 is all from python2 and more:
 - sha3_384
 - sha3_512
 
-## Expirimental
+## Experimental
 
 And for python3 a special syntax for the shake hash
 
