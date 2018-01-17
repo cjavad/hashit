@@ -8,28 +8,28 @@ import hashit.__main__
 # NOTE THE TESTS REQUIRE A MD5-CHECKSUM of a file as a point of comparionsing
 
 FILE = "LICENSE"
-FILE_SUM = "c9ca86e6b436c4cc98d62d336f0b5369"
+FILE_SUM = "8ca87f6e5e1480c2a83cc0f76fb1276b"
 
 # check sums for file
 FILE_SUMS = {
-    "md4":"324c4e0b6529f5185ee2afaff06397ba",
-    "md5":"c9ca86e6b436c4cc98d62d336f0b5369",
-    "sha1":"529c3dca5681db4e2b37a7909064dfe2344ec095",
-    "DSA":"529c3dca5681db4e2b37a7909064dfe2344ec095",
-    "ecdsa-with-SHA1":"529c3dca5681db4e2b37a7909064dfe2344ec095",
-    "dsaEncryption":"529c3dca5681db4e2b37a7909064dfe2344ec095",
-    "DSA-SHA":"529c3dca5681db4e2b37a7909064dfe2344ec095",
-    "dsaWithSHA":"529c3dca5681db4e2b37a7909064dfe2344ec095",
-    "sha":"558a4c1c3f0afbe6280f10a5370649db495d5011",
-    "sha224":"0991203002e4412141f21808bec216b65c17c1ecc5b6d299f53c8b5d",
-    "sha256":"785e3de164e5c7787e9bb856707fe8d565e1d76823939eff226ca1c6666cac18",
-    "sha384":"acfc0018b0ed7ced42d3e83c14fc85d009a4541612063b4660e0b09b4651a728cc21d477284eaa845528effad68bb9be",
-    "sha512":"89f83d0ae1ca66c386c0c271e440b37967e3ab495b36a20a8ca67445135febef461baa92a67870c81f998509212f5da308f816e4c95b8c0ea2625488be341bb0",
-    "ripemd160":"ae16a3dfbb4aed2e2a2564ab4f24bdc090de925a",
-    "whirlpool":"b6c954e249f9dac08aeba5a72742471f48a98b7d0f98dc075fc68884ed9df7bf0ddfb4b9922b269a554524d9e3a110dca5fd7a2d452891ece092ed5028efb1fa",
-    "crc32":"5cb92e3e",
-    "blake2s":"f6e4ed248c729474ba235b08e7415facf586f99aadf23b8ba2ff186ef7dcf26c",
-    "blake2b":"2dc623f7f3f81b2b7cdb5ae496a72ef93f20147f5a653a4d61374384cc42f3ef14ae67403e2b3152da6e842d76b24061cb3510cdbc9f403ae900d9dc9d536a2e"
+    "DSA": "3dba84c57f97eade3e754a6739e0d1b13bf3ea35",
+    "DSA-SHA": "3dba84c57f97eade3e754a6739e0d1b13bf3ea35",
+    "blake2b": "27c1dad8331065b4eec0c5767631fe2e1e3d8d327cfbd9d406618eef98b88399dc9aa410ab8d1dec1021671083a72572fbc054e210532563ff5c2235fc2ec794",
+    "blake2s": "5bd9d53a9e8caf717ee4028968df3beda69320c981b503b2bf905090a7734244",
+    "crc32": "43be10fe",
+    "dsaEncryption": "3dba84c57f97eade3e754a6739e0d1b13bf3ea35",
+    "dsaWithSHA": "3dba84c57f97eade3e754a6739e0d1b13bf3ea35",
+    "ecdsa-with-SHA1": "3dba84c57f97eade3e754a6739e0d1b13bf3ea35",
+    "md4": "34bcfe03311b48576b259fd1f8df3743",
+    "md5": "8ca87f6e5e1480c2a83cc0f76fb1276b",
+    "ripemd160": "635d845687ce3f548ce328384f456a66f5f5b992",
+    "sha": "b3a66501bcf4273e281e6469ba0d50e4aca7dc8a",
+    "sha1": "3dba84c57f97eade3e754a6739e0d1b13bf3ea35",
+    "sha224": "6479610a2cd48f07748e198a9ae343fa2ffbee2ea31bec8c88887f97",
+    "sha256": "e7434be58d1f9c3d37c33b4f0b627ffc94a1bdc5cdd06cd3a8d40db0aec6aec2",
+    "sha384": "dde49e5e7615138a38fd1e7955bacc04d1921706b445889115165df50215fa3c37bbee8089a4b70315475b8f8e05db67",
+    "sha512": "05c7499712855e34cbbaf5a6e381a28e9749980d1e43787bb5fc8d5dbf666d4d6eb06705ee9503c84cf0a86a0ab04b27441ea74bdb69dfdc0484ada489ecb519",
+    "whirlpool": "327cfa505f50abe31cfd4914e7b86005174fb04c8909cffe005ed663a02afbd7b5ddc4154d79e8cd529a06bcad974d2be130fbdef0037abe44d48855d3f0f40c"
 }
 
 class Test(unittest.TestCase):
