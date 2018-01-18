@@ -45,7 +45,7 @@ def parse_test1(jsonfile):
     data = json.loads(open(jsonfile, "r").read())
 
     def findt(s):
-        sorted_list = sorted(data.keys(), key=lambda key: data[key][s])
+        sorted_list = sorted(data, key=lambda key: data[key][s])
         for c, i in enumerate(sorted_list):
             sorted_list[c] = i + ": " + str(data[i][s])
         
@@ -85,11 +85,11 @@ def test2(algo, n=1000, bigfile="/home/javad/filename"):
 
 if __name__ == "__main__":
     # hash with a bunch of algorigthms a million times each and compare results
-    if not (os.path.exists("benchmarks.json") and os.path.exists("benchmarks2.json")):
-        test1(100000, "benchmarks.json")
-        test1(100000, "benchmarks2.json")
+    if not (os.path.exists("./res/benchmarks.json") and os.path.exists("./res/benchmarks2.json")):
+        test1(100000, "./res/benchmarks.json")
+        test1(100000, "./res/benchmarks2.json")
 
-    parse_test1("benchmarks.json")
-    parse_test1("benchmarks2.json")
+    parse_test1("./res/benchmarks.json")
+    parse_test1("./res/benchmarks2.json")
 
-    test2("sha256", bigfile="file.json")
+    test2("sha256", bigfile="./res/file.json")

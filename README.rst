@@ -15,6 +15,8 @@ shake hashes is disabled for now
 i would recommend python3 for this program as its version of hashlib
 supports sha3 (Keccak)
 
+And for compatibly reasons does detect not work for sha3 yet.
+
 Usage
 --------------
 
@@ -45,6 +47,8 @@ Changelog
 --------------
 
 ::
+
+    3.1.5 - Skipped 3.1.4 cause i have been renaming varibles, cleaning code and improving performance.
 
     3.1.2-3.1.3 - fixed this document
 

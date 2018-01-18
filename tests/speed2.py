@@ -61,7 +61,7 @@ def CryptoVsHashlib(file_to_hash="speed.py", data_to_hash="Hello World!", n=time
         "sha1":{},
         "ripemd160":{}
     }
-    for algo in hashers.keys():
+    for algo in hashers:
         # hashlib_hash for hashlib and crypto_hash for crypto (pycrypto(dome))
         # first hash an file
         h_file = timeit.timeit("hashFile('{}', hashers['{}']['hashlib_hash'])".format(file_to_hash, algo), setup="from __main__ import hashFile, hashers", number=n)
@@ -84,7 +84,7 @@ def CompareCnH(output=None, amount_of_datasets=100, n=1000):
 
     res2 = dict()
 
-    for algo in hashers.keys():
+    for algo in hashers:
         res2[algo] = {}
         res2[algo]["crypto_hash"] = {"file":0, "str":0, "amount-file":[], "amount-str":[]}
         res2[algo]["hashlib_hash"] = {"file":0, "str":0, "amount-file":[], "amount-str":[]}
@@ -92,8 +92,8 @@ def CompareCnH(output=None, amount_of_datasets=100, n=1000):
         other = lambda x: "crypto_hash" if x == "hashlib_hash" else "hashlib_hash" # switch to the opposite
 
         for ds in res:
-            ff = max(ds[algo].keys(), key=lambda key: ds[algo][key]["file"])
-            fs = max(ds[algo].keys(), key=lambda key: ds[algo][key]["str"])
+            ff = max(ds[algo], key=lambda key: ds[algo][key]["file"])
+            fs = max(ds[algo], key=lambda key: ds[algo][key]["str"])
             res2[algo][ff]["file"] += 1
             res2[algo][ff]["amount-file"].append(ds[algo][ff]["file"] - ds[algo][other(ff)]["file"])
             res2[algo][fs]["str"] += 1
@@ -105,7 +105,7 @@ def CompareCnH(output=None, amount_of_datasets=100, n=1000):
 def ReadCnH(filename):
     res2 = json.loads(open(filename, "r").read())["results"]
     # print data
-    for algo in hashers.keys():
+    for algo in hashers:
         f_file = max(res2[algo], key=lambda key: res2[algo][key]["file"])
         f_str = max(res2[algo], key=lambda key: res2[algo][key]["str"])
 
@@ -114,7 +114,7 @@ def ReadCnH(filename):
 
 if __name__ == "__main__":
     
-    if not os.path.exists("pycrypto_vs_hashlib.json"):
-        CompareCnH(output="pycrypto_vs_hashlib.json")
+    if not os.path.exists("./res/pycrypto_vs_hashlib.json"):
+        CompareCnH(output="./res/pycrypto_vs_hashlib.json")
 
-    ReadCnH("pycrypto_vs_hashlib.json")
+    ReadCnH("./res/pycrypto_vs_hashlib.json")

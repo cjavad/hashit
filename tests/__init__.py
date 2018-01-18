@@ -5,31 +5,31 @@ sys.path.insert(0, "..")
 import hashit
 import hashit.__main__
 
-# NOTE THE TESTS REQUIRE A MD5-CHECKSUM of a file as a point of comparionsing
+# NOTE THE TESTS REQUIRE A MD5-CHECKSUM and a CHECKSUM-table of a file as a point of comparionsing
 
 FILE = "LICENSE"
-FILE_SUM = "3d205fb716c7c57732eb37c1e29d82d9"
+FILE_SUM = "c11869fc956d819d2a336c74f4cc6000"
 
 # check sums for file
 FILE_SUMS = {
-    "DSA": "3ccefed5c16a412668222aae97f7e293c34779b4",
-    "DSA-SHA": "3ccefed5c16a412668222aae97f7e293c34779b4",
-    "blake2b": "196bf4efa6c8e77b019ce834ea2c5011349171b395792316e109eb7d123533ce1c0a56917c76437e2ee4e26f65d3b447326f6bb0244f89cef2c88b9ce58aeb35",
-    "blake2s": "c9a393cb9b0683b360bc257aaba1e8b34644f1753c8e60d705b8c87b1c091575",
-    "crc32": "ebd1a795",
-    "dsaEncryption": "3ccefed5c16a412668222aae97f7e293c34779b4",
-    "dsaWithSHA": "3ccefed5c16a412668222aae97f7e293c34779b4",
-    "ecdsa-with-SHA1": "3ccefed5c16a412668222aae97f7e293c34779b4",
-    "md4": "6cfc8cbf106583427461e6d2e1e93d0d",
-    "md5": "3d205fb716c7c57732eb37c1e29d82d9",
-    "ripemd160": "2a217ec724b82bba4a96c32612e897ec60f91910",
-    "sha": "f6982fc17ec8fd17a048ef56161f83bd114f7f0c",
-    "sha1": "3ccefed5c16a412668222aae97f7e293c34779b4",
-    "sha224": "342ef4f554e58c7df12790813abef77b44cf98120d12d55ff8ebee26",
-    "sha256": "066b8c740c367994ab192f6e2eced1ba2d7cc68d35f62ae93a2f9cfed5e5db2a",
-    "sha384": "e2ece4ba03fcec5bf73e49516a911924b754179279035fc57c3d03986ea744c6ab24319d9566fbee7a17255dd1f2a2d9",
-    "sha512": "855010d939eab6711357e47158e349ccb3f582e115f0f7c790c1ed8a8e8589f4f3d4a02e9e3d57eb2f1952da2249290fcac613e42b08881bd44245dce9b3ff7d",
-    "whirlpool": "385df6dafb57b4862d309481dc91001f468978bd506d724d04efb1461f631c5952b6b0bc7e85770434abd28dab2240fc26d05751f0c9eca1254cb11883cd3065"
+    "DSA": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
+    "DSA-SHA": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
+    "blake2b": "a64b7235b81d307b919c0d74ded6c86b823e2b9b2a9c1e50e55e273daedd5417027f2a2a1b4abc5d72be5170b462979867cae4b8c3fcf8a7d8a09a1c93fc9d11",
+    "blake2s": "1ecfc726c59ec5cd52a24730e3345a650d4a2554b1b1dc50ed9c1faf9ebd8179",
+    "crc32": "3371bb00",
+    "dsaEncryption": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
+    "dsaWithSHA": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
+    "ecdsa-with-SHA1": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
+    "md4": "1901cf76521dfb68b0a88df72c995345",
+    "md5": "c11869fc956d819d2a336c74f4cc6000",
+    "ripemd160": "7fbabc556593e015495d752a0f8ba1d99eee0f8a",
+    "sha": "597018a568e01f2434ce967be416beaefff02536",
+    "sha1": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
+    "sha224": "16ac30faa8d42524bc70f3f52412680ada5993d401ca057edfe3cdec",
+    "sha256": "81be97a4c17e703ddce3cfe0bd774aba4d67d4e3f225da4b4071a75388132aca",
+    "sha384": "b4efcc718ecf169bddbaeb023694071193a255d57674144220f9880544da1feaee0a218043ae00cbd3fbe2e84900e771",
+    "sha512": "70ef754d5a3f87b7a545bce7360f20327b17f094fc75f3fc095551d6ea9e2459b1bbc7d22f26971d7716a8d204e83b33b169099544bc7c32feac26a31090cc39",
+    "whirlpool": "f6f74448a5ea9553387678f68146d0f38dd639e644e547840077cd39a6c20a23452d28d8758aa2aba03bcb2eba38b350050ec5fecc52d1f813ae0e1892994ce8"
 }
 
 class Test(unittest.TestCase):
@@ -118,12 +118,13 @@ class Test(unittest.TestCase):
         for n in range(100000000):
             n = str(n)
             h = crc(n.encode())
-            if h in done.keys():
+            if h in done:
                 print("ERROR collision found in CRC32", h, n, "and", done[h])
                 break
-
-            done[h] = n
-
+            try:
+                done[h] = n
+            except MemoryError:
+                done.clear()
 
     def test_other(self):
         self.assertIsInstance(hashit.supports_color(), bool)

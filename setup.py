@@ -10,7 +10,7 @@ setup(
     version=__version__,
     license="MIT",
     include_package_data=True,
-    test_suite="scripts.unit",
+    test_suite="tests",
     entry_points = {
         "console_scripts":[
             "hashit = hashit.__main__:main"

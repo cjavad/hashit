@@ -1,3 +1,10 @@
+"""
+Copyrigth (c) 2018-present Javad Shafique
+
+this module using length and connections to find a match 
+for an hashing algorithem. It's basicly a matching algorigtem
+it can be used for almost any pure function in this case for hashes.
+"""
 # Copyright (c) 2018-present Javad Shafique
 # This 'Software' can't be used without permission
 # from Javad Shafique.
@@ -21,11 +28,11 @@ def generate_some_dataset(datatoworkon = "some data"):
 
     #find connection and size
     
-    for each_element in dict_for_storing_set.keys():
+    for each_element in dict_for_storing_set:
         elements_data = dict_for_storing_set[each_element]["data"]
         elements_size = dict_for_storing_set[each_element]["size"]
 
-        for second_element in dict_for_storing_set.keys():
+        for second_element in dict_for_storing_set:
             if dict_for_storing_set[second_element]["size"] == elements_size:
                 if elements_data == dict_for_storing_set["data"]:
                     dict_for_storing_set[each_element]["connection"].append(second_element)
@@ -52,7 +59,7 @@ def detect(string, table, maybe = True):
     so_far = list()
     length = len(string)
     
-    for key in table.keys():
+    for key in table:
         dat = table[key]
 
         if dat["size"] == length:
@@ -68,7 +75,7 @@ def detect(string, table, maybe = True):
                 so_far.remove(j)
 
     if maybe:
-        for key in table.keys():
+        for key in table:
             dat = table[key]
 
             if dat["size"] == length:
@@ -95,10 +102,12 @@ def detect(string, table, maybe = True):
 # is outputted and is ready to be used be the user.
 
 # list of which algorithms is most likly used (WIP)
-priority = {
+'''
+PRIORITY = {
     "md5":["md5"],
     "sha1":["dsaEncryption", "DSA", "ecdsa-with-SHA1", "dsaWithSHA", "DSA-SHA"]
 }
+'''
 
 # checks if string is hex
 def ishex(hexstr):
@@ -106,6 +115,7 @@ def ishex(hexstr):
     return all(char in string.hexdigits for char in hexstr)
 
 def generate_data_set(hashon, algos, hasher_that_takes_new):
+    """Generates dataset based on data and list of strings that can be used to create objects to use that data"""
     data_dict = dict()
     # go overt algorithems
     for algo in algos:
@@ -113,12 +123,12 @@ def generate_data_set(hashon, algos, hasher_that_takes_new):
         # create dict in dict with all infomation stored in a table
         data_dict.update({algo:{"data":hashed, "size":len(hashed), "size-as":list(), "connection":list()}})
 
-    for key in data_dict.keys():
+    for key in data_dict:
         # set default values
         hashed = data_dict[key]["data"]
         length = data_dict[key]["size"]
 
-        for second in data_dict.keys():
+        for second in data_dict:
             if length == data_dict[second]["size"] and not second == key:
                 if hashed == data_dict[second]["data"]:
                     data_dict[key]["connection"].append(second)
@@ -129,19 +139,22 @@ def generate_data_set(hashon, algos, hasher_that_takes_new):
     
     return data_dict
         
-# return value for detect
-tup = namedtuple("Closest", ["certain", "maybe"])
+# return value for detect, a named tuple with two values
+NTUPLE = namedtuple("Closest", ["certain", "maybe"])
 
 
-def detect(string, table, maybe=True):
-    if not ishex(string):
+def detect(s, table, maybe=True):
+    """Compares result from datasets, finds connections and eleminates contestants"""
+    if not (len(s) % 4 == 0 and ishex(s)):
         return None
-    
+
+
+
     so = list()
     so_far = list()
-    length = len(string)
+    length = len(s)
     
-    for key in table.keys():
+    for key in table:
         dat = table[key]
 
         if dat["size"] == length:
@@ -157,7 +170,7 @@ def detect(string, table, maybe=True):
                 so_far.remove(j)
 
     if maybe:
-        for key in table.keys():
+        for key in table:
             dat = table[key]
 
             if dat["size"] == length:
@@ -165,6 +178,6 @@ def detect(string, table, maybe=True):
 
     if len(so_far) >= 0 and len(so) == 1:
         # if there only is one option then use it
-        return tup(certain=so, maybe=[])
+        return NTUPLE(certain=so, maybe=[])
     else:
-        return tup(certain=so_far, maybe=so)
+        return NTUPLE(certain=so_far, maybe=so)

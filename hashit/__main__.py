@@ -3,10 +3,53 @@ import json
 from argc import argc
 # Import all from hashit
 from .__init__ import os, hashlib, eprint, hashFile, new, \
-    CONFIG, Exit, check, generate_data_set, detect, sfv_max, \
+    GLOBAL, Exit, check, generate_data_set, detect, sfv_max, \
     __algorithems__, __author__, __help__, __license__, supports_color
 
 from .version import __version__
+
+def walk(path):
+    """Goes over a path an finds all files, appends them to a list and returns that list"""
+    walked = []
+    for path, _subdirs, files in os.walk(path):
+        # for each file
+        for name in files:
+            # add it to in_files list()
+            walked.append((path  + "/" + name).replace("\\", "/").replace("//", "/"))
+
+    # return list with file names
+    return walked
+
+def config(argv):
+    """Sets argvs' config and commands"""
+
+    def hash_list():
+        """Generates an easy readable list"""
+        algos = (__algorithems__ + ["sha3_224", "sha3_256", "sha3_384", "sha3_512"] if os.sys.version_info[0] == 3 else __algorithems__)
+        s = [sorted(algos)[x:x+2] for x in range(0, len(algos), 2)]
+        for c, l in enumerate(s):
+            s[c] = ', '.join(l)
+
+        return [""]+s+[""]
+
+    # set commands
+    argv.set("-h", "--help", "help", "Print help message", None, __help__(argv.generate_docs), True)
+    argv.set("-v", "--version", "version", "Print current version", None, __version__, True)
+    argv.set("-l", "--license", "license", "Prints license", None, __license__, True)
+    argv.set("-hl", "--hash-list", "hashlist", "Prints list of all supported hashes", None, hash_list(), True)
+    # set arguments
+    argv.set("-H", "--hash", "hash", "Select hash use -hl --hash-list for more info")
+    argv.set("-a", "--all", "all", "Calculate all hashes posible for a single file and output as json")
+    argv.set("-sp", "--strip-path", "spath", "Strips fullpath from results", False)
+    argv.set("-c", "--check", "check", "Check checksum-file (sfv or standard)")
+    argv.set("-o", "--output", "output", "Output data to file (in->do->out)")
+    argv.set("-C", "--color", "color", "Enable colored output where it is supported", GLOBAL["USE_COLORS_DEFAULT"])
+    argv.set("-d", "--detect", "detect", "Enable hash detection for check and if you pass it and hash it will detect that")
+    argv.set("-f", "--file", "file", "Hash single a file")
+    argv.set("-q", "--quiet", "quiet", "Minimal output", False)
+    argv.set("-m", "--memory-optimatation", "memopt", "Enables memory optimatation only useful for large files", False)
+    argv.set("-sfv", "--simple-file-verification", "sfv", "Outputs in a sfv compatible format", False)
+    argv.set("-s", "--size", "size", "Adds a size to output", False)
 
 def _main(args=None):
     """Main function which is the cli parses arguments and runs appropriate commands"""
@@ -17,24 +60,8 @@ def _main(args=None):
 
     # using argc module by me (support for python2)
     argv = argc(args, False)
-    # set commands
-    argv.set("-h", "--help", "help", "Print help message", None, __help__(argv.generate_docs), True)
-    argv.set("-v", "--version", "version", "Print current version", None, __version__, True)
-    argv.set("-l", "--license", "license", "Prints license", None, __license__, True)
-    argv.set("-hl", "--hash-list", "hashlist", "Prints list of all supported hashes", None, "\nList of hashes:\n\n      " +  '\n      '.join(__algorithems__), True)
-    # set arguments
-    argv.set("-H", "--hash", "hash", "Select hash use -hl --hash-list for more info", None)
-    argv.set("-a", "--all", "all", "Calculate all hashes posible for a single file and output as json", None)
-    argv.set("-sp", "--strip-path", "spath", "Strips fullpath from results", False)
-    argv.set("-c", "--check", "check", "Check checksum-file (sfv or standard)", None)
-    argv.set("-o", "--output", "output", "Output data to file (in->do->out)", None)
-    argv.set("-C", "--color", "color", "Enable colored output where it is supported", CONFIG["USE_COLORS_DEFAULT"])
-    argv.set("-d", "--detect", "detect", "Enable hash detection for check and if you pass it and hash it will detect that", None)
-    argv.set("-f", "--file", "file", "Hash single a file", None)
-    argv.set("-q", "--quiet", "quiet", "Minimal output", False)
-    argv.set("-m", "--memory-optimatation", "memopt", "Enables memory optimatation only useful for large files", False)
-    argv.set("-sfv", "--simple-file-verification", "sfv", "Outputs in a sfv compatible format", False)
-    argv.set("-s", "--size", "size", "Adds a size to output", False)
+    # set commands and config with config
+    config(argv)
 
     if len(args) == 0:
         # if there is not arguments show help
@@ -43,50 +70,51 @@ def _main(args=None):
     argv.run()
 
 
-    """ Varibles """
-    # set colors
-    RED = CONFIG["COLORS"]["RED"]
-    GREEN = CONFIG["COLORS"]["GREEN"]
-    YELLOW = CONFIG["COLORS"]["YELLOW"]
-    RESET = CONFIG["COLORS"]["RESET"]
+    # Varibles
 
+    # set colors
+    RED = ""
+    GREEN = ""
+    YELLOW = ""
+    RESET = ""
 
     # file list, and path
     in_files = list() # list of all files
     my_path = os.getcwd() # path to search in
 
+    Config = {}
     # get hash from arguments
     # default is md5 for now
-    hasha = argv.get("hash")
+    Config["hash"] = argv.get("hash")
     # get all other options and parse them
-    to_detect = argv.get("detect") # to detect or not
-    to_check = argv.get("check") # to check or not
-    hash_onefile = argv.get("file") # only hash a single file (md5sum behavior)
-    all_onefile = argv.get("all")
-    use_colors = argv.get("color", True) # use colors (True for detect type)
-    be_quiet = argv.get("quiet") # silent output
-    to_strippath = argv.get("spath") # strip fullpath
-    output_file = argv.get("output") # output output to output (in->do->out)
-    use_sfv = argv.get("sfv") # use simple file verification compatible format
-    use_mem = argv.get("memopt") # use memory optimatations
-    use_size = argv.get("size") # get size of file in bytes
+    Config["detect?"] = argv.get("detect") # to detect or not
+    Config["check?"] = argv.get("check") # to check or not
+    Config["single"] = argv.get("file") # only hash a single file (md5sum behavior)
+    Config["all_single"] = argv.get("all")
+    Config["colors?"] = argv.get("color", True) # use colors (True for detect type)
+    Config["quiet?"] = argv.get("quiet") # silent output
+    Config["strip-path?"] = argv.get("spath") # strip fullpath
+    Config["writeToFile"] = argv.get("output") # output output to output (in->do->out)
+    Config["SimpleFileVerification"] = argv.get("sfv") # use simple file verification compatible format
+    Config["MemoryOptimatation"] = argv.get("memopt") # use memory optimatations
+    Config["AddSize"] = argv.get("size") # get size of file in bytes
 
-    # it supports md5 and sha256
-    hash_is = hashlib.md5()
+    # use md5 by default
+    hash_is = new(GLOBAL["DEFAULT_HASH"])
 
     # check if its an valid hashing
-    if hasha in hashlib.algorithms_available or hasha in __algorithems__ or str(hasha)[:5] == "shake":
+    if Config["hash"] in hashlib.algorithms_available or Config["hash"] in __algorithems__ or str(Config["hash"])[:5] == "shake":
         # check if it's in guaranteed
-        if not hasha in hashlib.algorithms_guaranteed and hasha in hashlib.algorithms_available:
+        if not Config["hash"] in hashlib.algorithms_guaranteed and Config["hash"] in hashlib.algorithms_available:
             # if not print an warning
-            if not be_quiet:
-                eprint(YELLOW + str(hasha), "is not guaranteed to work on your system" + RESET)
+            if not Config["quiet?"]:
+                eprint(YELLOW + str(Config["hash"]), "is not guaranteed to work on your system" + RESET)
         # and use the hash
-        hash_is = new(hasha)
+        hash_is = new(Config["hash"])
 
     else:
-        if not hasha in (None, True) and not be_quiet:
-            eprint(RED + str(hasha), "is not a valid hash", RESET)
+        if not Config["hash"] in (None, True) and not Config["quiet?"]:
+            eprint(RED + str(Config["hash"]), "is not a valid hash", RESET)
         # else set it to md5
         hash_is = hashlib.md5()
 
@@ -95,10 +123,10 @@ def _main(args=None):
     output = None
 
     # check if out is set and it has a value
-    if not output_file in (None, True):
+    if not Config["writeToFile"] in (None, True):
         # if it is open file
         use_out = True
-        output = open(output_file, "w")
+        output = open(Config["writeToFile"], "w")
     else:
         # else set it to false
         use_out = False
@@ -112,17 +140,17 @@ def _main(args=None):
             (new_path.count("/") >= 1 or new_path in (".", "..")) else my_path
 
     # check if we should use colors
-    if supports_color() ^ use_colors:
-        # if not disable them
-        RED = ""
-        GREEN = ""
-        YELLOW = ""
-        RESET = ""
-    
+    if supports_color() and Config["colors?"]:
+        # if yes enable them
+        RED = GLOBAL["COLORS"]["RED"]
+        GREEN = GLOBAL["COLORS"]["GREEN"]
+        YELLOW = GLOBAL["COLORS"]["YELLOW"]
+        RESET = GLOBAL["COLORS"]["RESET"]
+
     # check for hash one file
-    if not all_onefile in (None, True):
-        if os.path.exists(all_onefile):
-            data = open(all_onefile, "rb").read()
+    if not Config["all_single"] in (None, True):
+        if os.path.exists(Config["all_single"]):
+            data = open(Config["all_single"], "rb").read()
             results = {}
             for algo in __algorithems__:
                 results[algo] = new(algo, data).hexdigest()
@@ -134,11 +162,11 @@ def _main(args=None):
             else:
                 print(out)
         else:
-            eprint(RED + CONFIG["FILE_NOT"] + RESET)
+            eprint(RED + GLOBAL["FILE_NOT"] + RESET)
 
     # if detect is choosen use it
-    elif not to_detect in (None, True):
-        hashes = detect(to_detect, generate_data_set("Hallo", __algorithems__, new))
+    elif not Config["detect?"] in (None, True):
+        hashes = detect(Config["detect?"], generate_data_set("Hallo", __algorithems__, new))
         if hashes != None:
             for item in hashes.certain:
                 print(GREEN + "Same results as", item + RESET)
@@ -154,29 +182,32 @@ def _main(args=None):
         Exit()
 
     # if to check use that
-    elif not to_check in (None, True):
+    elif not Config["check?"] in (None, True):
         # check for file
-        if os.path.exists(to_check):
+        if os.path.exists(Config["check?"]):
             # then check
-            check(to_check, hash_is, use_colors, be_quiet, to_detect, use_sfv, use_size)
+            check(
+                Config["check?"],
+                hash_is, Config["colors?"],
+                Config["quiet?"],
+                Config["detect?"],
+                Config["SimpleFileVerification"],
+                Config["AddSize"]
+            )
 
         else:
             # if the file does not exist
             # print error message
-            eprint(RED + CONFIG["FILE_NOT"] + RESET)
+            eprint(RED + GLOBAL["FILE_NOT"] + RESET)
             Exit() # and exit
 
-    # check the hash_onefile argument
-    elif not hash_onefile in (None, True):
-        in_files.append(hash_onefile)
+    # check the Config["single"] argument
+    elif not Config["single"] in (None, True):
+        in_files = [Config["single"]]
 
     else:
         # walk directory and add files to my_path
-        for path, _subdirs, files in os.walk(my_path):
-            # for each file
-            for name in files:
-                # add it to in_files list()
-                in_files.append((path  + "/" + name).replace("\\", "/").replace("//", "/"))
+        in_files = walk(my_path)
 
     # if there is any files in in_files
     if in_files: 
@@ -187,7 +218,7 @@ def _main(args=None):
         for fname in in_files:
             try:
                 # hash file
-                current_hash = hashFile(fname, hash_is, use_mem)
+                current_hash = hashFile(fname, hash_is, Config["MemoryOptimatation"])
 
             except (FileNotFoundError, PermissionError) as Error:
                 if Error == PermissionError:
@@ -199,16 +230,16 @@ def _main(args=None):
             print_str = current_hash
             size = ""
 
-            if use_size:
+            if Config["AddSize"]:
                 size = str(os.stat(fname).st_size) + " "
 
-            if use_sfv:
+            if Config["SimpleFileVerification"]:
                 print_str = sfv_max(current_hash, fname, len(longest_filename), size)
             else:
                 print_str = current_hash + " " + str(size + fname)
 
             # check if fullpath path shall be stripped
-            if to_strippath:
+            if Config["strip-path?"]:
                 print_str = print_str.replace(my_path, ".") 
             
             # if we should output the result to a file
@@ -230,16 +261,18 @@ def main(args=None):
     """Main function that calls _main"""
     try:
         _main(args)
+
     except Exception as Error:
+
         # define colors
         RED = ""
         YELLOW = ""
         RESET = ""
         # check if term supports color
         if supports_color():
-            YELLOW = CONFIG["COLORS"]["YELLOW"]
-            RED = CONFIG["COLORS"]["RED"]
-            RESET = CONFIG["COLORS"]["RESET"]
+            YELLOW = GLOBAL["COLORS"]["YELLOW"]
+            RED = GLOBAL["COLORS"]["RED"]
+            RESET = GLOBAL["COLORS"]["RESET"]
 
         if type(Error) == KeyboardInterrupt:
             pass

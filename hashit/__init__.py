@@ -41,15 +41,15 @@ __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro pr
 # this list is the message that will be printed
 # when the user uses hashit --help
 
-# fix algo list by sorting it trough
-__algorithems__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake") or \
-        s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32
+# fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm)
+__algorithems__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake", "sha3_") \
+    or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32
 
 __help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", help_command, "", \
      "Notice: this program was made by Javad Shafique, and uses argc another package by me\n"]
 
 # Global config
-CONFIG = {
+GLOBAL = {
     "raise":True,
     "FILE_NOT":"File does not exist",
     "COLORS":{
@@ -58,7 +58,8 @@ CONFIG = {
         "YELLOW":"\x1b[0;33m",
         "RESET":"\x1b[0m"
     },
-    "USE_COLORS_DEFAULT":False
+    "USE_COLORS_DEFAULT":False,
+    "DEFAULT_HASH":"md5"
 }
 
 # exit alias for os.sys.exit
@@ -160,6 +161,7 @@ def sfv_max(file_hash, file_path, longest, size=""):
 
 # creates new hash
 def new(hashname, data=b''):
+    """Custom hash-init function that returns the hashes"""
     if hashname == "crc32":
         return Crc32(data)
     elif hashname[:5] == "shake" and os.sys.version_info[0] == 3:
@@ -212,8 +214,8 @@ def hashFile(filename, hasher, memory_opt=False):
     else:
         # dont use memory optimatation but close file
         with open(filename, "rb") as file:
-            hash = new(hasher.name, file.read()).hexdigest()
-        return hash
+            chash = new(hasher.name, file.read()).hexdigest()
+        return chash
 
 # check reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
@@ -222,10 +224,10 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum"""
 
     # set colors
-    RED = CONFIG["COLORS"]["RED"]
-    GREEN = CONFIG["COLORS"]["GREEN"]
-    YELLOW = CONFIG["COLORS"]["YELLOW"]
-    RESET = CONFIG["COLORS"]["RESET"]
+    RED = GLOBAL["COLORS"]["RED"]
+    GREEN = GLOBAL["COLORS"]["GREEN"]
+    YELLOW = GLOBAL["COLORS"]["YELLOW"]
+    RESET = GLOBAL["COLORS"]["RESET"]
 
     # check if system supports color
     # with bitwise-exclusive or (XOR)
@@ -241,7 +243,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     
     # check if file exits
     if not os.path.exists(path):
-        eprint(RED + CONFIG["FILE_NOT"] + RESET)
+        eprint(RED + GLOBAL["FILE_NOT"] + RESET)
         return
 
     # using generator to save proccessing power for parsing

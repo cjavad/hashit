@@ -22,7 +22,7 @@ class crc32:
     def hexdigest(self):
         return hex_crc32(self.data)
 
-da = open("speed.py", "rb").read()
+da = str()
 
 def test_speed():
     return crc32(da).hexdigest()
@@ -39,7 +39,7 @@ def collision():
     for n in range(1000**3*4 + 1):
         n = str(n)
         h = crc(n.encode())
-        if h in done.keys():
+        if h in done:
             print("ERROR collision found in CRC32", h, n, "and", done[h])
         else:
             try:
@@ -47,16 +47,18 @@ def collision():
             except MemoryError:
                 done.clear()
 
-'''
-if __name__ == "__main__":
-    collision()
-'''
 
+if __name__ == "__main__":
+    da = open("speed.py", "rb").read()
+    collision()
+
+'''
 back = []
-data = open("crc_hashcollisions.txt", "r").readlines()
+data = open("./res/crc_hashcollisions.txt", "r").readlines()
 
 for l in data:
     l = l.split(" ")
     back.append(' '.join([l[0] + ":", l[1], l[2]]))
 
 open("file.yaml", "w").writelines(back)
+'''

@@ -8,10 +8,11 @@ description: |
   such a program using python.
 
 grade: stable
-confinement: classic
+confinement: strict
 
 apps:
   hashit:
+    plugs: [home]
     command: bin/hashit
 
 parts:
