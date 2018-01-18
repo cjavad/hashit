@@ -1,8 +1,7 @@
 name: hashit
-version: 3.1.5
+version: 3.2.0
 summary: hashit is an replacement for (md5sum, sha1sum, and so on)
 icon: icon.png
-architectures: [all]
 description: |
   Hashit is an hashing program which can be uses to hash and verify muliple files on a system.
   I got the idea from an ubuntu iso image which have this hash table, so i got the idea to make
@@ -18,7 +17,7 @@ description: |
   hashname + sum, which i thougth was a pretty lame naming convention.
 
 grade: stable
-confinement: classic
+confinement: strict
 
 apps:
   hashit:

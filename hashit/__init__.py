@@ -58,12 +58,25 @@ GLOBAL = {
         "YELLOW":"\x1b[0;33m",
         "RESET":"\x1b[0m"
     },
+    "SNAP_PATH":"/var/lib/snapd/hostfs",
     "USE_COLORS_DEFAULT":False,
     "DEFAULT_HASH":"md5"
 }
 
 # exit alias for os.sys.exit
 Exit = os.sys.exit
+
+
+# gets fullpath
+def fixpath(path):
+    """Returns full path and supports snap"""
+    c_path = os.path.join(os.getcwd(), path).replace("\\", "")
+    # check if you'll need to use snap
+    if os.environ.get("SNAP"):
+        c_path = GLOBAL["SNAP_PATH"] + c_path
+    
+    return c_path
+
 
 # print to stderr
 def eprint(*args, **kwargs):
@@ -139,6 +152,7 @@ def choose_hash(hash1, hashit):
 
 def reader(filename, mode="r", remove_binary_mark=True):
     """Creates generator for file"""
+    filename = fixpath(filename)
     return (line.replace("*", "") if remove_binary_mark else line for line in open(filename, mode=mode).readlines())
 
 # read sfv file and create and generator with correct results
@@ -199,6 +213,7 @@ def blockIter(afile, blocksize=65536):
 # do not use, at least 10 times slower than any other method
 def easy_hash(filename, hasher):
     """Slow but easy to use self-contained hasher"""
+    filename = fixpath(filename)
     # openfile
     with open(filename, "rb") as afile: 
         for block in (line for line in afile.readlines()):
@@ -208,7 +223,8 @@ def easy_hash(filename, hasher):
 
 # hashfile, the function used for all file hashing-operations
 def hashFile(filename, hasher, memory_opt=False):
-    """hashFile is a simple way to hash files using """
+    """ hashFile is a simple way to hash files using """
+    filename = fixpath(filename)
     if memory_opt:
         return hashIter(blockIter(open(filename, "rb")), hasher, True)
     else:

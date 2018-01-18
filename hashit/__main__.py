@@ -3,7 +3,7 @@ import json
 from argc import argc
 # Import all from hashit
 from .__init__ import os, hashlib, eprint, hashFile, new, \
-    GLOBAL, Exit, check, generate_data_set, detect, sfv_max, \
+    GLOBAL, Exit, check, generate_data_set, detect, sfv_max, fixpath, \
     __algorithems__, __author__, __help__, __license__, supports_color
 
 from .version import __version__
@@ -126,7 +126,7 @@ def _main(args=None):
     if not Config["writeToFile"] in (None, True):
         # if it is open file
         use_out = True
-        output = open(Config["writeToFile"], "w")
+        output = open(fixpath(Config["writeToFile"]), "w")
     else:
         # else set it to false
         use_out = False
@@ -188,7 +188,8 @@ def _main(args=None):
             # then check
             check(
                 Config["check?"],
-                hash_is, Config["colors?"],
+                hash_is,
+                Config["colors?"],
                 Config["quiet?"],
                 Config["detect?"],
                 Config["SimpleFileVerification"],
