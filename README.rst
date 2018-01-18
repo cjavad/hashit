@@ -6,6 +6,15 @@ muliple files on a system. I got the idea from an ubuntu iso image which
 have this hash table, so i got the idea to make such a program using
 python.
 
+I also found that the linux 'standard' hashing commands was named like this:
+    - md5sum
+    - sha1sum
+    - sha256sum
+    - cksum
+    - sum
+    
+hashname + sum, which i thougth was a pretty lame naming convention.
+
 Notice:
 ~~~~~~~
 
