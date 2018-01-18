@@ -8,7 +8,7 @@ description: |
   such a program using python.
 
 grade: stable
-confinement: strict
+confinement: classic
 
 apps:
   hashit:
