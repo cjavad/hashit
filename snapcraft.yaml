@@ -1,13 +1,13 @@
 name: hashit
-version: 3.0.1
+version: 3.1.3
 summary: hashit
 description: |
   Hashit is an hashing program which can be uses to hash and verify muliple files on a system.
   I got the idea from an ubuntu iso image which have this hash table, so i got the idea to make
   such a program using python.
 
-grade: strict
-confinement: classic
+grade: stable
+confinement: strict
 
 apps:
   hashit:
