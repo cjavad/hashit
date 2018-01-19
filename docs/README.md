@@ -17,7 +17,7 @@ File Formats it supports:
 
 One of the reasons i created this program was because i thougth (from README.rst) that the current naming convention for
 hashing and file verification tools on debian based systems (they did better on bsd but still) where seriosly inefficent
-by seperating each hash into a diffrent tool (yes i am aware of that these tools are implemented in C and making them into one program could most likely also cause the same kind of confusion) so hashit ships with all hash functions in one program/command where md5 is the default.
+by seperating each hash into a different tool (yes i am aware of that these tools are implemented in C and making them into one program could most likely also cause the same kind of confusion) so hashit ships with all hash functions in one program/command where md5 is the default.
 
 See [docs/hashes.md](hashes.md) for the diffrent types of hashes supported
 
