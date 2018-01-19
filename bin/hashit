@@ -27,5 +27,9 @@ NO ONE CAN CLAIM OWNERSHIP OF THIS SOFTWARE.
 
 import sys
 from hashit.__main__ import main
+
 # start hashit
-main(sys.argv[1:])
+try:
+    main(sys.argv[1:]))
+except Exception as e:
+    print(e)
