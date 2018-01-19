@@ -1,7 +1,7 @@
 from __future__ import print_function
-import unittest, hashlib, sys, random, string
+import unittest, hashlib, os, random, string
 from binascii import unhexlify # python3 support
-sys.path.insert(0, "..")
+os.sys.path.insert(0, "..")
 import hashit
 import hashit.__main__
 
@@ -9,6 +9,9 @@ import hashit.__main__
 
 FILE = "LICENSE"
 FILE_SUM = "c11869fc956d819d2a336c74f4cc6000"
+
+if not os.path.exists(FILE):
+    os.chdir("..")
 
 # check sums for file
 FILE_SUMS = {
@@ -112,6 +115,7 @@ class Test(unittest.TestCase):
         self.assertTrue(c_str in all_gen)
         
     def test_crc32(self):
+        """
         crc = lambda d=b'': hashit.new("crc32", d).hexdigest()
         done = {}
 
@@ -125,6 +129,17 @@ class Test(unittest.TestCase):
                 done[h] = n
             except MemoryError:
                 done.clear()
+        """
+
+    def test_format(self):
+        s = hashit.bsd_tag(FILE_SUM, FILE, "md5")
+        self.assertEqual(s, "md5 ({}) = {}".format(FILE, FILE_SUM))
+        self.assertEqual(hashit.bsd2str(s), ["md5", FILE, FILE_SUM])
+
+        # check the sfv parser
+        self.assertEqual(hashit.sfv_max("abc", "def", 4), "def  abc")
+
+
 
     def test_other(self):
         self.assertIsInstance(hashit.supports_color(), bool)
@@ -137,8 +152,6 @@ class Test(unittest.TestCase):
 
         # just checking
         self.assertEqual(hashit.__author__, "Javad Shafique")
-        # check the sfv parser
-        self.assertEqual(hashit.sfv_max("abc", "def", 4), "def  abc")
 
 
 

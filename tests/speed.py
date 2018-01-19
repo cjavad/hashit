@@ -5,6 +5,18 @@ from memory_profiler import profile
 os.sys.path.insert(0, "..")
 import hashit
 
+
+# do not use, at least 10 times slower than any other method
+def easy_hash(filename, hasher):
+    """Slow but easy to use self-contained hasher"""
+    filename = filename
+    # openfile
+    with open(filename, "rb") as afile: 
+        for block in (line for line in afile.readlines()):
+            hasher.update(block)
+    # return hash
+    return hasher.hexdigest()
+
 if os.sys.version_info[0] == 2:
     global input
     input = raw_input
@@ -22,7 +34,7 @@ def slow_hashfile(file, algo):
 
 
 def easy_hashfile(file, algo):
-    return hashit.easy_hash(file, hashit.new(algo))
+    return easy_hash(file, hashit.new(algo))
 
 
 

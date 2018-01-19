@@ -1,5 +1,13 @@
-|Snap Status| Project is hosted on
-`pypi <https://pypi.org/project/hashit/>`__
+.. image:: https://build.snapcraft.io/badge/JavadSM/hashit.svg
+   :target: https://build.snapcraft.io/user/JavadSM/hashit
+
+Project is hosted on `pypi <https://pypi.org/project/hashit/>`__
+
+
+See docs for more info
+
+Background
+~~~~~~~~~~
 
 Hashit is an hashing program which can be uses to hash and verify
 muliple files on a system. I got the idea from an ubuntu iso image which
@@ -18,13 +26,15 @@ hashname + sum, which i thougth was a pretty lame naming convention.
 Notice:
 ~~~~~~~
 
-some hashes as blake2b and blake2s is not supported in python2 and all
-shake hashes is disabled for now
+some hashes as blake2b and blake2s is not supported in python2.
 
-i would recommend python3 for this program as its version of hashlib
+I would recommend python3 for this program as its version of hashlib
 supports sha3 (Keccak)
 
-And for compatibly reasons does detect not work for sha3 yet.
+And for compatibly reasons does detect not work for sha3 yet. so basicly to many confusions between sha2 and sha3
+
+BSD can be useful with the -A --append because then multiple diffrent hashtypes can be stored
+in the same file, good for multi-sized file validation. (remember -m)
 
 Usage
 --------------
@@ -55,7 +65,8 @@ From python you can do it like this
 Changelog
 --------------
 
-::
+
+    3.3.0 - Added BSD Style output and check format detection. Also an -s option that can hash a piece of text see `docs <https://github.com/JavadSM/hashit/blob/master/docs/>`__ for more
 
     3.2.1 - ReRelease for snap
 
@@ -101,7 +112,4 @@ Changelog
 
     0.0.1 - Initial release, ready for use
 
-Works with python2 and python3.
-
-.. |Snap Status| image:: https://build.snapcraft.io/badge/JavadSM/hashit.svg
-   :target: https://build.snapcraft.io/user/JavadSM/hashit
+Works with python2 and python3. 

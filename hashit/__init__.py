@@ -52,15 +52,26 @@ __help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", he
 GLOBAL = {
     "raise":True,
     "FILE_NOT":"File does not exist",
+    "DEFAULTS":{
+        "HASH":"md5",
+        "STRIP":False,
+        "COLORS":False,
+        "MEMOPT":False,
+        "SIZE":False,
+        "QUIET":False,
+        "DETECT":None,
+        "APPEND":False
+    },
     "COLORS":{
         "RED":"\x1b[0;31m",
         "GREEN":"\x1b[0;32m",
         "YELLOW":"\x1b[0;33m",
         "RESET":"\x1b[0m"
     },
+    "BLANK": (None, True),
     "SNAP_PATH":"/var/lib/snapd/hostfs",
-    "USE_COLORS_DEFAULT":False,
-    "DEFAULT_HASH":"md5"
+    "APPEND_SNAP":True,
+    "WRITE_MODE":"w" # 'w' not 'a'
 }
 
 # exit alias for os.sys.exit
@@ -72,7 +83,7 @@ def fixpath(path):
     """Returns full path and supports snap"""
     c_path = os.path.join(os.getcwd(), path).replace("\\", "")
     # check if you'll need to use snap
-    if os.environ.get("SNAP"):
+    if os.environ.get("SNAP") and GLOBAL["APPEND_SNAP"]:
         c_path = GLOBAL["SNAP_PATH"] + c_path
     
     return c_path
@@ -99,6 +110,25 @@ def supports_color():
 
     return True
 
+# detect format
+def detect_format(s):
+    """Autodetect hash format"""
+    if len(s.split(" ")) <= 1:
+        # not valid hash
+        return None
+    
+    # if both ( and ) is in the string return bsd
+    if s.count("(") > 0 and s.count(")") > 0 and len(s.split(" ")) > 2:
+        # bsd style
+        return "bsd"
+    
+    # if the second element in the list is a hash then return sfv
+    elif len([l for l in s.split(" ") if l != ""][1]) % 4 == 0:
+        # simple file verification
+        return "sfv"
+    else:
+        # else None at All
+        return "N/A"
 
 def choose_hash(hash1, hashit):
     """
@@ -148,6 +178,7 @@ def choose_hash(hash1, hashit):
         # else do noting
         pass
 
+    # return hasher
     return hashit
 
 def reader(filename, mode="r", remove_binary_mark=True):
@@ -173,7 +204,29 @@ def sfv_max(file_hash, file_path, longest, size=""):
     # return sfv compatible string
     return file_path + spaces + (file_hash + size)
 
-# creates new hash
+
+# formats in a BSD-style
+def bsd_tag(file_hash, file_path, hashname):
+    """Formats string in a bsd style format"""
+    return "{} ({}) = {}".format(hashname, file_path, file_hash)
+
+# parses bsd-tag by converting it to a standard format 
+def bsd2str(bsdstr, size=False):
+    """Parses a bsd compatible string to an array"""
+    step1 = bsdstr.replace("\n", "").replace("\0", "").split(" ")
+    hashname = step1[0]
+    filepath = step1[1].replace("(", "").replace(")", "")
+    filehash = step1[3]
+    # check for size
+    if len(bsdstr) > 5 and size:
+        # return with size
+        return [hashname, filepath, filehash, int(step1.pop())]
+    else:
+        # return list with elements
+        return [hashname, filepath, filehash]
+
+
+# inits a new hasher
 def new(hashname, data=b''):
     """Custom hash-init function that returns the hashes"""
     if hashname == "crc32":
@@ -210,16 +263,6 @@ def blockIter(afile, blocksize=65536):
             yield block
             block = afile.read(blocksize)
 
-# do not use, at least 10 times slower than any other method
-def easy_hash(filename, hasher):
-    """Slow but easy to use self-contained hasher"""
-    filename = fixpath(filename)
-    # openfile
-    with open(filename, "rb") as afile: 
-        for block in (line for line in afile.readlines()):
-            hasher.update(block)
-    # return hash
-    return hasher.hexdigest()
 
 # hashfile, the function used for all file hashing-operations
 def hashFile(filename, hasher, memory_opt=False):
@@ -236,9 +279,8 @@ def hashFile(filename, hasher, memory_opt=False):
 # check reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
 
-def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False):
+def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum"""
-
     # set colors
     RED = GLOBAL["COLORS"]["RED"]
     GREEN = GLOBAL["COLORS"]["GREEN"]
@@ -267,20 +309,42 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
 
     # set default varaibles
     x_reader = None
-    hash_index = 0
-    path_index = 0
-    size_index = 1
+    name_index = 0 # for BSDTag, where the hash is located
+    hash_index = 0 # where is the hash in the list
+    path_index = 0 # where is the path in the list
+    size_index = 1 # where is the size in the list
+    # max_elem = 2 # how many items are there in the list
 
-    max_elem = 2
+    file_format = None # which format are you using
 
+    # get first line from the file
+    first_line = open(path, "r").readline()
 
-    if sfv:
+    # auto detect checksum file format
+    detectFormat = lambda s,e: detect_format(s) == e
+
+    if sfv or detectFormat(first_line, "sfv"):
         x_reader = lambda: read_sfv(path)
         # get length of file
         length = sum(1 for i in x_reader())
         # set indexes
         hash_index = 1
         path_index = 0
+
+        sfv = True
+        bsdtag = False
+        file_format = "sfv"
+
+    elif bsdtag or detectFormat(first_line, "bsd"):
+        hash_index = 2
+        path_index = 1
+
+        sfv = False
+        bsdtag = True
+
+        x_reader = lambda: reader(path)
+        file_format = "bsd"
+
     else:
         x_reader = lambda: reader(path)
         length = sum(1 for i in x_reader())
@@ -288,31 +352,39 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         hash_index = 0
         path_index = 1
 
+        file_format = "N/A"
+
     # check if you should add file sizes to the output
     if size:
-        max_elem = 3    
-        size_index = 1
-
-        if sfv:
+        # BSDTag bump's everything up by one
+        if bsdtag:
+            size_index = 3
+        elif sfv:
             size_index = 2
         else:
+            # bump path index up by one
             path_index = 2
+            size_index = 1
 
     # choose hash if not already selected
     # using new detection algorithem
     try:
         if detectHash:
-            # get first line from the file
-            first_line = open(path, "r").readline()
-            # get hash from line
-            hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if x != ''][hash_index]
+            # parse hash
+            if bsdtag:
+                hash1 = bsd2str(first_line)[hash_index]
+            else:
+                hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if x != ''][hash_index]
             # get new hasher
             hashit = choose_hash(hash1, hashit)
 
+            # check if it is empty
             if hashit == None:
+                # if it is print error message
                 eprint(YELLOW + "Checksum-file does not seem to be valid, maybe it is a sfv file? (try -sfv)" + RESET)
+                # and return
                 return
-
+    # if indexerror
     except IndexError:
         # if no data in file
         if length <= 0:
@@ -322,11 +394,15 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     # go over filedata-generator
     for line in x_reader():
         # convert string to data
-        data = [s for s in line.replace("\n", "").replace("\0", "").split(" ") if s != '']
+        if bsdtag:
+            # if BSDTag is selected 
+            data = bsd2str(line, size)
+        else:
+            data = [s for s in line.replace("\n", "").replace("\0", "").split(" ") if s != '']
 
-        if len(data) != max_elem:
-            # then there is something wrong with the format
-            continue
+        if bsdtag:
+            if data[0] in __algorithems__ or data[0][:5] in ("sha3_", "shake"):
+                hashit = new(data[0])
         
         # get hash and filepath from data-list with predefined indexes
         last_hash, filename = data[hash_index], data[path_index]
@@ -345,21 +421,31 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             current_size = int()
             last_size = int()
 
+            # result of sizecheck
+            # default: True
             SizeCheck = True
 
+            # if we shall check the size diffrence
+            # get last and current size
             if size:
                 last_size = data[size_index]
                 current_size = os.stat(filename).st_size
                 SizeCheck = int(last_size) == int(current_size)
 
+            # check if there are any changes in the results end 
+            # from them that in the file
             if not current_hash == last_hash or not SizeCheck:
                 # if the file has changed print notice (md5sum inpired)
                 if not SizeCheck:
+                    # change with file increase/decreas
                     print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash + RESET, YELLOW + str(last_size) + RESET + "->" + YELLOW + str(current_size) , end=RESET + '\n')
                 else: 
+                    # change in hash
                     print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash, end=RESET + '\n')
 
+            # if not to be quiet
             elif not be_quiet:
+                # print OK
                 # else print OK if not quiet
                 print(filename + ":" + GREEN, "OK", end=RESET + '\n')
 
@@ -367,8 +453,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         elif not be_quiet:
             # file does not exist
             eprint(RED + filename + ":", "FAILED, File does not exist" + RESET)
-            # and continue
-            continue
 
         else:
+            # else continue 
             continue
