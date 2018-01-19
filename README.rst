@@ -57,6 +57,8 @@ Changelog
 
 ::
 
+    3.2.1 - ReRelease for snap
+
     3.2.0 - Full support for snap
 
     3.1.5 - Skipped 3.1.4 cause i have been renaming varibles, cleaning code and improving performance.
