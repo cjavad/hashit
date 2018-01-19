@@ -39,3 +39,4 @@ $ touch file
 $ python3 -m hashit -H shake_2 -f file
 49b9 file
 ```
+[back](README.md)
