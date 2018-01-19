@@ -22,6 +22,7 @@ confinement: devmode
 apps:
   hashit:
     command: bin/hashit
+    plugs: [home]
 
 parts:
   hashit:
