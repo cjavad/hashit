@@ -35,6 +35,7 @@ shake_${amount_to_return}
 so 
 
 ```bash
-> python3 -m hashit -H shake_2  
-49b9
+$ touch file
+$ python3 -m hashit -H shake_2 -f file
+49b9 file
 ```
