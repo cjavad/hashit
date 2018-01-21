@@ -81,7 +81,7 @@ Exit = os.sys.exit
 # gets fullpath
 def fixpath(path):
     """Returns full path and supports snap"""
-    c_path = os.path.join(os.getcwd(), path).replace("\\", "")
+    c_path = os.path.join(os.getcwd(), path).replace("\\", "/")
     # check if you'll need to use snap
     if os.environ.get("SNAP") and GLOBAL["APPEND_SNAP"]:
         c_path = GLOBAL["SNAP_PATH"] + c_path
