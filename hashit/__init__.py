@@ -50,12 +50,10 @@ __help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", he
 
 # Global config
 GLOBAL = {
-    "raise":True,
-    "FILE_NOT":"File does not exist",
     "DEFAULTS":{
         "HASH":"md5",
         "STRIP":False,
-        "COLORS":False,
+        "COLORS":True, # if supported colors are on by default
         "MEMOPT":False,
         "SIZE":False,
         "QUIET":False,
@@ -68,9 +66,17 @@ GLOBAL = {
         "YELLOW":"\x1b[0;33m",
         "RESET":"\x1b[0m"
     },
+    "WARNINGS":{
+        "FILE_NOT":"File does not exist",
+        "MAYBE":"Did you maybe mean:",
+        "HASH_NOT":"is not a valid hash type",
+        "WRONG_FORMAT":"Checksum-file does not seem to be valid, maybe it is a sfv file? (try -sfv)",
+        "EMPTY_CHK":"checksum file is empty"
+    },
     "BLANK": (None, True),
     "SNAP_PATH":"/var/lib/snapd/hostfs",
     "APPEND_SNAP":True,
+    "raise":True,
     "WRITE_MODE":"w" # 'w' not 'a'
 }
 
@@ -153,7 +159,7 @@ def choose_hash(hash1, hashit):
             for c, h in enumerate(tup.maybe):
                 eprint(h, "(" + str(c) + ")")
             # get input by printing questing
-            eprint("Did you maybe mean:", end=" ")
+            eprint(GLOBAL["WARNINGS"]["MAYBE"], end=" ")
             # and getting input as an int
             c_index = int(input())
             # fix output
@@ -238,7 +244,7 @@ def new(hashname, data=b''):
         return hashlib.new(hashname, data)
     
     else:
-        raise ValueError(hashname + " is not a valid hash type")
+        raise ValueError(hashname + " " + GLOBAL["WARNINGS"]["HASH_NOT"])
 
 
 # hashIter goes over an bytes string
@@ -301,7 +307,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     
     # check if file exits
     if not os.path.exists(path):
-        eprint(RED + GLOBAL["FILE_NOT"] + RESET)
+        eprint(RED + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
         return
 
     # using generator to save proccessing power for parsing
@@ -381,14 +387,14 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             # check if it is empty
             if hashit == None:
                 # if it is print error message
-                eprint(YELLOW + "Checksum-file does not seem to be valid, maybe it is a sfv file? (try -sfv)" + RESET)
+                eprint(YELLOW + GLOBAL["WARNINGS"]["WRONG_FORMAT"] + RESET)
                 # and return
                 return
     # if indexerror
     except IndexError:
         # if no data in file
         if length <= 0:
-            eprint(RED + "checksum file is empty" + RESET)
+            eprint(RED + GLOBAL["WARNINGS"]["EMPTY_CHK"] + RESET)
             return
 
     # go over filedata-generator
@@ -452,7 +458,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
 
         elif not be_quiet:
             # file does not exist
-            eprint(RED + filename + ":", "FAILED, File does not exist" + RESET)
+            eprint(RED + filename + ":", "FAILED, " + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
 
         else:
             # else continue 

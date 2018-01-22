@@ -1,5 +1,5 @@
 name: hashit
-version: 3.3.1
+version: 3.3.3-beta
 summary: hashit is an replacement for (md5sum, sha1sum, and so on)
 icon: icon.png
 description: |
@@ -16,8 +16,8 @@ description: |
   
   hashname + sum, which i thougth was a pretty lame naming convention.
 
-grade: stable
-confinement: devmode
+grade: devel
+confinement: strict
 
 apps:
   hashit:

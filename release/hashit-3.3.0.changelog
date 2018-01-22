@@ -2,6 +2,6 @@ Added BSD Style output and check format detection. Also an -s option that can ha
 
 The BSD output is specified [here](../docs/README.md)
 
-using -s will take an text input either via the commandline or an prompt that closes on ^D (CTRL+D)
+using -s will take an text input either via the commandline or an prompt that closes on ^D (^Z + ENTER for windows)
 we have also added an -A --append option that instead of writing to files, it appends to them
 Fixed some bugs and some more documentation.

@@ -195,7 +195,7 @@ def _main(args=None):
             else:
                 print(out)
         else:
-            eprint(RED + GLOBAL["FILE_NOT"] + RESET)
+            eprint(RED + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
 
     # if detect is choosen use it
     elif not Config["detect?"] in GLOBAL["BLANK"]:
@@ -233,7 +233,7 @@ def _main(args=None):
         else:
             # if the file does not exist
             # print error message
-            eprint(RED + GLOBAL["FILE_NOT"] + RESET)
+            eprint(RED + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
             Exit() # and exit
 
     # check the Config["single"] argument
@@ -256,8 +256,11 @@ def _main(args=None):
                 current_hash = hashFile(fname, hash_is, Config["MemoryOptimatation"])
 
             except (FileNotFoundError, PermissionError) as Error:
-                if Error == PermissionError:
-                    eprint()
+                if isinstance(Error, FileNotFoundError):
+                    eprint(RED + fname + ", " + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
+
+                elif isinstance(Error, PermissionError):
+                    eprint(RED + str(Error) + RESET)
                 # and continue
                 continue
             
@@ -327,7 +330,7 @@ def main(args=None):
         elif isinstance(error, OSError):
             eprint(YL + "Windows 10, windows 8(.1), windows 7 (sp*), windows vista (sp*), windows xp (sp*), windows 98/95, windows NT *. OK not that bad" + RE)
             eprint(YL + "Macos (Sierra+) and OSX (El Captain-) thank god for apples naming" + RE)
-            eprint(YL + "So" + ', '.join(random.sample(LINUX_LIST, 10)) + ", and so on linux...\n")
+            eprint(YL + "So" + ', '.join(random.sample(LINUX_LIST, 10)) + ", to be continued...\n")
             eprint("JDK, so something happend with your os, message: " + RE)
 
         
