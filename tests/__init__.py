@@ -40,7 +40,7 @@ class Test(unittest.TestCase):
         file = open(FILE, "rb")
         data = file.read()
 
-        for algo in hashit.__algorithems__:
+        for algo in hashit.__algorithms__:
             h1 = hashit.new(algo, data).hexdigest()
             h2 = hashit.hashFile(FILE, hashit.new(algo), True)
             self.assertEqual(h1, h2)
@@ -52,7 +52,7 @@ class Test(unittest.TestCase):
 
     def test_detect(self):
         # generate data set
-        ds = hashit.generate_data_set("Hallo", hashit.__algorithems__, hashit.new)
+        ds = hashit.generate_data_set("Hallo", hashit.__algorithms__, hashit.new)
 
         # hash file three times
         h1 = hashit.hashIter(hashit.blockIter(open(FILE, "rb")), hashlib.md5())
@@ -95,7 +95,7 @@ class Test(unittest.TestCase):
         h3 = hashit.hashIter(hashit.blockIter(open(FILE, "rb")), hashit.new(algo))
 
         # just checking
-        self.assertEqual(hashit.detect(hashit.hashFile(FILE, hashlib.sha224(), False), hashit.generate_data_set("HALLO", hashit.__algorithems__, hashit.new)).certain[0], "sha224")
+        self.assertEqual(hashit.detect(hashit.hashFile(FILE, hashlib.sha224(), False), hashit.generate_data_set("HALLO", hashit.__algorithms__, hashit.new)).certain[0], "sha224")
 
         self.assertTrue(h1 == h2 == h3 == FILE_SUM)
     

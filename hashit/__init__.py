@@ -1,5 +1,12 @@
 """hashit module for hashit command is contaning all the code for hashit
 
+hashit is an hashing application which main purpose is to replace all the 'default'
+hashing commands that comes with linux and also provide a usable hashing program
+for windows hence the choice of using python. while hashit supports both python 2 and 3
+i would strongly recommend using python3 because that python3 comes with a newer version
+of hashlib and therefore many new hash-functions, altough it is posible to add these into
+python2 with the load() function which acts like a 'connecter' and enables hashit to use
+third-party hashing-functions as long as the have the same api as specified in docs/README.md 
 
 MIT License                                                                      
 
@@ -41,17 +48,18 @@ __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro pr
 # this list is the message that will be printed
 # when the user uses hashit --help
 
-# fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm)
-__algorithems__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake", "sha3_") \
-    or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32
 
 __help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", help_command, "", \
      "Notice: this program was made by Javad Shafique, and uses argc another package by me\n"]
 
+# fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm)
+__algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake", "sha3_") \
+    or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
+
 # Global config
 GLOBAL = {
     "DEFAULTS":{
-        "HASH":"md5",
+        "HASH":"md5", # default hash to use
         "STRIP":False,
         "COLORS":True, # if supported colors are on by default
         "MEMOPT":False,
@@ -60,23 +68,45 @@ GLOBAL = {
         "DETECT":None,
         "APPEND":False
     },
+    "EXTRA":{
+        "crc32":Crc32
+    },
     "COLORS":{
         "RED":"\x1b[0;31m",
         "GREEN":"\x1b[0;32m",
         "YELLOW":"\x1b[0;33m",
         "RESET":"\x1b[0m"
     },
-    "WARNINGS":{
+    "MESSAGES":{
         "FILE_NOT":"File does not exist",
         "MAYBE":"Did you maybe mean:",
-        "HASH_NOT":"is not a valid hash type",
+        "HASH_NOT":"is not a valid hash",
         "WRONG_FORMAT":"Checksum-file does not seem to be valid, maybe it is a sfv file? (try -sfv)",
-        "EMPTY_CHK":"checksum file is empty"
+        "EMPTY_CHK":"checksum file is empty",
+        "PERM_ERR":"could not be accessed",
+        "CUR_FORM":"current format is",
+        "WORKS_ON":"is not guaranteed to work on your system",
+        "LOAD_FAIL":"Failed to load",
+        "OK":"OK",
+        "FAIL":"FAILED"
+    },
+    "ERRORS":{
+        # JOKES in here
+        "TypeError":"Wrong type used (in cli-arguments) - please use a static programming language",
+        "FileNotFoundError":"Error, file seems to be missing calling systemd to confirm 'sure you haved checked the MBR?'",
+        "OSError":{
+            # set os-jokes here
+            "windows":"Windows 10, windows 8(.1), windows 7 (sp*), windows vista (sp*), windows xp (sp*), windows 98/95, windows NT *. OK not that bad",
+            "macos":"Macos (Sierra+) and OSX (El Captain-) thank god for apples naming",
+            "linux":"So {} , to be continued...\n",
+            "END":"JDK, so something happend with your os, message: "
+        }
     },
     "BLANK": (None, True),
     "SNAP_PATH":"/var/lib/snapd/hostfs",
-    "APPEND_SNAP":True,
-    "raise":True,
+    "DEVMODE":True,
+    "ACCESS": (os.access("/home", os.R_OK) if os.path.exists("/home") else False),
+    "HASH_STR":"Hello World!", # String that detect uses to generate the dataset
     "WRITE_MODE":"w" # 'w' not 'a'
 }
 
@@ -89,9 +119,9 @@ def fixpath(path):
     """Returns full path and supports snap"""
     c_path = os.path.join(os.getcwd(), path).replace("\\", "/")
     # check if you'll need to use snap
-    if os.environ.get("SNAP") and GLOBAL["APPEND_SNAP"]:
+    if os.environ.get("SNAP") and GLOBAL["DEVMODE"] and not GLOBAL["ACCESS"]:
         c_path = GLOBAL["SNAP_PATH"] + c_path
-    
+
     return c_path
 
 
@@ -118,20 +148,21 @@ def supports_color():
 
 # detect format
 def detect_format(s):
-    """Autodetect hash format"""
+    """Autodetect hash format, by checking the length and what it contains"""
     if len(s.split(" ")) <= 1:
         # not valid hash
         return None
     
-    # if both ( and ) is in the string return bsd
-    if s.count("(") > 0 and s.count(")") > 0 and len(s.split(" ")) > 2:
-        # bsd style
-        return "bsd"
-    
     # if the second element in the list is a hash then return sfv
-    elif len([l for l in s.split(" ") if l != ""][1]) % 4 == 0:
+    if len([l for l in s.split(" ") if l != ""][1]) % 4 == 0 and not ("(" in s and ")" in s):
         # simple file verification
         return "sfv"
+
+    # if both ( and ) is in the string return bsd
+    elif ("(" and ")" in s) and len(s.split(" ")) > 2 and len([l for l in s.split(" ") if l != ""][1]) % 4 != 0:
+        # bsd style
+        return "bsd"
+
     else:
         # else None at All
         return "N/A"
@@ -144,14 +175,14 @@ def choose_hash(hash1, hashit):
     # check for valid hash
     if hasattr(hashit, "name"):
         # get result from detect.detect
-        tup = detect(hash1, generate_data_set("Hallo", __algorithems__, new))
+        tup = detect(hash1, generate_data_set(GLOBAL["HASH_STR"], __algorithms__, new))
         # but only use if not already choosen
 
         # not valid hash
         if tup is None:
             return None
 
-        if len(tup.certain) >= 1 and not (hashit.name in tup.certain or hashit.name in tup.maybe):
+        if len(tup.certain) >= 1 and not (hashit.name in tup.certain or tup.maybe):
             hashit = new(tup.certain[0])
         
         elif len(tup.maybe) >= 1:
@@ -159,7 +190,7 @@ def choose_hash(hash1, hashit):
             for c, h in enumerate(tup.maybe):
                 eprint(h, "(" + str(c) + ")")
             # get input by printing questing
-            eprint(GLOBAL["WARNINGS"]["MAYBE"], end=" ")
+            eprint(GLOBAL["MESSAGES"]["MAYBE"], end=" ")
             # and getting input as an int
             c_index = int(input())
             # fix output
@@ -174,11 +205,9 @@ def choose_hash(hash1, hashit):
                 # if it's out of index
                 # raise IndexError
                 raise IndexError
-
         else:
-            # choose anyone from certain
-            # as they will all work
-            eprint("Using", tup.certain[0])
+            # the current hash is probaly the rigth one
+            pass
 
     else:
         # else do noting
@@ -188,13 +217,13 @@ def choose_hash(hash1, hashit):
     return hashit
 
 def reader(filename, mode="r", remove_binary_mark=True):
-    """Creates generator for file"""
+    """Creates generator for an file, better for larger files not part of the MEMOPT"""
     filename = fixpath(filename)
     return (line.replace("*", "") if remove_binary_mark else line for line in open(filename, mode=mode).readlines())
 
 # read sfv file and create and generator with correct results
 def read_sfv(filename):
-    """Creates generator that reads and parses sfv compatible files"""
+    """Creates generator that reads and parses sfv compatible files using reader"""
     # remove spaces from string
     return (' '.join([l for l in l.split(" ") if l != '']) for l in reader(filename, "r"))
 
@@ -202,9 +231,11 @@ def read_sfv(filename):
 def sfv_max(file_hash, file_path, longest, size=""):
     """calculates the amount of spaces needed in a sfv file"""
     if len(size) > 0:
+        # add size if so
         size = " " + size 
-
+    # hardcoded space variable 
     spaces = " "
+    # check length
     if len(file_path) - 1 < longest:
         spaces = spaces*(longest - len(file_path) + 1)
     # return sfv compatible string
@@ -235,17 +266,42 @@ def bsd2str(bsdstr, size=False):
 # inits a new hasher
 def new(hashname, data=b''):
     """Custom hash-init function that returns the hashes"""
-    if hashname == "crc32":
-        return Crc32(data)
+    if hashname in GLOBAL["EXTRA"]:
+        return GLOBAL["EXTRA"][hashname](data)
+
     elif hashname[:5] == "shake" and os.sys.version_info[0] == 3:
         return shake(hashname, data)
 
     elif hashname in hashlib.algorithms_available:
         return hashlib.new(hashname, data)
-    
-    else:
-        raise ValueError(hashname + " " + GLOBAL["WARNINGS"]["HASH_NOT"])
 
+    else:
+        raise ValueError(hashname + " " + GLOBAL["MESSAGES"]["HASH_NOT"])
+
+def load(hashclass):
+    """
+    Add hashes to GLOBAL.EXTRA which is the dict that contains all the "extra"
+    hash-functions such as Crc32, which allows external hashing algorithms to 
+    be used as long as the have the same api as specified in docs/README.md
+
+    returns True/False based on whether or not the data is loaded
+    """
+    if "update" and "hexdigest" and "digest" in hashclass.__dict__:
+        hashname = hashclass().name
+        GLOBAL["EXTRA"][hashname] = hashclass
+        return True
+    else:
+        return False
+
+def load_all(list_of_hashclasses):
+    """Just for it, a function that loads all plugins in a list"""
+    for hc in list_of_hashclasses:
+        if not load(hc):
+            eprint(hc, GLOBAL["MESSAGES"]["LOAD_FAIL"])
+            continue
+        else:
+            pass
+            
 
 # hashIter goes over an bytes string
 # block for block and updates the hash while
@@ -262,7 +318,7 @@ def hashIter(bytesiter, hasher, ashexstr=True):
 # byte data for hashIter
 
 def blockIter(afile, blocksize=65536):
-    """Will create generator for reading file"""
+    """Will create a generator for reading a file"""
     with afile:
         block = afile.read(blocksize)
         while block:
@@ -272,7 +328,7 @@ def blockIter(afile, blocksize=65536):
 
 # hashfile, the function used for all file hashing-operations
 def hashFile(filename, hasher, memory_opt=False):
-    """ hashFile is a simple way to hash files using """
+    """hashFile is a simple way to hash files using diffrent methods"""
     filename = fixpath(filename)
     if memory_opt:
         return hashIter(blockIter(open(filename, "rb")), hasher, True)
@@ -290,9 +346,8 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     # set colors
     RED = GLOBAL["COLORS"]["RED"]
     GREEN = GLOBAL["COLORS"]["GREEN"]
-    YELLOW = GLOBAL["COLORS"]["YELLOW"]
-    RESET = GLOBAL["COLORS"]["RESET"]
-
+    YELLOW = GLOBAL["COLORS"]["YELLOW"]   
+    RESET = GLOBAL["COLORS"]["RESET"] 
     # check if system supports color
     # with bitwise-exclusive or (XOR)
     if supports_color() ^ useColors:
@@ -307,7 +362,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     
     # check if file exits
     if not os.path.exists(path):
-        eprint(RED + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
+        eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
         return
 
     # using generator to save proccessing power for parsing
@@ -337,27 +392,33 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         hash_index = 1
         path_index = 0
 
+        # reset other varibles
         sfv = True
         bsdtag = False
         file_format = "sfv"
 
     elif bsdtag or detectFormat(first_line, "bsd"):
+        # set indexes
         hash_index = 2
         path_index = 1
 
+        # and reset other variables
         sfv = False
         bsdtag = True
 
+        # create reader
         x_reader = lambda: reader(path)
+        # set file format
         file_format = "bsd"
 
     else:
+        # create reader
         x_reader = lambda: reader(path)
         length = sum(1 for i in x_reader())
         # set indexes
         hash_index = 0
         path_index = 1
-
+        # set file format to None At All
         file_format = "N/A"
 
     # check if you should add file sizes to the output
@@ -387,14 +448,14 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             # check if it is empty
             if hashit == None:
                 # if it is print error message
-                eprint(YELLOW + GLOBAL["WARNINGS"]["WRONG_FORMAT"] + RESET)
+                eprint(YELLOW + GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format) + RESET)
                 # and return
                 return
     # if indexerror
     except IndexError:
         # if no data in file
         if length <= 0:
-            eprint(RED + GLOBAL["WARNINGS"]["EMPTY_CHK"] + RESET)
+            eprint(RED + GLOBAL["MESSAGES"]["EMPTY_CHK"] + RESET)
             return
 
     # go over filedata-generator
@@ -407,8 +468,8 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             data = [s for s in line.replace("\n", "").replace("\0", "").split(" ") if s != '']
 
         if bsdtag:
-            if data[0] in __algorithems__ or data[0][:5] in ("sha3_", "shake"):
-                hashit = new(data[0])
+            if data[0] in __algorithms__ + list(GLOBAL["EXTRA"].keys()) or data[0][:5] in ("sha3_", "shake"):
+                hashit = new(data[name_index])
         
         # get hash and filepath from data-list with predefined indexes
         last_hash, filename = data[hash_index], data[path_index]
@@ -453,12 +514,12 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             elif not be_quiet:
                 # print OK
                 # else print OK if not quiet
-                print(filename + ":" + GREEN, "OK", end=RESET + '\n')
+                print(filename + ":" + GREEN, GLOBAL["MESSAGES"]["OK"], end=RESET + '\n')
 
 
         elif not be_quiet:
             # file does not exist
-            eprint(RED + filename + ":", "FAILED, " + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
+            eprint(RED + filename + ":", "{}, ".format(GLOBAL["MESSAGES"]["FAILED"]) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
 
         else:
             # else continue 

@@ -1,1 +1,9 @@
 theme: jekyll-theme-cayman
+
+github:
+  tar_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.tar
+  zip_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.zip
+
+author:
+  name: Javad Shafique
+  url: javadsm.wordpress.com

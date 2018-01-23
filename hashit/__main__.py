@@ -1,19 +1,25 @@
-"""Commandline code for hashit application"""
+"""Command line program for hashit
+
+this module "__main__" contains all the code for argparsing, running
+and anything needed for an command lin application such as hashit.
+
+it uses argc another package by me, but i am considering switching to argparse
+"""
 import json
 import random
 from argc import argc
 # Import all from hashit
-from .__init__ import os, hashlib, eprint, hashFile, new, bsd_tag, \
+from .__init__ import os, hashlib, eprint, hashFile, new, bsd_tag, load, \
     GLOBAL, Exit, check, generate_data_set, detect, sfv_max, fixpath, \
-    __algorithems__, __author__, __help__, __license__, supports_color
+    __algorithms__, __author__, __help__, __license__, supports_color
 
 from .extra import LINUX_LIST
 from .version import __version__
 
-def walk(path):
+def walk(goover):
     """Goes over a path an finds all files, appends them to a list and returns that list"""
     walked = []
-    for path, _subdirs, files in os.walk(path):
+    for path, _subdirs, files in os.walk(goover):
         # for each file
         for name in files:
             # add it to in_files list()
@@ -27,7 +33,9 @@ def config(argv):
 
     def hash_list():
         """Generates an easy-to-read list"""
-        algos = (__algorithems__ + ["sha3_224", "sha3_256", "sha3_384", "sha3_512"] if os.sys.version_info[0] == 3 else __algorithems__)
+        algos = set((__algorithms__ + ["sha3_224", "sha3_256", "sha3_384", "sha3_512"] if os.sys.version_info[0] == 3 else __algorithms__)\
+             + list(GLOBAL["EXTRA"].keys())) # add extras
+        # sort set
         s = [sorted(algos)[x:x+2] for x in range(0, len(algos), 2)]
         for c, l in enumerate(s):
             s[c] = ', '.join(l)
@@ -56,7 +64,7 @@ def config(argv):
     argv.set("-S", "--size", "size", "Adds a size to output", GLOBAL["DEFAULTS"]["SIZE"])
     argv.set("-A", "--append", "append", "Instead of writing to a file you will append to it", GLOBAL["DEFAULTS"]["APPEND"])
 
-def _main(args=None):
+def main_(args=None):
     """Main function which is the cli parses arguments and runs appropriate commands"""
     # switch args if needed
     if args is None:
@@ -110,19 +118,19 @@ def _main(args=None):
     hash_is = new(GLOBAL["DEFAULTS"]["HASH"])
 
     # check if its an valid hashing
-    if Config["hash"] in hashlib.algorithms_available or Config["hash"] in __algorithems__ or str(Config["hash"])[:5] == "shake":
+    if Config["hash"] in hashlib.algorithms_available or Config["hash"] in __algorithms__ or Config["hash"] in list(GLOBAL["EXTRA"].keys()) or str(Config["hash"])[:5] == "shake":
         # check if it's in guaranteed
         if not Config["hash"] in hashlib.algorithms_guaranteed and Config["hash"] in hashlib.algorithms_available:
             # if not print an warning
             if not Config["quiet?"]:
-                eprint(YELLOW + str(Config["hash"]), "is not guaranteed to work on your system" + RESET)
+                eprint(YELLOW + str(Config["hash"]), GLOBAL["MESSAGES"]["WORKS_ON"] + RESET)
         # and use the hash
         hash_is = new(Config["hash"])
 
     else:
         if not Config["hash"] in GLOBAL["BLANK"] and not Config["quiet?"]:
             # then print error message
-            eprint(RED + str(Config["hash"]), "is not a valid hash", RESET)
+            eprint(RED + str(Config["hash"]), GLOBAL["MESSAGES"]["HASH_NOT"], RESET)
 
     # select output
     use_out = False
@@ -185,7 +193,7 @@ def _main(args=None):
         if os.path.exists(Config["all_single"]):
             data = open(Config["all_single"], "rb").read()
             results = {}
-            for algo in __algorithems__:
+            for algo in __algorithms__:
                 results[algo] = new(algo, data).hexdigest()
 
             out = json.dumps(results, indent=4, sort_keys=True)
@@ -195,11 +203,11 @@ def _main(args=None):
             else:
                 print(out)
         else:
-            eprint(RED + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
+            eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
 
     # if detect is choosen use it
     elif not Config["detect?"] in GLOBAL["BLANK"]:
-        hashes = detect(Config["detect?"], generate_data_set("Hallo", __algorithems__, new))
+        hashes = detect(Config["detect?"], generate_data_set("Hallo", __algorithms__, new))
         if hashes != None:
             for item in hashes.certain:
                 print(GREEN + "Same results as", item + RESET)
@@ -212,7 +220,7 @@ def _main(args=None):
         else:
             print(RED + "Not valid hash" + RESET)
         # exit when done
-        Exit()
+        Exit(0)
 
     # if to check use that
     elif not Config["check?"] in GLOBAL["BLANK"]:
@@ -233,8 +241,8 @@ def _main(args=None):
         else:
             # if the file does not exist
             # print error message
-            eprint(RED + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
-            Exit() # and exit
+            eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+            Exit(1) # and exit
 
     # check the Config["single"] argument
     elif not Config["single"] in GLOBAL["BLANK"]:
@@ -256,11 +264,13 @@ def _main(args=None):
                 current_hash = hashFile(fname, hash_is, Config["MemoryOptimatation"])
 
             except (FileNotFoundError, PermissionError) as Error:
+                # if the file does not exist print a error message
                 if isinstance(Error, FileNotFoundError):
-                    eprint(RED + fname + ", " + GLOBAL["WARNINGS"]["FILE_NOT"] + RESET)
+                    eprint(RED + fname + ", " + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
 
+                # check if we have access to the file
                 elif isinstance(Error, PermissionError):
-                    eprint(RED + str(Error) + RESET)
+                    eprint(RED + fname + " " + GLOBAL["MESSAGES"] + RESET)
                 # and continue
                 continue
             
@@ -294,27 +304,31 @@ def _main(args=None):
                 print(print_str)
 
         # Exit when done
-        Exit()
+        Exit(0)
     else:
         # Else exit
-        Exit()
+        Exit(1)
 
 """
 Hashit __main__.py can be executed directly with python(3) -m hashit "commands"
 and via snap
 """
 
-
-
 def main(args=None):
+    """
+    Main function with error catching, can force-exit with os._exit(1)
+
+    this main function calls main_() and cathes any error while giving the user a "pretty"
+    error.
+    """
     try:
         # execute main application
-        _main(args)
+        main_(args)
     except Exception as error:
         # define colors
         RD = ""
         YL = ""
-        RS = ""
+        RE = ""
         # check if term supports color
         if supports_color():
             YL = GLOBAL["COLORS"]["YELLOW"]
@@ -322,21 +336,22 @@ def main(args=None):
             RE = GLOBAL["COLORS"]["RESET"]
 
         if isinstance(error, TypeError):
-            eprint(YL + "Wrong type used (in cli-arguments) - please use a static programming language" + RE)
+            eprint(YL + GLOBAL["ERRORS"]["TypeError"] + RE)
 
         elif isinstance(error, FileNotFoundError):
-            eprint(YL + "Error, file seems to be missing calling systemd to confirm 'sure you haved checked the MBR?'" + RE)
+            eprint(YL + GLOBAL["ERRORS"]["FileNotFoundError"] + RE)
         
         elif isinstance(error, OSError):
-            eprint(YL + "Windows 10, windows 8(.1), windows 7 (sp*), windows vista (sp*), windows xp (sp*), windows 98/95, windows NT *. OK not that bad" + RE)
-            eprint(YL + "Macos (Sierra+) and OSX (El Captain-) thank god for apples naming" + RE)
-            eprint(YL + "So" + ', '.join(random.sample(LINUX_LIST, 10)) + ", to be continued...\n")
-            eprint("JDK, so something happend with your os, message: " + RE)
+            eprint(YL + GLOBAL["ERRORS"]["OSError"]["windows"])
+            eprint(GLOBAL["ERRORS"]["OSError"]["macos"])
+            eprint(GLOBAL["ERRORS"]["OSError"]["linux"].format(', '.join(random.sample(LINUX_LIST, 10))))
+            eprint(GLOBAL["ERRORS"]["OSError"]["END"] + RE)
 
-        
+        # and print error
         eprint(RD + str(error) + RE)
         
-        os._exit(0) # force exit
+        os._exit(1) # force exit
 
+# if the program is being called
 if __name__ == "__main__":
     main() # then execute main function

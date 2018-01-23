@@ -39,7 +39,7 @@ def easy_hashfile(file, algo):
 
 
 def gen(n=timeit.default_number):
-    for algo in hashit.__algorithems__:
+    for algo in hashit.__algorithms__:
         x = timeit.timeit("hashfile('speed.py', '" + algo + "')", setup="from __main__ import hashfile", number=n)
         x2 = timeit.timeit("hashstr('"+ str(x) + "', '" + algo + "')", setup="from __main__ import hashstr", number=n)
         yield {"algo":algo, "file-time":x,"str-time":x2,"number":n} 
@@ -71,7 +71,7 @@ def parse_test1(jsonfile):
 # where default big file is an 512M file
 #@profile
 def test2(algo, n=1000, bigfile="/home/javad/filename"):
-    if algo in hashit.__algorithems__:
+    if algo in hashit.__algorithms__:
         fast = timeit.timeit("hashfile('" + bigfile + "', '"+algo+"')", setup="from __main__ import hashfile", number=n)
         print("Fast:", fast)
         all_in = timeit.timeit("slow_hashfile('" + bigfile + "', '"+algo+"')", setup="from __main__ import slow_hashfile", number=n)

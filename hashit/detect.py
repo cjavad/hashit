@@ -4,19 +4,17 @@ Copyrigth (c) 2018-present Javad Shafique
 this module using length and connections to find a match 
 for an hashing algorithem. It's basicly a matching algorigtem
 it can be used for almost any pure function in this case for hashes.
-"""
+
 # Copyright (c) 2018-present Javad Shafique
 # This 'Software' can't be used without permission
 # from Javad Shafique.
 
-import string
-from collections import namedtuple
 # this module using length and connections to find a match 
 # for an hashing algorithem. It's basicly a matching algorigtem
 # it can be used for almost any pure function in this case for hashes.
 # basic template:
 
-"""
+
 def generate_some_dataset(datatoworkon = "some data"):
     dict_for_storing_set = dict()
 
@@ -44,13 +42,12 @@ def generate_some_dataset(datatoworkon = "some data"):
     # return finished dataset
     
     return dict_for_storing_set
-"""
 
 # and for parsing that infomation 
 # you can use the detect function
 # as here:
 
-"""
+
 def detect(string, table, maybe = True):
     if not (type(string) == str):
         return None
@@ -89,7 +86,7 @@ def detect(string, table, maybe = True):
     else:
         return tup(certain=so_far, maybe=so)
 
-"""
+
 
 # compare hashes for hash-detection
 # it can generate data that can compare
@@ -102,22 +99,25 @@ def detect(string, table, maybe = True):
 # is outputted and is ready to be used be the user.
 
 # list of which algorithms is most likly used (WIP)
-'''
+
 PRIORITY = {
     "md5":["md5"],
     "sha1":["dsaEncryption", "DSA", "ecdsa-with-SHA1", "dsaWithSHA", "DSA-SHA"]
 }
-'''
+"""
+
+import string
+from collections import namedtuple
 
 # checks if string is hex
 def ishex(hexstr):
-    """Checks is string is hexidecimal"""
+    """Checks if string is hexidecimal"""
     return all(char in string.hexdigits for char in hexstr)
 
 def generate_data_set(hashon, algos, hasher_that_takes_new):
     """Generates dataset based on data and list of strings that can be used to create objects to use that data"""
     data_dict = dict()
-    # go overt algorithems
+    # go over the algorithms
     for algo in algos:
         hashed = hasher_that_takes_new(algo, hashon.encode()).hexdigest()
         # create dict in dict with all infomation stored in a table
@@ -143,6 +143,7 @@ def generate_data_set(hashon, algos, hasher_that_takes_new):
 NTUPLE = namedtuple("Closest", ["certain", "maybe"])
 
 
+# detection function returns NTYPLE
 def detect(s, table, maybe=True):
     """Compares result from datasets, finds connections and eleminates contestants"""
     if not (len(s) % 4 == 0 and ishex(s)):
@@ -153,7 +154,7 @@ def detect(s, table, maybe=True):
     so = list()
     so_far = list()
     length = len(s)
-    
+  
     for key in table:
         dat = table[key]
 
@@ -172,7 +173,6 @@ def detect(s, table, maybe=True):
     if maybe:
         for key in table:
             dat = table[key]
-
             if dat["size"] == length:
                 so.append(key)
 

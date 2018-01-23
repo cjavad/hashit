@@ -33,7 +33,7 @@ I would recommend installing it from pypi like this
 
 But you can also install it from snap
 
-    snap install hashit
+    snap install hashit (--devmode or --classic is recommend)
 
 ## Technical Notes
 ```
@@ -48,11 +48,11 @@ such as the hash, path and filesize. These indexes can then be used on the lists
 parser.
 ```
 
->```
+>
 >  The hash-classes are built like so
 >  all classes added needs this kind of
->  api due to compatibility
-> ```
+>  api due to compatibility. See [plugins](plugins.md) for more
+> 
 >```py
 >class hashname:
 >    name = "hashname"
@@ -76,3 +76,9 @@ parser.
 >        G_HASH = self.digest()
 >        return convert_to_hex(G_HASH)
 >```
+
+## Notes:
+
+- I interpet N/a as None At All because i can
+- The dist.zip (not in repo) contains all the old versions of the software
+- Detect only works for a few selected algoritms

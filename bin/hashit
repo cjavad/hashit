@@ -30,6 +30,8 @@ from hashit.__main__ import main
 
 # start hashit
 try:
-    main(sys.argv[1:]))
+    main(sys.argv[1:])
 except Exception as e:
     print(e)
+finally:
+    sys.exit()

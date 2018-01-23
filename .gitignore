@@ -12,5 +12,9 @@ prime/
 snap/
 stage/
 
+# extra snap stuff
 *.snap*
 *.bz2
+
+# old
+dist.zip

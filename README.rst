@@ -36,6 +36,7 @@ And for compatibly reasons does detect not work for sha3 yet. so basicly to many
 BSD can be useful with the -A --append because then multiple diffrent hashtypes can be stored
 in the same file, good for multi-sized file validation. (remember -m)
 
+
 Usage
 --------------
 
