@@ -1,159 +1,113 @@
-  ------------ -------------------------------------------------------------------------------------------------------------------------------
-   \           [index](.)\
-   \           [/home/javad/Dropbox/playground/hashit/hashit/\_\_init\_\_.py](file:/home/javad/Dropbox/playground/hashit/hashit/__init__.py)
-  **hashit**   
-  ------------ -------------------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package hashit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
 
-`hashit module for hashit command is contaning all the code for hashit   hashit is an hashing application which main purpose is to replace all the 'default' hashing commands that comes with linux and also provide a usable hashing program for windows hence the choice of using python. while hashit supports both python 2 and 3 i would strongly recommend using python3 because that python3 comes with a newer version of hashlib and therefore many new hash-functions, altough it is posible to add these into python2 with the load() function which acts like a 'connecter' and enables hashit to use third-party hashing-functions as long as the have the same api as specified in docs/README.md    MIT License                                                                         Copyright (c) 2018 Javad Shafique                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.   NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.`
-
- \
-**Package Contents**
-
-`      `
-
- 
-
-  --------------------------------------- ------------------------------------- ----------------------------- ---------------------------------
-  [\_\_main\_\_](hashit.__main__.html)\   [detection](hashit.detection.html)\   [extra](hashit.extra.html)\   [version](hashit.version.html)\
-  --------------------------------------- ------------------------------------- ----------------------------- ---------------------------------
-
- \
-**Functions**
-
-`      `
-
- 
-
-[**Exit**]{#-Exit} = exit(...)
-:   `exit([status])   Exit the interpreter by raising SystemExit(status). If the status is omitted or None, it defaults to zero (i.e., success). If the status is an integer, it will be used as the system exit status. If it is another kind of object, it will be printed and the system exit status will be one (i.e., failure).`
-
-**\_\_help\_\_** *lambda* help\_command
-
-[**blockIter**]{#-blockIter}(afile, blocksize=65536)
-:   `Will create a generator for reading a file`
-
-<!-- -->
-
-[**bsd2str**]{#-bsd2str}(bsdstr, size=False)
-:   `Parses a bsd compatible string to an array`
-
-<!-- -->
-
-[**bsd\_tag**]{#-bsd_tag}(file\_hash, file\_path, hashname)
-:   `Formats string in a bsd style format`
-
-<!-- -->
-
-[**check**]{#-check}(path, hashit, useColors=False, be\_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False)
-:   `Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum`
-
-<!-- -->
-
-[**choose\_hash**]{#-choose_hash}(hash1, hashit)
-:   `Uses detect.decect to identify hashes with a high accuracy but when there if some issues it will take user input.`
-
-<!-- -->
-
-[**detect\_format**]{#-detect_format}(s)
-:   `Autodetect hash format, by checking the length and what it contains`
-
-<!-- -->
-
-[**eprint**]{#-eprint}(\*args, \*\*kwargs)
-:   `Prints to stderr usefull for warnings and error messages`
-
-<!-- -->
-
-[**fixpath**]{#-fixpath}(path)
-:   `Returns full path and supports snap`
-
-<!-- -->
-
-[**hashFile**]{#-hashFile}(filename, hasher, memory\_opt=False)
-:   `hashFile is a simple way to hash files using diffrent methods`
-
-<!-- -->
-
-[**hashIter**]{#-hashIter}(bytesiter, hasher, ashexstr=True)
-:   `Will hash the blockIter generator and return digest`
-
-<!-- -->
-
-[**load**]{#-load}(hashclass)
-:   `Add hashes to GLOBAL.EXTRA which is the dict that contains all the "extra" hash-functions such as Crc32, which allows external hashing algorithms to  be used as long as the have the same api as specified in docs/README.md   returns True/False based on whether or not the data is loaded`
-
-<!-- -->
-
-[**load\_all**]{#-load_all}(list\_of\_hashclasses)
-:   `Just for it, a function that loads all plugins in a list`
-
-<!-- -->
-
-[**new**]{#-new}(hashname, data=b'')
-:   `Custom hash-init function that returns the hashes`
-
-<!-- -->
-
-[**read\_sfv**]{#-read_sfv}(filename)
-:   `Creates generator that reads and parses sfv compatible files using reader`
-
-<!-- -->
-
-[**reader**]{#-reader}(filename, mode='r', remove\_binary\_mark=True)
-:   `Creates generator for an file, better for larger files not part of the MEMOPT`
-
-<!-- -->
-
-[**sfv\_max**]{#-sfv_max}(file\_hash, file\_path, longest, size='')
-:   `calculates the amount of spaces needed in a sfv file`
-
-<!-- -->
-
-[**supports\_color**]{#-supports_color}()
-:   `Returns True if the running system's terminal supports color, and False otherwise.`
-
- \
-**Data**
-
-`      `
-
- 
-
-**GLOBAL** = {'ACCESS': True, 'BLANK': (None, True), 'COLORS': {'GREEN':
-'\\x1b\[0;32m', 'RED': '\\x1b\[0;31m', 'RESET': '\\x1b\[0m', 'YELLOW':
-'\\x1b\[0;33m'}, 'DEFAULTS': {'APPEND': False, 'COLORS': True, 'DETECT':
-None, 'HASH': 'md5', 'MEMOPT': False, 'QUIET': False, 'SIZE': False,
-'STRIP': False}, 'DEVMODE': True, 'ERRORS': {'FileNotFoundError':
-"Error, file seems to be missing calling systemd to confirm 'sure you
-haved checked the MBR?'", 'OSError': {'END': 'JDK, so something happend
-with your os, message: ', 'linux': 'So {} , to be continued...\\n',
-'macos': 'Macos (Sierra+) and OSX (El Captain-) thank god for apples
-naming', 'windows': 'Windows 10, windows 8(.1), windows 7 (sp\*),
-wind...p\*), windows 98/95, windows NT \*. OK not that bad'},
-'TypeError': 'Wrong type used (in cli-arguments) - please use a static
-programming language'}, 'EXTRA': {'crc32': &lt;class
-'hashit.extra.Crc32'&gt;}, 'HASH\_STR': 'Hello World!', 'MESSAGES':
-{'CUR\_FORM': 'current format is', 'EMPTY\_CHK': 'checksum file is
-empty', 'FAIL': 'FAILED', 'FILE\_NOT': 'File does not exist',
-'HASH\_NOT': 'is not a valid hash', 'LOAD\_FAIL': 'Failed to load',
-'MAYBE': 'Did you maybe mean:', 'OK': 'OK', 'PERM\_ERR': 'could not be
-accessed', 'WORKS\_ON': 'is not guaranteed to work on your system',
-...}, 'SNAP\_PATH': '/var/lib/snapd/hostfs', ...}\
-**\_\_algorithms\_\_** = \['md5', 'DSA', 'md4', 'sha', 'sha1', 'crc32',
-'sha384', 'sha512', 'sha256', 'sha224', 'blake2b', 'blake2s', 'DSA-SHA',
-'ripemd160', 'whirlpool', 'dsaWithSHA', 'dsaEncryption',
-'ecdsa-with-SHA1'\]\
-**\_\_license\_\_** = 'MIT, Copyrigth (c) 2017-present Javad Shafique'\
-**print\_function** = \_Feature((2, 6, 0, 'alpha', 2), (3, 0, 0,
-'alpha', 0), 65536)\
-**with\_statement** = \_Feature((2, 5, 0, 'alpha', 1), (2, 6, 0,
-'alpha', 0), 32768)
-
- \
-**Author**
-
-`      `
-
- 
-
-Javad Shafique
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>hashit</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/javad/Dropbox/playground/hashit/hashit/__init__.py">/home/javad/Dropbox/playground/hashit/hashit/__init__.py</a></font></td></tr></table>
+    <p><tt>hashit&nbsp;module&nbsp;for&nbsp;hashit&nbsp;command&nbsp;is&nbsp;contaning&nbsp;all&nbsp;the&nbsp;code&nbsp;for&nbsp;hashit<br>
+&nbsp;<br>
+hashit&nbsp;is&nbsp;an&nbsp;hashing&nbsp;application&nbsp;which&nbsp;main&nbsp;purpose&nbsp;is&nbsp;to&nbsp;replace&nbsp;all&nbsp;the&nbsp;'default'<br>
+hashing&nbsp;commands&nbsp;that&nbsp;comes&nbsp;with&nbsp;linux&nbsp;and&nbsp;also&nbsp;provide&nbsp;a&nbsp;usable&nbsp;hashing&nbsp;program<br>
+for&nbsp;windows&nbsp;hence&nbsp;the&nbsp;choice&nbsp;of&nbsp;using&nbsp;python.&nbsp;while&nbsp;hashit&nbsp;supports&nbsp;both&nbsp;python&nbsp;2&nbsp;and&nbsp;3<br>
+i&nbsp;would&nbsp;strongly&nbsp;recommend&nbsp;using&nbsp;python3&nbsp;because&nbsp;that&nbsp;python3&nbsp;comes&nbsp;with&nbsp;a&nbsp;newer&nbsp;version<br>
+of&nbsp;hashlib&nbsp;and&nbsp;therefore&nbsp;many&nbsp;new&nbsp;hash-functions,&nbsp;altough&nbsp;it&nbsp;is&nbsp;posible&nbsp;to&nbsp;add&nbsp;these&nbsp;into<br>
+python2&nbsp;with&nbsp;the&nbsp;<a href="#-load">load</a>()&nbsp;function&nbsp;which&nbsp;acts&nbsp;like&nbsp;a&nbsp;'connecter'&nbsp;and&nbsp;enables&nbsp;hashit&nbsp;to&nbsp;use<br>
+third-party&nbsp;hashing-functions&nbsp;as&nbsp;long&nbsp;as&nbsp;the&nbsp;have&nbsp;the&nbsp;same&nbsp;api&nbsp;as&nbsp;specified&nbsp;in&nbsp;docs/README.md&nbsp;<br>
+&nbsp;<br>
+MIT&nbsp;License&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Copyright&nbsp;(c)&nbsp;2018&nbsp;Javad&nbsp;Shafique<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Permission&nbsp;is&nbsp;hereby&nbsp;granted,&nbsp;free&nbsp;of&nbsp;charge,&nbsp;to&nbsp;any&nbsp;person&nbsp;obtaining&nbsp;a&nbsp;copy<br>
+of&nbsp;this&nbsp;software&nbsp;and&nbsp;associated&nbsp;documentation&nbsp;files&nbsp;(the&nbsp;"Software"),&nbsp;to&nbsp;deal<br>
+in&nbsp;the&nbsp;Software&nbsp;without&nbsp;restriction,&nbsp;including&nbsp;without&nbsp;limitation&nbsp;the&nbsp;rights<br>
+to&nbsp;use,&nbsp;copy,&nbsp;modify,&nbsp;merge,&nbsp;publish,&nbsp;distribute,&nbsp;sublicense,&nbsp;and/or&nbsp;sell<br>
+copies&nbsp;of&nbsp;the&nbsp;Software,&nbsp;and&nbsp;to&nbsp;permit&nbsp;persons&nbsp;to&nbsp;whom&nbsp;the&nbsp;Software&nbsp;is<br>
+furnished&nbsp;to&nbsp;do&nbsp;so,&nbsp;subject&nbsp;to&nbsp;the&nbsp;following&nbsp;conditions:<br>
+&nbsp;<br>
+The&nbsp;above&nbsp;copyright&nbsp;notice&nbsp;and&nbsp;this&nbsp;permission&nbsp;notice&nbsp;shall&nbsp;be&nbsp;included&nbsp;in&nbsp;all<br>
+copies&nbsp;or&nbsp;substantial&nbsp;portions&nbsp;of&nbsp;the&nbsp;Software.<br>
+&nbsp;<br>
+THE&nbsp;SOFTWARE&nbsp;IS&nbsp;PROVIDED&nbsp;"AS&nbsp;IS",&nbsp;WITHOUT&nbsp;WARRANTY&nbsp;OF&nbsp;ANY&nbsp;KIND,&nbsp;EXPRESS&nbsp;OR<br>
+IMPLIED,&nbsp;INCLUDING&nbsp;BUT&nbsp;NOT&nbsp;LIMITED&nbsp;TO&nbsp;THE&nbsp;WARRANTIES&nbsp;OF&nbsp;MERCHANTABILITY,<br>
+FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE&nbsp;AND&nbsp;NONINFRINGEMENT.&nbsp;IN&nbsp;NO&nbsp;EVENT&nbsp;SHALL&nbsp;THE<br>
+AUTHORS&nbsp;OR&nbsp;COPYRIGHT&nbsp;HOLDERS&nbsp;BE&nbsp;LIABLE&nbsp;FOR&nbsp;ANY&nbsp;CLAIM,&nbsp;DAMAGES&nbsp;OR&nbsp;OTHER<br>
+LIABILITY,&nbsp;WHETHER&nbsp;IN&nbsp;AN&nbsp;ACTION&nbsp;OF&nbsp;CONTRACT,&nbsp;TORT&nbsp;OR&nbsp;OTHERWISE,&nbsp;ARISING&nbsp;FROM,<br>
+OUT&nbsp;OF&nbsp;OR&nbsp;IN&nbsp;CONNECTION&nbsp;WITH&nbsp;THE&nbsp;SOFTWARE&nbsp;OR&nbsp;THE&nbsp;USE&nbsp;OR&nbsp;OTHER&nbsp;DEALINGS&nbsp;IN&nbsp;THE<br>
+SOFTWARE.<br>
+&nbsp;<br>
+NO&nbsp;ONE&nbsp;CAN&nbsp;CLAIM&nbsp;OWNERSHIP&nbsp;OF&nbsp;THIS&nbsp;"SOFTWARE"&nbsp;AND&nbsp;ASSOCIATED&nbsp;DOCUMENTATION&nbsp;FILES.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="hashit.__main__.html">__main__</a><br>
+</td><td width="25%" valign=top><a href="hashit.detection.html">detection</a><br>
+</td><td width="25%" valign=top><a href="hashit.extra.html">extra</a><br>
+</td><td width="25%" valign=top><a href="hashit.version.html">version</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-Exit"><strong>Exit</strong></a> = exit(...)</dt><dd><tt>exit([status])<br>
+&nbsp;<br>
+Exit&nbsp;the&nbsp;interpreter&nbsp;by&nbsp;raising&nbsp;SystemExit(status).<br>
+If&nbsp;the&nbsp;status&nbsp;is&nbsp;omitted&nbsp;or&nbsp;None,&nbsp;it&nbsp;defaults&nbsp;to&nbsp;zero&nbsp;(i.e.,&nbsp;success).<br>
+If&nbsp;the&nbsp;status&nbsp;is&nbsp;an&nbsp;integer,&nbsp;it&nbsp;will&nbsp;be&nbsp;used&nbsp;as&nbsp;the&nbsp;system&nbsp;exit&nbsp;status.<br>
+If&nbsp;it&nbsp;is&nbsp;another&nbsp;kind&nbsp;of&nbsp;object,&nbsp;it&nbsp;will&nbsp;be&nbsp;printed&nbsp;and&nbsp;the&nbsp;system<br>
+exit&nbsp;status&nbsp;will&nbsp;be&nbsp;one&nbsp;(i.e.,&nbsp;failure).</tt></dd></dl>
+ <dl><dt><strong>__help__</strong> <em>lambda</em> help_command</dt></dl>
+ <dl><dt><a name="-blockIter"><strong>blockIter</strong></a>(afile, blocksize=65536)</dt><dd><tt>Will&nbsp;create&nbsp;a&nbsp;generator&nbsp;for&nbsp;reading&nbsp;a&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-bsd2str"><strong>bsd2str</strong></a>(bsdstr, size=False)</dt><dd><tt>Parses&nbsp;a&nbsp;bsd&nbsp;compatible&nbsp;string&nbsp;to&nbsp;an&nbsp;array</tt></dd></dl>
+ <dl><dt><a name="-bsd_tag"><strong>bsd_tag</strong></a>(file_hash, file_path, hashname)</dt><dd><tt>Formats&nbsp;string&nbsp;in&nbsp;a&nbsp;bsd&nbsp;style&nbsp;format</tt></dd></dl>
+ <dl><dt><a name="-check"><strong>check</strong></a>(path, hashit, useColors=False, be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False)</dt><dd><tt>Will&nbsp;read&nbsp;an&nbsp;file&nbsp;which&nbsp;have&nbsp;a&nbsp;SFV&nbsp;compatible&nbsp;checksum-file&nbsp;or&nbsp;a&nbsp;standard&nbsp;one&nbsp;and&nbsp;verify&nbsp;the&nbsp;files&nbsp;checksum</tt></dd></dl>
+ <dl><dt><a name="-choose_hash"><strong>choose_hash</strong></a>(hash1, hashit)</dt><dd><tt>Uses&nbsp;detect.decect&nbsp;to&nbsp;identify&nbsp;hashes&nbsp;with&nbsp;a&nbsp;high&nbsp;accuracy&nbsp;but&nbsp;when<br>
+there&nbsp;if&nbsp;some&nbsp;issues&nbsp;it&nbsp;will&nbsp;take&nbsp;user&nbsp;input.</tt></dd></dl>
+ <dl><dt><a name="-detect_format"><strong>detect_format</strong></a>(s)</dt><dd><tt>Autodetect&nbsp;hash&nbsp;format,&nbsp;by&nbsp;checking&nbsp;the&nbsp;length&nbsp;and&nbsp;what&nbsp;it&nbsp;contains</tt></dd></dl>
+ <dl><dt><a name="-eprint"><strong>eprint</strong></a>(*args, **kwargs)</dt><dd><tt>Prints&nbsp;to&nbsp;stderr&nbsp;usefull&nbsp;for&nbsp;warnings&nbsp;and&nbsp;error&nbsp;messages</tt></dd></dl>
+ <dl><dt><a name="-fixpath"><strong>fixpath</strong></a>(path)</dt><dd><tt>Returns&nbsp;full&nbsp;path&nbsp;and&nbsp;supports&nbsp;snap</tt></dd></dl>
+ <dl><dt><a name="-hashFile"><strong>hashFile</strong></a>(filename, hasher, memory_opt=False)</dt><dd><tt>hashFile&nbsp;is&nbsp;a&nbsp;simple&nbsp;way&nbsp;to&nbsp;hash&nbsp;files&nbsp;using&nbsp;diffrent&nbsp;methods</tt></dd></dl>
+ <dl><dt><a name="-hashIter"><strong>hashIter</strong></a>(bytesiter, hasher, ashexstr=True)</dt><dd><tt>Will&nbsp;hash&nbsp;the&nbsp;blockIter&nbsp;generator&nbsp;and&nbsp;return&nbsp;digest</tt></dd></dl>
+ <dl><dt><a name="-load"><strong>load</strong></a>(hashclass)</dt><dd><tt>Add&nbsp;hashes&nbsp;to&nbsp;GLOBAL.EXTRA&nbsp;which&nbsp;is&nbsp;the&nbsp;dict&nbsp;that&nbsp;contains&nbsp;all&nbsp;the&nbsp;"extra"<br>
+hash-functions&nbsp;such&nbsp;as&nbsp;Crc32,&nbsp;which&nbsp;allows&nbsp;external&nbsp;hashing&nbsp;algorithms&nbsp;to&nbsp;<br>
+be&nbsp;used&nbsp;as&nbsp;long&nbsp;as&nbsp;the&nbsp;have&nbsp;the&nbsp;same&nbsp;api&nbsp;as&nbsp;specified&nbsp;in&nbsp;docs/README.md<br>
+&nbsp;<br>
+returns&nbsp;True/False&nbsp;based&nbsp;on&nbsp;whether&nbsp;or&nbsp;not&nbsp;the&nbsp;data&nbsp;is&nbsp;loaded</tt></dd></dl>
+ <dl><dt><a name="-load_all"><strong>load_all</strong></a>(list_of_hashclasses)</dt><dd><tt>Just&nbsp;for&nbsp;it,&nbsp;a&nbsp;function&nbsp;that&nbsp;loads&nbsp;all&nbsp;plugins&nbsp;in&nbsp;a&nbsp;list</tt></dd></dl>
+ <dl><dt><a name="-new"><strong>new</strong></a>(hashname, data=b'')</dt><dd><tt>Custom&nbsp;hash-init&nbsp;function&nbsp;that&nbsp;returns&nbsp;the&nbsp;hashes</tt></dd></dl>
+ <dl><dt><a name="-read_sfv"><strong>read_sfv</strong></a>(filename)</dt><dd><tt>Creates&nbsp;generator&nbsp;that&nbsp;reads&nbsp;and&nbsp;parses&nbsp;sfv&nbsp;compatible&nbsp;files&nbsp;using&nbsp;reader</tt></dd></dl>
+ <dl><dt><a name="-reader"><strong>reader</strong></a>(filename, mode='r', remove_binary_mark=True)</dt><dd><tt>Creates&nbsp;generator&nbsp;for&nbsp;an&nbsp;file,&nbsp;better&nbsp;for&nbsp;larger&nbsp;files&nbsp;not&nbsp;part&nbsp;of&nbsp;the&nbsp;MEMOPT</tt></dd></dl>
+ <dl><dt><a name="-sfv_max"><strong>sfv_max</strong></a>(file_hash, file_path, longest, size='')</dt><dd><tt>calculates&nbsp;the&nbsp;amount&nbsp;of&nbsp;spaces&nbsp;needed&nbsp;in&nbsp;a&nbsp;sfv&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-supports_color"><strong>supports_color</strong></a>()</dt><dd><tt>Returns&nbsp;True&nbsp;if&nbsp;the&nbsp;running&nbsp;system's&nbsp;terminal&nbsp;supports&nbsp;color,&nbsp;and&nbsp;False<br>
+otherwise.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>GLOBAL</strong> = {'ACCESS': True, 'BLANK': (None, True), 'COLORS': {'GREEN': '<font color="#c040c0">\x1b</font>[0;32m', 'RED': '<font color="#c040c0">\x1b</font>[0;31m', 'RESET': '<font color="#c040c0">\x1b</font>[0m', 'YELLOW': '<font color="#c040c0">\x1b</font>[0;33m'}, 'DEFAULTS': {'APPEND': False, 'COLORS': True, 'DETECT': None, 'HASH': 'md5', 'MEMOPT': False, 'QUIET': False, 'SIZE': False, 'STRIP': False}, 'DEVMODE': True, 'ERRORS': {'FileNotFoundError': "Error, file seems to be missing calling systemd to confirm 'sure you haved checked the MBR?'", 'OSError': {'END': 'JDK, so something happend with your os, message: ', 'linux': 'So {} , to be continued...<font color="#c040c0">\n</font>', 'macos': 'Macos (Sierra+) and OSX (El Captain-) thank god for apples naming', 'windows': 'Windows 10, windows 8(.1), windows 7 (sp*), wind...p*), windows 98/95, windows NT *. OK not that bad'}, 'TypeError': 'Wrong type used (in cli-arguments) - please use a static programming language'}, 'EXTRA': {'crc32': &lt;class 'hashit.extra.Crc32'&gt;}, 'HASH_STR': 'Hello World!', 'MESSAGES': {'CUR_FORM': 'current format is', 'EMPTY_CHK': 'checksum file is empty', 'FAIL': 'FAILED', 'FILE_NOT': 'File does not exist', 'HASH_NOT': 'is not a valid hash', 'LOAD_FAIL': 'Failed to load', 'MAYBE': 'Did you maybe mean:', 'OK': 'OK', 'PERM_ERR': 'could not be accessed', 'WORKS_ON': 'is not guaranteed to work on your system', ...}, 'SNAP_PATH': '/var/lib/snapd/hostfs', ...}<br>
+<strong>__algorithms__</strong> = ['sha', 'DSA', 'md4', 'md5', 'sha1', 'crc32', 'sha224', 'sha384', 'sha256', 'sha512', 'DSA-SHA', 'blake2s', 'blake2b', 'ripemd160', 'whirlpool', 'dsaWithSHA', 'dsaEncryption', 'ecdsa-with-SHA1']<br>
+<strong>__license__</strong> = 'MIT, Copyrigth (c) 2017-present Javad Shafique'<br>
+<strong>print_function</strong> = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 65536)<br>
+<strong>with_statement</strong> = _Feature((2, 5, 0, 'alpha', 1), (2, 6, 0, 'alpha', 0), 32768)</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Javad&nbsp;Shafique</td></tr></table>
+</body></html>

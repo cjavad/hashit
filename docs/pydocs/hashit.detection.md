@@ -1,209 +1,234 @@
-  ------------------------------------- -----------------------------------------------------------------------------------------------------------------------------
-   \                                    [index](.)\
-   \                                    [/home/javad/Dropbox/playground/hashit/hashit/detection.py](file:/home/javad/Dropbox/playground/hashit/hashit/detection.py)
-  **[hashit](hashit.html).detection**   
-  ------------------------------------- -----------------------------------------------------------------------------------------------------------------------------
-
-`Copyrigth (c) 2018-present Javad Shafique   this module using length and connections to find a match  for an hashing algorithem. It's basicly a matching algorigtem it can be used for almost any pure function in this case for hashes.   # Copyright (c) 2018-present Javad Shafique # This 'Software' can't be used without permission # from Javad Shafique.   # this module using length and connections to find a match  # for an hashing algorithem. It's basicly a matching algorigtem # it can be used for almost any pure function in this case for hashes. # basic template:     def generate_some_dataset(datatoworkon = "some data"):     dict_for_storing_set = dict()       for each_element in a_list_of_something_to_compare_with:         data = function_that_uses_data_to_generate_something(each_element, datatoworkon)           dict_for_storing_set.update({each_element:{"data":data, "size":len(data), "size-as":list(), "connection":list()}})         #find connection and size          for each_element in dict_for_storing_set:         elements_data = dict_for_storing_set[each_element]["data"]         elements_size = dict_for_storing_set[each_element]["size"]           for second_element in dict_for_storing_set:             if dict_for_storing_set[second_element]["size"] == elements_size:                 if elements_data == dict_for_storing_set["data"]:                     dict_for_storing_set[each_element]["connection"].append(second_element)                 else:                     dict_for_storing_set[each_element]["size-as"].append(second_element)             else:                 continue       # return finished dataset          return dict_for_storing_set   # and for parsing that infomation  # you can use the detect function # as here:     def detect(string, table, maybe = True):     if not (type(string) == str):         return None          so = list()     so_far = list()     length = len(string)          for key in table:         dat = table[key]           if dat["size"] == length:             for i in dat["connection"]:                 if i not in so_far:                     so_far.append(i)          for i in so_far:         dat = table[i]["connection"]           for j in so_far:             if not j in dat:                 so_far.remove(j)       if maybe:         for key in table:             dat = table[key]               if dat["size"] == length:                 so.append(key)       if len(so_far) >= 0 and len(so) == 1:               # if there only is one option then use it               return tup(certain=so, maybe=[])     else:         return tup(certain=so_far, maybe=so)       # compare hashes for hash-detection # it can generate data that can compare # diffrences between the results   # if works by categorizing the hashes into  # two categorizes. one for thoose who look alike # and one for thoose who generates the same output # given the same input. And with it a sorted result # is outputted and is ready to be used be the user.   # list of which algorithms is most likly used (WIP)   PRIORITY = {     "md5":["md5"],     "sha1":["dsaEncryption", "DSA", "ecdsa-with-SHA1", "dsaWithSHA", "DSA-SHA"] }`
-
- \
-**Modules**
-
-`      `
-
- 
-
-  ------------------------ -- -- --
-  [string](string.html)\         
-  ------------------------ -- -- --
-
- \
-**Classes**
-
-`      `
-
- 
-
-[builtins.tuple](builtins.html#tuple)([builtins.object](builtins.html#object))
-
-Closest
-
- \
-**NTUPLE** = [class
-Closest]{#NTUPLE}([builtins.tuple](builtins.html#tuple))
-
-`   `
-
-`Closest(certain, maybe) `
-
- 
-
-Method resolution order:
-:   Closest
-:   [builtins.tuple](builtins.html#tuple)
-:   [builtins.object](builtins.html#object)
-
-------------------------------------------------------------------------
-
-Methods defined here:\
-
-[**\_\_getnewargs\_\_**]{#Closest-__getnewargs__}(self)
-:   `Return self as a plain tuple.  Used by copy and pickle.`
-
-<!-- -->
-
-[**\_\_repr\_\_**]{#Closest-__repr__}(self)
-:   `Return a nicely formatted representation string`
-
-<!-- -->
-
-[**\_asdict**]{#Closest-_asdict}(self)
-:   `Return a new OrderedDict which maps field names to their values.`
-
-<!-- -->
-
-[**\_replace**]{#Closest-_replace}(\_self, \*\*kwds)
-:   `Return a new Closest object replacing specified fields with new values`
-
-------------------------------------------------------------------------
-
-Class methods defined here:\
-
-[**\_make**]{#Closest-_make}(iterable, new=&lt;built-in method \_\_new\_\_ of type object at 0x9e2040&gt;, len=&lt;built-in function len&gt;) from [builtins.type](builtins.html#type)
-:   `Make a new Closest object from a sequence or iterable`
-
-------------------------------------------------------------------------
-
-Static methods defined here:\
-
-[**\_\_new\_\_**]{#Closest-__new__}(\_cls, certain, maybe)
-:   `Create new instance of Closest(certain, maybe)`
-
-------------------------------------------------------------------------
-
-Data descriptors defined here:\
-
-**certain**
-:   `Alias for field number 0`
-
-<!-- -->
-
-**maybe**
-:   `Alias for field number 1`
-
-------------------------------------------------------------------------
-
-Data and other attributes defined here:\
-
-**\_fields** = ('certain', 'maybe')
-
-**\_source** = "from builtins import property as \_property,
-tupl...\_itemgetter(1), doc='Alias for field number 1')\\n\\n"
-
-------------------------------------------------------------------------
-
-Methods inherited from [builtins.tuple](builtins.html#tuple):\
-
-[**\_\_add\_\_**]{#Closest-__add__}(self, value, /)
-:   `Return self+value.`
-
-<!-- -->
-
-[**\_\_contains\_\_**]{#Closest-__contains__}(self, key, /)
-:   `Return key in self.`
-
-<!-- -->
-
-[**\_\_eq\_\_**]{#Closest-__eq__}(self, value, /)
-:   `Return self==value.`
-
-<!-- -->
-
-[**\_\_ge\_\_**]{#Closest-__ge__}(self, value, /)
-:   `Return self>=value.`
-
-<!-- -->
-
-[**\_\_getattribute\_\_**]{#Closest-__getattribute__}(self, name, /)
-:   `Return getattr(self, name).`
-
-<!-- -->
-
-[**\_\_getitem\_\_**]{#Closest-__getitem__}(self, key, /)
-:   `Return self[key].`
-
-<!-- -->
-
-[**\_\_gt\_\_**]{#Closest-__gt__}(self, value, /)
-:   `Return self>value.`
-
-<!-- -->
-
-[**\_\_hash\_\_**]{#Closest-__hash__}(self, /)
-:   `Return hash(self).`
-
-<!-- -->
-
-[**\_\_iter\_\_**]{#Closest-__iter__}(self, /)
-:   `Implement iter(self).`
-
-<!-- -->
-
-[**\_\_le\_\_**]{#Closest-__le__}(self, value, /)
-:   `Return self<=value.`
-
-<!-- -->
-
-[**\_\_len\_\_**]{#Closest-__len__}(self, /)
-:   `Return len(self).`
-
-<!-- -->
-
-[**\_\_lt\_\_**]{#Closest-__lt__}(self, value, /)
-:   `Return self<value.`
-
-<!-- -->
-
-[**\_\_mul\_\_**]{#Closest-__mul__}(self, value, /)
-:   `Return self*value.n`
-
-<!-- -->
-
-[**\_\_ne\_\_**]{#Closest-__ne__}(self, value, /)
-:   `Return self!=value.`
-
-<!-- -->
-
-[**\_\_rmul\_\_**]{#Closest-__rmul__}(self, value, /)
-:   `Return self*value.`
-
-<!-- -->
-
-[**count**]{#Closest-count}(...)
-:   `T.count(value) -> integer -- return number of occurrences of value`
-
-<!-- -->
-
-[**index**]{#Closest-index}(...)
-:   `T.index(value, [start, [stop]]) -> integer -- return first index of value. Raises ValueError if the value is not present.`
-
- \
-**Functions**
-
-`      `
-
- 
-
-[**detect**]{#-detect}(s, table, maybe=True)
-:   `Compares result from datasets, finds connections and eleminates contestants`
-
-<!-- -->
-
-[**generate\_data\_set**]{#-generate_data_set}(hashon, algos, hasher\_that\_takes\_new)
-:   `Generates dataset based on data and list of strings that can be used to create objects to use that data`
-
-<!-- -->
-
-[**ishex**]{#-ishex}(hexstr)
-:   `Checks if string is hexidecimal`
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module hashit.detection</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="hashit.html"><font color="#ffffff">hashit</font></a>.detection</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/javad/Dropbox/playground/hashit/hashit/detection.py">/home/javad/Dropbox/playground/hashit/hashit/detection.py</a></font></td></tr></table>
+    <p><tt>Copyrigth&nbsp;(c)&nbsp;2018-present&nbsp;Javad&nbsp;Shafique<br>
+&nbsp;<br>
+this&nbsp;module&nbsp;using&nbsp;length&nbsp;and&nbsp;connections&nbsp;to&nbsp;find&nbsp;a&nbsp;match&nbsp;<br>
+for&nbsp;an&nbsp;hashing&nbsp;algorithem.&nbsp;It's&nbsp;basicly&nbsp;a&nbsp;matching&nbsp;algorigtem<br>
+it&nbsp;can&nbsp;be&nbsp;used&nbsp;for&nbsp;almost&nbsp;any&nbsp;pure&nbsp;function&nbsp;in&nbsp;this&nbsp;case&nbsp;for&nbsp;hashes.<br>
+&nbsp;<br>
+#&nbsp;Copyright&nbsp;(c)&nbsp;2018-present&nbsp;Javad&nbsp;Shafique<br>
+#&nbsp;This&nbsp;'Software'&nbsp;can't&nbsp;be&nbsp;used&nbsp;without&nbsp;permission<br>
+#&nbsp;from&nbsp;Javad&nbsp;Shafique.<br>
+&nbsp;<br>
+#&nbsp;this&nbsp;module&nbsp;using&nbsp;length&nbsp;and&nbsp;connections&nbsp;to&nbsp;find&nbsp;a&nbsp;match&nbsp;<br>
+#&nbsp;for&nbsp;an&nbsp;hashing&nbsp;algorithem.&nbsp;It's&nbsp;basicly&nbsp;a&nbsp;matching&nbsp;algorigtem<br>
+#&nbsp;it&nbsp;can&nbsp;be&nbsp;used&nbsp;for&nbsp;almost&nbsp;any&nbsp;pure&nbsp;function&nbsp;in&nbsp;this&nbsp;case&nbsp;for&nbsp;hashes.<br>
+#&nbsp;basic&nbsp;template:<br>
+&nbsp;<br>
+&nbsp;<br>
+def&nbsp;generate_some_dataset(datatoworkon&nbsp;=&nbsp;"some&nbsp;data"):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dict_for_storing_set&nbsp;=&nbsp;dict()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;each_element&nbsp;in&nbsp;a_list_of_something_to_compare_with:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;=&nbsp;function_that_uses_data_to_generate_something(each_element,&nbsp;datatoworkon)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dict_for_storing_set.update({each_element:{"data":data,&nbsp;"size":len(data),&nbsp;"size-as":list(),&nbsp;"connection":list()}})<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#find&nbsp;connection&nbsp;and&nbsp;size<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;each_element&nbsp;in&nbsp;dict_for_storing_set:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elements_data&nbsp;=&nbsp;dict_for_storing_set[each_element]["data"]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elements_size&nbsp;=&nbsp;dict_for_storing_set[each_element]["size"]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;second_element&nbsp;in&nbsp;dict_for_storing_set:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;dict_for_storing_set[second_element]["size"]&nbsp;==&nbsp;elements_size:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;elements_data&nbsp;==&nbsp;dict_for_storing_set["data"]:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dict_for_storing_set[each_element]["connection"].append(second_element)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dict_for_storing_set[each_element]["size-as"].append(second_element)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;return&nbsp;finished&nbsp;dataset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;dict_for_storing_set<br>
+&nbsp;<br>
+#&nbsp;and&nbsp;for&nbsp;parsing&nbsp;that&nbsp;infomation&nbsp;<br>
+#&nbsp;you&nbsp;can&nbsp;use&nbsp;the&nbsp;detect&nbsp;function<br>
+#&nbsp;as&nbsp;here:<br>
+&nbsp;<br>
+&nbsp;<br>
+def&nbsp;<a href="#-detect">detect</a>(string,&nbsp;table,&nbsp;maybe&nbsp;=&nbsp;True):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;not&nbsp;(type(string)&nbsp;==&nbsp;str):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;so&nbsp;=&nbsp;list()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;so_far&nbsp;=&nbsp;list()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;length&nbsp;=&nbsp;len(string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;key&nbsp;in&nbsp;table:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dat&nbsp;=&nbsp;table[key]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;dat["size"]&nbsp;==&nbsp;length:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;in&nbsp;dat["connection"]:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;i&nbsp;not&nbsp;in&nbsp;so_far:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;so_far.append(i)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;in&nbsp;so_far:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dat&nbsp;=&nbsp;table[i]["connection"]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;in&nbsp;so_far:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;not&nbsp;j&nbsp;in&nbsp;dat:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;so_far.remove(j)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;maybe:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;key&nbsp;in&nbsp;table:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dat&nbsp;=&nbsp;table[key]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;dat["size"]&nbsp;==&nbsp;length:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;so.append(key)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;len(so_far)&nbsp;&gt;=&nbsp;0&nbsp;and&nbsp;len(so)&nbsp;==&nbsp;1:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;if&nbsp;there&nbsp;only&nbsp;is&nbsp;one&nbsp;option&nbsp;then&nbsp;use&nbsp;it<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;tup(certain=so,&nbsp;maybe=[])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;tup(certain=so_far,&nbsp;maybe=so)<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+#&nbsp;compare&nbsp;hashes&nbsp;for&nbsp;hash-detection<br>
+#&nbsp;it&nbsp;can&nbsp;generate&nbsp;data&nbsp;that&nbsp;can&nbsp;compare<br>
+#&nbsp;diffrences&nbsp;between&nbsp;the&nbsp;results<br>
+&nbsp;<br>
+#&nbsp;if&nbsp;works&nbsp;by&nbsp;categorizing&nbsp;the&nbsp;hashes&nbsp;into&nbsp;<br>
+#&nbsp;two&nbsp;categorizes.&nbsp;one&nbsp;for&nbsp;thoose&nbsp;who&nbsp;look&nbsp;alike<br>
+#&nbsp;and&nbsp;one&nbsp;for&nbsp;thoose&nbsp;who&nbsp;generates&nbsp;the&nbsp;same&nbsp;output<br>
+#&nbsp;given&nbsp;the&nbsp;same&nbsp;input.&nbsp;And&nbsp;with&nbsp;it&nbsp;a&nbsp;sorted&nbsp;result<br>
+#&nbsp;is&nbsp;outputted&nbsp;and&nbsp;is&nbsp;ready&nbsp;to&nbsp;be&nbsp;used&nbsp;be&nbsp;the&nbsp;user.<br>
+&nbsp;<br>
+#&nbsp;list&nbsp;of&nbsp;which&nbsp;algorithms&nbsp;is&nbsp;most&nbsp;likly&nbsp;used&nbsp;(WIP)<br>
+&nbsp;<br>
+PRIORITY&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"md5":["md5"],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"sha1":["dsaEncryption",&nbsp;"DSA",&nbsp;"ecdsa-with-SHA1",&nbsp;"dsaWithSHA",&nbsp;"DSA-SHA"]<br>
+}</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="string.html">string</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#tuple">builtins.tuple</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial">Closest
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><strong>NTUPLE</strong> = <a name="NTUPLE">class Closest</a>(<a href="builtins.html#tuple">builtins.tuple</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Closest(certain,&nbsp;maybe)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd>Closest</dd>
+<dd><a href="builtins.html#tuple">builtins.tuple</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Closest-__getnewargs__"><strong>__getnewargs__</strong></a>(self)</dt><dd><tt>Return&nbsp;self&nbsp;as&nbsp;a&nbsp;plain&nbsp;<a href="builtins.html#tuple">tuple</a>.&nbsp;&nbsp;Used&nbsp;by&nbsp;copy&nbsp;and&nbsp;pickle.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;nicely&nbsp;formatted&nbsp;representation&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="Closest-_asdict"><strong>_asdict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;new&nbsp;OrderedDict&nbsp;which&nbsp;maps&nbsp;field&nbsp;names&nbsp;to&nbsp;their&nbsp;values.</tt></dd></dl>
+
+<dl><dt><a name="Closest-_replace"><strong>_replace</strong></a>(_self, **kwds)</dt><dd><tt>Return&nbsp;a&nbsp;new&nbsp;Closest&nbsp;object&nbsp;replacing&nbsp;specified&nbsp;fields&nbsp;with&nbsp;new&nbsp;values</tt></dd></dl>
+
+<hr>
+Class methods defined here:<br>
+<dl><dt><a name="Closest-_make"><strong>_make</strong></a>(iterable, new=&lt;built-in method __new__ of type object at 0x9e2040&gt;, len=&lt;built-in function len&gt;)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;Closest&nbsp;object&nbsp;from&nbsp;a&nbsp;sequence&nbsp;or&nbsp;iterable</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="Closest-__new__"><strong>__new__</strong></a>(_cls, certain, maybe)</dt><dd><tt>Create&nbsp;new&nbsp;instance&nbsp;of&nbsp;Closest(certain,&nbsp;maybe)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>certain</strong></dt>
+<dd><tt>Alias&nbsp;for&nbsp;field&nbsp;number&nbsp;0</tt></dd>
+</dl>
+<dl><dt><strong>maybe</strong></dt>
+<dd><tt>Alias&nbsp;for&nbsp;field&nbsp;number&nbsp;1</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>_fields</strong> = ('certain', 'maybe')</dl>
+
+<dl><dt><strong>_source</strong> = "from builtins import property as _property, tupl..._itemgetter(1), doc='Alias for field number 1')<font color="#c040c0">\n\n</font>"</dl>
+
+<hr>
+Methods inherited from <a href="builtins.html#tuple">builtins.tuple</a>:<br>
+<dl><dt><a name="Closest-__add__"><strong>__add__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self+value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__contains__"><strong>__contains__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;key&nbsp;in&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="Closest-__getitem__"><strong>__getitem__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;self[key].</tt></dd></dl>
+
+<dl><dt><a name="Closest-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__hash__"><strong>__hash__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;hash(self).</tt></dd></dl>
+
+<dl><dt><a name="Closest-__iter__"><strong>__iter__</strong></a>(self, /)</dt><dd><tt>Implement&nbsp;iter(self).</tt></dd></dl>
+
+<dl><dt><a name="Closest-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__len__"><strong>__len__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;len(self).</tt></dd></dl>
+
+<dl><dt><a name="Closest-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__mul__"><strong>__mul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.n</tt></dd></dl>
+
+<dl><dt><a name="Closest-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-__rmul__"><strong>__rmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.</tt></dd></dl>
+
+<dl><dt><a name="Closest-count"><strong>count</strong></a>(...)</dt><dd><tt>T.<a href="#NTUPLE-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Closest-index"><strong>index</strong></a>(...)</dt><dd><tt>T.<a href="#NTUPLE-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value.<br>
+Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-detect"><strong>detect</strong></a>(s, table, maybe=True)</dt><dd><tt>Compares&nbsp;result&nbsp;from&nbsp;datasets,&nbsp;finds&nbsp;connections&nbsp;and&nbsp;eleminates&nbsp;contestants</tt></dd></dl>
+ <dl><dt><a name="-generate_data_set"><strong>generate_data_set</strong></a>(hashon, algos, hasher_that_takes_new)</dt><dd><tt>Generates&nbsp;dataset&nbsp;based&nbsp;on&nbsp;data&nbsp;and&nbsp;list&nbsp;of&nbsp;strings&nbsp;that&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;create&nbsp;objects&nbsp;to&nbsp;use&nbsp;that&nbsp;data</tt></dd></dl>
+ <dl><dt><a name="-ishex"><strong>ishex</strong></a>(hexstr)</dt><dd><tt>Checks&nbsp;if&nbsp;string&nbsp;is&nbsp;hexidecimal</tt></dd></dl>
+</td></tr></table>
+</body></html>

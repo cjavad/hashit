@@ -24,8 +24,10 @@ then
     $PY -m pydoc -w hashit.version
     mv *.html ./docs/pydocs
     cd ./docs/pydocs
-    find . -name "*.ht*" | while read i; do pandoc -f html -t markdown "$i" -o "${i%.*}.md"; done
-    rm *.html
+    #find . -name "*.ht*" | while read i; do pandoc -f html -t markdown "$i" -o "${i%.*}.md"; done
+    for file in *.html; do # rename files instead
+        mv "$file" "$(basename "$file" .html).md"
+    done
     cd ../..
     # clean/create file
     $PY -c "from pydocmd.__main__ import main; import sys; sys.argv = ['', 'simple', 'hashit+', 'hashit.__main__+', 'hashit.detection+', 'hashit.extra+']; main()" > ./docs/pydoc.md

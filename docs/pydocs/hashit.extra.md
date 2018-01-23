@@ -1,126 +1,102 @@
-  --------------------------------- ---------------------------------------------------------------------------------------------------------------------
-   \                                [index](.)\
-   \                                [/home/javad/Dropbox/playground/hashit/hashit/extra.py](file:/home/javad/Dropbox/playground/hashit/hashit/extra.py)
-  **[hashit](hashit.html).extra**   
-  --------------------------------- ---------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module hashit.extra</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
 
-`Extra functions and classes for hashit`
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="hashit.html"><font color="#ffffff">hashit</font></a>.extra</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/javad/Dropbox/playground/hashit/hashit/extra.py">/home/javad/Dropbox/playground/hashit/hashit/extra.py</a></font></td></tr></table>
+    <p><tt>Extra&nbsp;functions&nbsp;and&nbsp;classes&nbsp;for&nbsp;hashit</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="binascii.html">binascii</a><br>
+</td><td width="25%" valign=top><a href="hashlib.html">hashlib</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="hashit.extra.html#Crc32">Crc32</a>
+</font></dt><dt><font face="helvetica, arial"><a href="hashit.extra.html#shake">shake</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Crc32">class <strong>Crc32</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;is&nbsp;an&nbsp;api&nbsp;for&nbsp;the&nbsp;crc32&nbsp;function&nbsp;that&nbsp;is&nbsp;compatible&nbsp;with&nbsp;mor<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Crc32-__init__"><strong>__init__</strong></a>(self, data=b'')</dt><dd><tt>init&nbsp;class,&nbsp;creates&nbsp;data</tt></dd></dl>
 
- \
-**Modules**
+<dl><dt><a name="Crc32-copy"><strong>copy</strong></a>(self)</dt></dl>
 
-`      `
+<dl><dt><a name="Crc32-digest"><strong>digest</strong></a>(self)</dt><dd><tt>Digest&nbsp;as&nbsp;int</tt></dd></dl>
 
- 
+<dl><dt><a name="Crc32-hexdigest"><strong>hexdigest</strong></a>(self)</dt><dd><tt>Digest&nbsp;as&nbsp;hex</tt></dd></dl>
 
-  ---------------------------- -------------------------- -- --
-  [binascii](binascii.html)\   [hashlib](hashlib.html)\      
-  ---------------------------- -------------------------- -- --
+<dl><dt><a name="Crc32-update"><strong>update</strong></a>(self, data=b'')</dt><dd><tt>Update&nbsp;self.<strong>data</strong>&nbsp;with&nbsp;new&nbsp;data</tt></dd></dl>
 
- \
-**Classes**
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="shake">class <strong>shake</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Top-level&nbsp;api&nbsp;for&nbsp;hashlib.<a href="#shake">shake</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="shake-__init__"><strong>__init__</strong></a>(self, hashname, data=b'')</dt><dd><tt>Init&nbsp;class&nbsp;create&nbsp;hasher&nbsp;and&nbsp;data</tt></dd></dl>
 
-`      `
+<dl><dt><a name="shake-copy"><strong>copy</strong></a>(self)</dt></dl>
 
- 
+<dl><dt><a name="shake-digest"><strong>digest</strong></a>(self, length=None)</dt><dd><tt>Digest&nbsp;binary</tt></dd></dl>
 
-[builtins.object](builtins.html#object)
+<dl><dt><a name="shake-hexdigest"><strong>hexdigest</strong></a>(self, length=None)</dt><dd><tt>Digest&nbsp;hex</tt></dd></dl>
 
-[Crc32](hashit.extra.html#Crc32)
+<dl><dt><a name="shake-update"><strong>update</strong></a>(self, data=b'')</dt><dd><tt>Update&nbsp;self.<strong>data</strong>&nbsp;with&nbsp;new&nbsp;data</tt></dd></dl>
 
-[shake](hashit.extra.html#shake)
-
- \
-[class **Crc32**]{#Crc32}([builtins.object](builtins.html#object))
-
-`   `
-
-`This class is an api for the crc32 function that is compatible with mor `
-
- 
-
-Methods defined here:\
-
-[**\_\_init\_\_**]{#Crc32-__init__}(self, data=b'')
-:   `init class, creates data`
-
-[**copy**]{#Crc32-copy}(self)
-
-[**digest**]{#Crc32-digest}(self)
-:   `Digest as int`
-
-<!-- -->
-
-[**hexdigest**]{#Crc32-hexdigest}(self)
-:   `Digest as hex`
-
-<!-- -->
-
-[**update**]{#Crc32-update}(self, data=b'')
-:   `Update self.data with new data`
-
-------------------------------------------------------------------------
-
-Data descriptors defined here:\
-
-**\_\_dict\_\_**
-:   `dictionary for instance variables (if defined)`
-
-<!-- -->
-
-**\_\_weakref\_\_**
-:   `list of weak references to the object (if defined)`
-
- \
-[class **shake**]{#shake}([builtins.object](builtins.html#object))
-
-`   `
-
-`Top-level api for hashlib.shake `
-
- 
-
-Methods defined here:\
-
-[**\_\_init\_\_**]{#shake-__init__}(self, hashname, data=b'')
-:   `Init class create hasher and data`
-
-[**copy**]{#shake-copy}(self)
-
-[**digest**]{#shake-digest}(self, length=None)
-:   `Digest binary`
-
-<!-- -->
-
-[**hexdigest**]{#shake-hexdigest}(self, length=None)
-:   `Digest hex`
-
-<!-- -->
-
-[**update**]{#shake-update}(self, data=b'')
-:   `Update self.data with new data`
-
-------------------------------------------------------------------------
-
-Data descriptors defined here:\
-
-**\_\_dict\_\_**
-:   `dictionary for instance variables (if defined)`
-
-<!-- -->
-
-**\_\_weakref\_\_**
-:   `list of weak references to the object (if defined)`
-
- \
-**Data**
-
-`      `
-
- 
-
-**LINUX\_LIST** = \['Mythbuntu', 'Mac OS X', 'Debian Pure Blend', 'RPM',
-'Symphony OS', 'Astra Linux', 'Emdebian Grip', 'Russian Fedora Remix',
-'Secure-K', 'Knopperdisk', 'Mobilinux', 'touchscreen', 'MX Linux',
-'NepaLinux', 'fli4l', 'Nix', 'Ubuntu Mobile', 'primary', 'Fedora Core',
-'ChromeOS', ...\]
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>LINUX_LIST</strong> = ['Mythbuntu', 'Mac OS X', 'Debian Pure Blend', 'RPM', 'Symphony OS', 'Astra Linux', 'Emdebian Grip', 'Russian Fedora Remix', 'Secure-K', 'Knopperdisk', 'Mobilinux', 'touchscreen', 'MX Linux', 'NepaLinux', 'fli4l', 'Nix', 'Ubuntu Mobile', 'primary', 'Fedora Core', 'ChromeOS', ...]</td></tr></table>
+</body></html>
