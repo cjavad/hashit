@@ -77,6 +77,10 @@ parser.
 >        return convert_to_hex(G_HASH)
 >```
 
+## Links
+[pydocs](pydocs/hashit.md) generated with pydoc and converted to markdown via
+[pydocmd](pydoc.md) generated with pydocmd
+
 ## Notes:
 
 - I interpet N/a as None At All because i can

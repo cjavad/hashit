@@ -39,7 +39,7 @@ import re
 import hashlib
 
 from .extra import Crc32, shake
-from .detect import detect, generate_data_set
+from .detection import detect, generate_data_set
 
 __author__ = "Javad Shafique" # copyrigth holder
 __license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro program
