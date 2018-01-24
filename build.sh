@@ -28,13 +28,14 @@ then
     #cd ../..
     # clean/create file
     $PY -c "from pydocmd.__main__ import main; import sys; sys.argv = ['', 'simple', 'hashit+', 'hashit.__main__+', 'hashit.detection+', 'hashit.extra+']; main()" > ./docs/pydoc.md
+    printf "\n\n[back](README.md)" >> ./docs/pydoc.md # add back button
     exit
 fi
 
 if [ "$1" == "upload" ]
 then
     $PY setup.py sdist upload
-    rm ./dist/*.tar.gz
+    rm -rf ./dist
 else
     # Move and print messages
     SILENT="$($PY setup.py sdist --quiet --formats zip,tar)"

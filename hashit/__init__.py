@@ -65,9 +65,9 @@ GLOBAL = {
         "MEMOPT":False,
         "SIZE":False,
         "QUIET":False,
-        "DETECT":None,
+        "DETECT":False,
         "APPEND":False,
-        "RECURS":False
+        "RECURS":True
     },
     "EXTRA":{
         "crc32":Crc32
@@ -345,22 +345,19 @@ def hashFile(filename, hasher, memory_opt=False):
 def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum"""
     # set colors
-    RED = GLOBAL["COLORS"]["RED"]
-    GREEN = GLOBAL["COLORS"]["GREEN"]
-    YELLOW = GLOBAL["COLORS"]["YELLOW"]   
-    RESET = GLOBAL["COLORS"]["RESET"] 
+    RED = ""
+    GREEN = ""
+    YELLOW = ""
+    RESET = ""
     # check if system supports color
-    # with bitwise-exclusive or (XOR)
-    if supports_color() ^ useColors:
-        # if not override values
-        RED = ""
-        GREEN = ""
-        YELLOW = ""
-        RESET = ""
+    # and check if the colors is enabled
+    if supports_color() and useColors:
+        # if so override the vars with the colors
+        RED = GLOBAL["COLORS"]["RED"]
+        GREEN = GLOBAL["COLORS"]["GREEN"]
+        YELLOW = GLOBAL["COLORS"]["YELLOW"]   
+        RESET = GLOBAL["COLORS"]["RESET"] 
 
-    hash_index = int()
-    path_index = int()
-    
     # check if file exits
     if not os.path.exists(path):
         eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
@@ -371,12 +368,14 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
 
     # set default varaibles
     x_reader = None
+
+    # the indexes are used to specify were a specific item is
+    # in a list generated from the fileformat
     name_index = 0 # for BSDTag, where the hash is located
     hash_index = 0 # where is the hash in the list
     path_index = 0 # where is the path in the list
     size_index = 1 # where is the size in the list
     # max_elem = 2 # how many items are there in the list
-
     file_format = None # which format are you using
 
     # get first line from the file

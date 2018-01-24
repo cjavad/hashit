@@ -61,7 +61,7 @@ def walk(go_over):
     return walked
 
 def config(parser):
-    """Sets argvs' config and commands"""
+    """Sets argvs' config and commands with argparse and returns it for good sake"""
 
     def hash_list():
         """Generates an easy-to-read list"""
@@ -104,16 +104,18 @@ def main_(args=None):
     if args is None:
         # to sys.args
         args = os.sys.argv[1:]
-    # using argc module by me (support for python2)
+    # using argparse instead of argc for portability
     parser = argparse.ArgumentParser("hashit", description=__help__, epilog=__license__)
     # set commands and config with config
     parser = config(parser)
 
+    # check for amount of arguments
     if len(args) == 0:
         # if there is not arguments show help
         parser.parse_args(["--help"])
 
-    argv = parser.parse_args()
+    # parse args
+    argv = parser.parse_args(args)
 
     # Varibles
 
@@ -122,6 +124,14 @@ def main_(args=None):
     GREEN = ""
     YELLOW = ""
     RESET = ""
+
+    # check if we should use colors
+    if supports_color() and argv.color:
+        # if yes enable them
+        RED = GLOBAL["COLORS"]["RED"]
+        GREEN = GLOBAL["COLORS"]["GREEN"]
+        YELLOW = GLOBAL["COLORS"]["YELLOW"]
+        RESET = GLOBAL["COLORS"]["RESET"]
 
     # file list, and path
     in_files = list() # list of all files
@@ -157,14 +167,6 @@ def main_(args=None):
         # else set it to false
         use_out = False
 
-
-    # check if we should use colors
-    if supports_color() and argv.color:
-        # if yes enable them
-        RED = GLOBAL["COLORS"]["RED"]
-        GREEN = GLOBAL["COLORS"]["GREEN"]
-        YELLOW = GLOBAL["COLORS"]["YELLOW"]
-        RESET = GLOBAL["COLORS"]["RESET"]
     
 
     # check for new path
@@ -335,13 +337,13 @@ def main(args=None):
     """
     Main function with error catching, can force-exit with os._exit(1)
 
-    this main function calls main_() and cathes any error while giving the user a "pretty"
-    error.
+    this main function calls main_() and cathes any error while giving the user some "pretty"
+    errors.
     """
     try:
         # execute main application
         main_(args)
-    except OSError as error:
+    except Exception as error:
         # define colors
         RD = ""
         YL = ""

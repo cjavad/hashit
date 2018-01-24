@@ -78,6 +78,8 @@ parser.
 >```
 
 ## Links
+[extra](extra.md) how to setup hashit (plugins & config)
+
 [pydocmd](pydoc.md) generated with pydocmd
 
 ## Notes:

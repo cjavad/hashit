@@ -66,6 +66,10 @@ From python you can do it like this
 Changelog
 --------------
 
+    3.3.0a1 - removed argc depend, using argparse
+
+    3.3.0a0 - Fixing snap releated issues
+
     3.3.1 - Fixed bug in windows where \ would not be replaced by / in hashit.fixpath
 
     3.3.0 - Added BSD Style output and check format detection. Also an -s option that can hash a piece of text see `docs <https://github.com/JavadSM/hashit/blob/master/docs/>`__ for more

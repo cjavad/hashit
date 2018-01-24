@@ -180,7 +180,7 @@ Goes over a path an finds all files, appends them to a list and returns that lis
 ```python
 config(parser)
 ```
-Sets argvs' config and commands
+Sets argvs' config and commands with argparse and returns it for good sake
 <h2 id="hashit.__main__.main_">main_</h2>
 
 ```python
@@ -195,8 +195,8 @@ main(args=None)
 
 Main function with error catching, can force-exit with os._exit(1)
 
-this main function calls main_() and cathes any error while giving the user a "pretty"
-error.
+this main function calls main_() and cathes any error while giving the user some "pretty"
+errors.
 
 <h1 id="hashit.detection">hashit.detection</h1>
 
@@ -365,3 +365,6 @@ This class is an api for the crc32 function that is compatible with mor
 shake(self, hashname, data=b'')
 ```
 Top-level api for hashlib.shake
+
+
+[back](README.md)
