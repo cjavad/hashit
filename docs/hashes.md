@@ -1,4 +1,4 @@
-<script>var c = "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico\"/>"; document.getElementsByTagName('head')[0].append(c);</script>
+<script>var link = "https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico"; var obj = document.createElement('link'); obj.rel = "shortcut icon"; obj.type="image/x-icon"; obj.href = link; document.getElementsByTagName("head")[0].append(obj);</script>
 
 List off all supported hashes for all versions
 
