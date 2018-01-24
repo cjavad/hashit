@@ -1,4 +1,4 @@
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+<script>var c = "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico\"/>"; document.getElementsByTagName('head')[0].append(c);</script>
 
 [![](https://raw.githubusercontent.com/JavadSM/hashit/master/icon.png)](https://pypi.org/project/hashit) 
 # Hashit, an hashing application
