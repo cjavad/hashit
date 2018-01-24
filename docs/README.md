@@ -1,3 +1,5 @@
+<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+
 [![](../icon.png)](https://pypi.org/project/hashit) 
 # Hashit, an hashing application
 

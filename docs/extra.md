@@ -1,3 +1,7 @@
+<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+
+## Extra
+
 One of the ways i have setup hashit, is that it's very flexible which means
 that you the user can add change the way the program behaves quite easily
 
@@ -48,5 +52,7 @@ if __name__ == "__main__":
 ```
 and then you can call the program as such
 ```python3 hit.py -H hash_3-2-1```
+
+see [plugins](plugins.md) for more
 
 [back](README.md)

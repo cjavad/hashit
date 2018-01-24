@@ -1,3 +1,5 @@
+<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+
 With the new release, i have added support for loading thirdparty hashfunction to hashit via load() and GLOBAL
 basicly it adds a new entry to GLOBAL.EXTRA with its' name and class. The way these plugins work are quite simple,
 all it needs is a hashlib compatible api as such:

@@ -1,3 +1,5 @@
+<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+
 List off all supported hashes for all versions
 
 For all versions crc32 is supported

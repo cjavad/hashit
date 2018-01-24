@@ -1,3 +1,5 @@
+<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+
 # Usage of hashit
 
 Hashit takes arguments like this:

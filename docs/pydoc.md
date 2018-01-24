@@ -184,7 +184,7 @@ Sets argvs' config and commands with argparse and returns it for good sake
 <h2 id="hashit.__main__.main_">main_</h2>
 
 ```python
-main_(args=None)
+main_(args)
 ```
 Main function which is the cli parses arguments and runs appropriate commands
 <h2 id="hashit.__main__.main">main</h2>
