@@ -1,5 +1,5 @@
 name: hashit
-version: 3.3.3a1
+version: 3.3.3a2
 summary: hashit is an replacement for (md5sum, sha1sum, and so on)
 icon: icon.png
 description: |
@@ -28,5 +28,4 @@ parts:
   hashit:
     plugin: python
     python-version: python3
-    python-packages: ["argc"]
     source: .

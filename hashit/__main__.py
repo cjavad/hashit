@@ -94,6 +94,7 @@ def config(parser):
     parser.add_argument("-m", "--memory-optimatation", help="Enables memory optimatation (useful for large files)", action="store_true")
     parser.add_argument("-sfv", "--sfv", help="Outputs in a sfv compatible format", action="store_true")
     parser.add_argument("-bsd", "--bsd", help="output using the bsd checksum-format", action="store_true")
+    parser.add_argument("--strict", help="Exit 0, on any error", action="store_true", default=GLOBAL["DEFAULTS"]["STRICT"])
     parser.add_argument("-r", "--recursive", help="Hash all files in all subdirectories", action="store_true", default=GLOBAL["DEFAULTS"]["RECURS"])
     # return parser
     return parser
@@ -282,7 +283,7 @@ def main_(args=None):
                 # hash file
                 current_hash = hashFile(fname, hash_is, argv.memory_optimatation)
 
-            except (FileNotFoundError, PermissionError) as Error:
+            except (FileNotFoundError, PermissionError, OSError) if not argv.strict else (FileExistsError, PermissionError) as Error:
                 # if the file does not exist print a error message
                 if isinstance(Error, FileNotFoundError):
                     eprint(RED + fname + ", " + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
@@ -356,6 +357,9 @@ def main(args=None):
 
         if isinstance(error, TypeError):
             eprint(YL + GLOBAL["ERRORS"]["TypeError"] + RE)
+
+        elif isinstance(error, ValueError):
+            eprint(YL + GLOBAL["ERRORS"]["ValueError"] + RE)
 
         elif isinstance(error, FileNotFoundError):
             eprint(YL + GLOBAL["ERRORS"]["FileNotFoundError"] + RE)

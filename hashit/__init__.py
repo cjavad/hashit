@@ -64,6 +64,7 @@ GLOBAL = {
         "COLORS":True, # if supported colors are on by default
         "MEMOPT":False,
         "SIZE":False,
+        "STRICT":False,
         "QUIET":False,
         "DETECT":False,
         "APPEND":False,
@@ -93,6 +94,7 @@ GLOBAL = {
     },
     "ERRORS":{
         # JOKES in here
+        "ValueError":"Wrong type or mood?! :)",
         "TypeError":"Wrong type used (in cli-arguments) - please use a static programming language",
         "FileNotFoundError":"Error, file seems to be missing calling systemd to confirm 'sure you haved checked the MBR?'",
         "OSError":{
