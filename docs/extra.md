@@ -13,7 +13,9 @@ for all your plugin loading needs.
 To use this and the GLOBAL config all you need to do is to create your own little python file
 lets call it hit.py
 > hit.py
+
 ```py
+
 from hashit.__main__ import main, load, new, GLOBAL
 
 # set some config
