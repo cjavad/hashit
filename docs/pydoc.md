@@ -157,16 +157,28 @@ and anything needed for an command lin application such as hashit.
 
 it uses argc another package by me, but i am considering switching to argparse
 
+<h2 id="hashit.__main__.Print">Print</h2>
+
+```python
+Print(self, nargs=0, **kwargs)
+```
+Print action for argparse, takes one kwarg which is text the varible which contains the string to be printed
+<h2 id="hashit.__main__.Execute">Execute</h2>
+
+```python
+Execute(self, nargs=0, **kwargs)
+```
+Same as Print() but instead of printing an object it calls it takes func (function), and exit (bool)
 <h2 id="hashit.__main__.walk">walk</h2>
 
 ```python
-walk(goover)
+walk(go_over)
 ```
 Goes over a path an finds all files, appends them to a list and returns that list
 <h2 id="hashit.__main__.config">config</h2>
 
 ```python
-config(argv)
+config(parser)
 ```
 Sets argvs' config and commands
 <h2 id="hashit.__main__.main_">main_</h2>

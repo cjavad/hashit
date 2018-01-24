@@ -78,7 +78,6 @@ parser.
 >```
 
 ## Links
-[pydocs](pydocs/hashit.md) generated with pydoc and converted to markdown via
 [pydocmd](pydoc.md) generated with pydocmd
 
 ## Notes:

@@ -10,7 +10,6 @@ setup(
     version=__version__,
     license="MIT",
     include_package_data=True,
-    test_suite="tests",
     zip_safe=True,
     entry_points = {
         "console_scripts":[

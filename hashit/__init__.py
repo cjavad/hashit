@@ -42,15 +42,15 @@ from .extra import Crc32, shake
 from .detection import detect, generate_data_set
 
 __author__ = "Javad Shafique" # copyrigth holder
-__license__ = "MIT, Copyrigth (c) 2017-present Javad Shafique" # license foro program
-
-# help message
-# this list is the message that will be printed
-# when the user uses hashit --help
+__license__ = "MIT, Copyrigth (c) 2017-2018 Javad Shafique" # license for the program
 
 
-__help__ = lambda help_command: ["Usage:\n", "   hashit [options] $path", "", help_command, "", \
-     "Notice: this program was made by Javad Shafique, and uses argc another package by me\n"]
+# help desciption
+__help__ = """Hashit is an hashing program which can be uses to hash and verify
+muliple files on a system. I got the idea from an ubuntu iso image which
+have this hash table, so i got the idea to make such a program using
+python.
+"""
 
 # fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm)
 __algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake", "sha3_") \
@@ -66,7 +66,8 @@ GLOBAL = {
         "SIZE":False,
         "QUIET":False,
         "DETECT":None,
-        "APPEND":False
+        "APPEND":False,
+        "RECURS":False
     },
     "EXTRA":{
         "crc32":Crc32
@@ -102,7 +103,7 @@ GLOBAL = {
             "END":"JDK, so something happend with your os, message: "
         }
     },
-    "BLANK": (None, True),
+    "BLANK": (None, True, False),
     "SNAP_PATH":"/var/lib/snapd/hostfs",
     "DEVMODE":True,
     "ACCESS": (os.access("/home", os.R_OK) if os.path.exists("/home") else False),
@@ -497,7 +498,11 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             if size:
                 last_size = data[size_index]
                 current_size = os.stat(filename).st_size
-                SizeCheck = int(last_size) == int(current_size)
+                try:
+                    SizeCheck = int(last_size) == int(current_size)
+                except ValueError:
+                    # os returns wrong size format
+                    SizeCheck = True
 
             # check if there are any changes in the results end 
             # from them that in the file
