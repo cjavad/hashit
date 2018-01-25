@@ -40,6 +40,7 @@ then
     exit
 fi
 
+
 if [ "$1" == "upload" ]
 then
     $PY setup.py sdist upload
@@ -52,4 +53,12 @@ else
     mv $TAR "${TO}/hashit.tar"
     echo "Moved to ${TO}/hashit.zip and ${TO}/hashit.tar"
     rm -r dist/
+
+    if [ "$1" == "deb" ]
+    then
+        cd release
+        rm -rf deb_dist
+        py2dsc-deb hashit.zip
+        exit
+    fi
 fi
