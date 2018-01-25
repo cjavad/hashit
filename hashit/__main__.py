@@ -7,6 +7,7 @@ it uses argc another package by me, but i am considering switching to argparse
 """
 import json
 import random
+import traceback
 import argparse
 # Import all from hashit
 from .__init__ import os, hashlib, eprint, hashFile, new, bsd_tag, load, \
@@ -24,10 +25,16 @@ class Print(argparse.Action):
         elif "text" in kwargs:
             self.data = kwargs.pop("text")
 
+        if "exit" in kwargs:
+            self.exit = True if kwargs.pop("exit") else False
+
         super(Print, self).__init__(nargs=nargs, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
         print(self.data)
+
+        if self.exit:
+            Exit()
 
 class Execute(argparse.Action):
     """Same as Print() but instead of printing an object it calls it takes func (function), and exit (bool)"""
@@ -45,8 +52,9 @@ class Execute(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         print(self.data())
+
         if self.exit:
-            exit()
+            Exit()
 
 def walk(go_over):
     """Goes over a path an finds all files, appends them to a list and returns that list"""
@@ -73,40 +81,54 @@ def config(parser):
             s[c] = ', '.join(l)
 
         return  "\n" + '\n'.join(s) + "\n"
+    
+    # create groups
+    ghelp = parser.add_argument_group("help")
+    formats = parser.add_argument_group("formats")
+    settings = parser.add_argument_group("settings")
+    other = parser.add_argument_group("other")
+    dev = parser.add_argument_group("devtools")
 
     # set commands
     parser.add_argument('path', nargs="?", default=os.getcwd()) # for directroy
-    parser.add_argument("-V", "--version", help="Print current version and exit", action="version", version="%(prog)s " + __version__)
-    parser.add_argument("-l", "--license", help="Print license and exit", action=Print, text=__license__)
-    parser.add_argument("-H", "--hash", help="Select hash use -hl --hash-list for more info", metavar="hashname", default=GLOBAL["DEFAULTS"]["HASH"])
-    parser.add_argument("-hl", "--hash-list", help="Prints list of all supported hashes and exits", action=Execute, func=hash_list, exit=True)
-    parser.add_argument("-a", "--all", help="Calculate all hashes for a single file", metavar="filename")
-    parser.add_argument("-C", "--color", help="Enable colored output where it is supported", action="store_true", default=GLOBAL["DEFAULTS"]["COLORS"])
-    parser.add_argument("-f", "--file", help="Hash single a file", metavar="filename")
-    parser.add_argument("-S", "--size", help="Adds the file size to the output", action="store_true", default=GLOBAL["DEFAULTS"]["SIZE"])
-    parser.add_argument("-s", "--string", nargs="?", help="hash a string or a piece of text", default=False)
-    parser.add_argument("-sp", "--strip-path", help="Strips fullpath from the results", action="store_true", default=GLOBAL["DEFAULTS"]["STRIP"])
-    parser.add_argument("-A", "--append", help="Instead of writing to a file you will append to it", action="store_true", default=GLOBAL["DEFAULTS"]["APPEND"])
-    parser.add_argument("-d", "--detect", nargs="?", help="Enable hash detection for check", default=GLOBAL["DEFAULTS"]["DETECT"])
-    parser.add_argument("-c", "--check", help="Verify checksums from a checksum file", metavar="filename", default=GLOBAL["DEFAULTS"]["MEMOPT"])
-    parser.add_argument("-o", "--output", help="output output to an output (file)", metavar="filename")
-    parser.add_argument("-q", "--quiet", help="Reduces output", action="store_true")
-    parser.add_argument("-m", "--memory-optimatation", help="Enables memory optimatation (useful for large files)", action="store_true")
-    parser.add_argument("-sfv", "--sfv", help="Outputs in a sfv compatible format", action="store_true")
-    parser.add_argument("-bsd", "--bsd", help="output using the bsd checksum-format", action="store_true")
-    parser.add_argument("--strict", help="Exit 0, on any error", action="store_true", default=GLOBAL["DEFAULTS"]["STRICT"])
-    parser.add_argument("-r", "--recursive", help="Hash all files in all subdirectories", action="store_true", default=GLOBAL["DEFAULTS"]["RECURS"])
+
+    # add all the helping arguments
+    ghelp.add_argument("-h", "--help", help="show this help message and exit", action=Execute, func=parser.format_help, exit=True)
+    ghelp.add_argument("-V", "--version", help="Print current version and exit", action="version", version="%(prog)s " + __version__)
+    ghelp.add_argument("-l", "--license", help="Print license and exit", action=Print, text=__license__, exit=True)
+    ghelp.add_argument("-hl", "--hash-list", help="Prints list of all supported hashes and exits", action=Execute, func=hash_list, exit=True)
+
+    # all the options that sets something
+    settings.add_argument("-H", "--hash", help="Select hash use -hl --hash-list for more info", metavar="hashname", default=GLOBAL["DEFAULTS"]["HASH"])
+    settings.add_argument("-C", "--color", help="Enable colored output where it is supported", action="store_true", default=GLOBAL["DEFAULTS"]["COLORS"])
+    settings.add_argument("-sp", "--strip-path", help="Strips fullpath from the results", action="store_true", default=GLOBAL["DEFAULTS"]["STRIP"])
+    settings.add_argument("-A", "--append", help="Instead of writing to a file you will append to it", action="store_true", default=GLOBAL["DEFAULTS"]["APPEND"])
+    settings.add_argument("-q", "--quiet", help="Reduces output", action="store_true")
+    settings.add_argument("-m", "--memory-optimatation", help="Enables memory optimatation (useful for large files)", action="store_true")
+    settings.add_argument("-r", "--recursive", help="Hash all files in all subdirectories", action="store_true", default=GLOBAL["DEFAULTS"]["RECURS"])
+
+    # other, things that are optinional such as single file hashes
+    other.add_argument("-a", "--all", help="Calculate all hashes for a single file", metavar="filename")
+    other.add_argument("-f", "--file", help="Hash single a file", metavar="filename")
+    other.add_argument("-s", "--string", nargs="?", help="hash a string or a piece of text", default=False, metavar="string")
+    other.add_argument("-d", "--detect", nargs="?", help="Enable hash detection for check", metavar="hash", default=GLOBAL["DEFAULTS"]["DETECT"])
+    other.add_argument("-c", "--check", help="Verify checksums from a checksum file", metavar="filename", default=GLOBAL["DEFAULTS"]["MEMOPT"])
+    other.add_argument("-o", "--output", help="output output to an output (file)", metavar="filename")
+
+    formats.add_argument("-S", "--size", help="Adds the file size to the output", action="store_true", default=GLOBAL["DEFAULTS"]["SIZE"])
+    formats.add_argument("-sfv", "--sfv", help="Outputs in a sfv compatible format", action="store_true")
+    formats.add_argument("-bsd", "--bsd", help="output using the bsd checksum-format", action="store_true")
+
+    dev.add_argument("-t", "--trace", help="Print traceback of any error cathed and exit", action="store_true", default=GLOBAL["DEFAULTS"]["TRACE"])
+    
+
     # return parser
     return parser
 
-def main_(args=None):
+def main_(args):
     """Main function which is the cli parses arguments and runs appropriate commands"""
-    # switch args if needed
-    if args is None:
-        # to sys.args
-        args = os.sys.argv[1:]
     # using argparse instead of argc for portability
-    parser = argparse.ArgumentParser("hashit", description=__help__, epilog=__license__)
+    parser = argparse.ArgumentParser("hashit", description=__help__, epilog=__license__, add_help=False)
     # set commands and config with config
     parser = config(parser)
 
@@ -176,8 +198,6 @@ def main_(args=None):
         # check if argument is path else do not change path
         if os.path.exists(new_path) and ("/" in new_path or new_path in (".", "..")):
             my_path = new_path
-    if "-d" in args or "--detect" in args:
-        argv.detect = True
 
     # check for string
     if "-s" in args or "--string" in args:
@@ -227,15 +247,16 @@ def main_(args=None):
         hashes = detect(argv.detect, generate_data_set("Hallo", __algorithms__, new))
         if hashes != None:
             for item in hashes.certain:
-                print(GREEN + "Same results as", item + RESET)
+                print(GREEN + GLOBAL["MESSAGES"]["RESULTS_AS"], item + RESET)
 
-            # print sepetator
-            print("")
+            # print sepetator if there is a need for one
+            if len(hashes.maybe) >= 1 and len(hashes.certain) >= 1:
+                print("")
 
             for item in hashes.maybe:
-                print(YELLOW + "Maybe", item + RESET)
+                print(YELLOW + GLOBAL["MESSAGES"]["MAYBE"], item + RESET)
         else:
-            print(RED + "Not valid hash" + RESET)
+            print(RED + str(argv.detect) + " " + GLOBAL["MESSAGES"]["HASH_NOT"] + RESET)
         # exit when done
         Exit(0)
 
@@ -283,7 +304,7 @@ def main_(args=None):
                 # hash file
                 current_hash = hashFile(fname, hash_is, argv.memory_optimatation)
 
-            except (FileNotFoundError, PermissionError, OSError) if not argv.strict else (FileExistsError, PermissionError) as Error:
+            except (FileNotFoundError, PermissionError) as Error:
                 # if the file does not exist print a error message
                 if isinstance(Error, FileNotFoundError):
                     eprint(RED + fname + ", " + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
@@ -291,7 +312,14 @@ def main_(args=None):
                 # check if we have access to the file
                 elif isinstance(Error, PermissionError):
                     eprint(RED + fname + " " + GLOBAL["MESSAGES"] + RESET)
-                # and continue
+                
+                # print stack and trace if needed 
+                if argv.trace:
+                    eprint(YELLOW, end="")
+                    traceback.print_stack(file=os.sys.stderr)
+                    traceback.print_exc(file=os.sys.stderr)
+                    eprint(RESET, end="")
+
                 continue
             
             # set print_str
@@ -341,6 +369,11 @@ def main(args=None):
     this main function calls main_() and cathes any error while giving the user some "pretty"
     errors.
     """
+    # switch args if needed
+    if args is None:
+        # to sys.args
+        args = os.sys.argv[1:]
+
     try:
         # execute main application
         main_(args)
@@ -370,8 +403,15 @@ def main(args=None):
             eprint(GLOBAL["ERRORS"]["OSError"]["linux"].format(', '.join(random.sample(LINUX_LIST, 10))))
             eprint(GLOBAL["ERRORS"]["OSError"]["END"] + RE)
 
-        # and print error
-        eprint(RD + str(error) + RE)
+        # print stack and trace if needed
+        if "--trace" in args or "-t" in args:
+            eprint(RD, end="")
+            traceback.print_stack(file=os.sys.stderr)
+            traceback.print_exc(file=os.sys.stderr)
+            eprint(RE, end="")
+        else:
+            # else print error
+            eprint(RD + str(error) + RE)
         
         os._exit(1) # force exit
 

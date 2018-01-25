@@ -65,6 +65,10 @@ From python you can do it like this
 
 Changelog
 --------------
+ 
+    3.3.3a3 - Extended Configs working on homepage and docs
+
+    3.3.3a2 - Added --trace and fixed some of the issues with detect and argparse
 
     3.3.0a1 - removed argc depend, using argparse
 

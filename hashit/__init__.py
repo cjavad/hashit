@@ -64,7 +64,7 @@ GLOBAL = {
         "COLORS":True, # if supported colors are on by default
         "MEMOPT":False,
         "SIZE":False,
-        "STRICT":False,
+        "TRACE":False,
         "QUIET":False,
         "DETECT":False,
         "APPEND":False,
@@ -90,7 +90,9 @@ GLOBAL = {
         "WORKS_ON":"is not guaranteed to work on your system",
         "LOAD_FAIL":"Failed to load",
         "OK":"OK",
-        "FAIL":"FAILED"
+        "FAIL":"FAILED",
+        "MAYBE":"Maybe",
+        "RESULTS_AS":"Same results as"
     },
     "ERRORS":{
         # JOKES in here
@@ -185,12 +187,12 @@ def choose_hash(hash1, hashit):
         if tup is None:
             return None
 
-        if len(tup.certain) >= 1 and not (hashit.name in tup.certain or tup.maybe):
+        if len(tup.certain) >= 1 and not (hashit.name in tup.certain or tup.maybe) and len(tup.maybe) <= 0:
             hashit = new(tup.certain[0])
         
         elif len(tup.maybe) >= 1:
             # for each element in maybe
-            for c, h in enumerate(tup.maybe):
+            for c, h in enumerate(tup.certain + tup.maybe):
                 eprint(h, "(" + str(c) + ")")
             # get input by printing questing
             eprint(GLOBAL["MESSAGES"]["MAYBE"], end=" ")
@@ -202,7 +204,7 @@ def choose_hash(hash1, hashit):
             # then use the input as an index
             if len(tup.maybe) - 1 >= c_index:  
                 # choose maybe
-                hashit = new(tup.maybe[c_index])
+                hashit = new((tup.certain + tup.maybe)[c_index])
 
             else:
                 # if it's out of index
