@@ -66,6 +66,8 @@ From python you can do it like this
 Changelog
 --------------
     
+    3.3.4 - Bugfixes and more, fixed parsers added some benchmarks and fixing some more of the snap-related issues
+
     3.3.3 - Full release
 
     3.3.3a3 - Extended Configs working on homepage and docs

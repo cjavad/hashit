@@ -10,6 +10,7 @@ setup(
     version=__version__,
     license="MIT",
     include_package_data=True,
+    test_suite="tests",
     zip_safe=True,
     entry_points = {
         "console_scripts":[
@@ -18,7 +19,6 @@ setup(
     },
     url="https://github.com/JavadSM/hashit",
     packages=["hashit"],
-    install_requires = ["argc"],
     description = "Hashing Application with muliple modes, settings and more!",
     long_description = LONG_DES,
     classifiers = [

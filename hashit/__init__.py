@@ -39,7 +39,7 @@ import re
 import hashlib
 
 from .extra import Crc32, shake
-from .detection import detect, generate_data_set
+from .detection import detect, generate_data_set, ishex
 
 __author__ = "Javad Shafique" # copyrigth holder
 __license__ = "MIT, Copyrigth (c) 2017-2018 Javad Shafique" # license for the program
@@ -118,6 +118,7 @@ GLOBAL = {
 # exit alias for os.sys.exit
 Exit = os.sys.exit
 
+# ~ Files ~
 
 # gets fullpath
 def fixpath(path):
@@ -129,6 +130,100 @@ def fixpath(path):
 
     return c_path
 
+def reader(filename, mode="r", remove_binary_mark=True): # remove binary marker from md5sum
+    """Creates generator for an file, better for larger files not part of the MEMOPT"""
+    filename = fixpath(filename)
+    # return generator
+    return ('*'.join(line.split("*")[1:]).replace("\n", "") if line.startswith("*") and remove_binary_mark else \
+            line.replace("\n", "") for line in open(filename, mode=mode).readlines())
+
+# ~ File Formats ~
+
+class SFV:
+    """Class for parsing and creating sfv strings"""
+    def __init__(self, filename=None, size=False):
+        """Inits sfv class with file and use_size"""
+        self.filename = filename
+        self.size = size
+
+    def read(self, filename=None, size=False):
+        """Creates generator that reads and parses sfv compatible files using reader"""
+        for line in reader(self.filename or filename, "r"):
+            # read sfv file and create and generator with correct results
+            yield self.parser(line, self.size or size)
+
+    @staticmethod
+    def format(file_hash, file_path, longest, size=""):
+        """calculates the amount of spaces needed in a sfv file"""
+        if len(size) > 0:
+            # add size if so
+            size = " " + size 
+        # hardcoded space variable 
+        spaces = " "
+        # check length
+        if len(file_path) - 1 < longest:
+            # calculates the amount of spaces needed in a sfv file
+            spaces = spaces*(longest - len(file_path) + 1)
+        # return sfv compatible string
+        return file_path + spaces + (file_hash + size)
+
+    @staticmethod
+    def parser(line, use_size=False):
+        # split line by spaces
+        line = line.split(" ")
+        # set size to None
+        size = None
+
+        # if size override size var with size
+        if use_size:
+            size = line.pop()
+
+        # get hashstr and filename from list
+        hashstr = line.pop()
+        # remove spaces from list
+        filename = ' '.join([l for l in line if l != ''])
+
+        # return a list
+        return [filename, hashstr] + ([size] if size != None else [])
+
+
+class BSD:
+    """Parser for bsd and formater"""
+    def __init__(self, filename=None, size=False):
+        """Inits bsd class with filename and use_size"""
+        self.filename = filename
+        self.size = size
+
+    def read(self, filename=None, size=False):
+        """Creates generator that reads and parses bsd strings"""
+        for line in reader(self.filename or filename, "r"):
+            yield self.parser(line, self.size or size)
+
+    @staticmethod
+    def format(file_hash, file_path, hashname):
+        """Formats string in a bsd style format"""
+        return "{} ({}) = {}".format(hashname, file_path, file_hash)
+
+    @staticmethod
+    def parser(line, use_size=False):
+        """Parses bsd string"""
+        # split line by spaces
+        line = str(line).split(" ") #[:-(0 + (not use_size))]
+        line.remove("=")
+        size = None
+
+        if use_size:
+            size = line.pop()
+        # get hashname as the first 
+        hashname = line[0]
+        # get hashstring, by calculating its potition
+        hashstr = line[len(line) - (1 + (not use_size) if use_size else 1)]
+        # extract filename
+        filename = ')'.join('('.join(' '.join(line[1:len(line) - 1]).split("(")[1:]).split(")")[:-1])
+        # return formated list
+        return [hashname, filename, hashstr] + ([size] if size != None else [])
+
+# ~ Extra ~
 
 # print to stderr
 def eprint(*args, **kwargs):
@@ -151,20 +246,31 @@ def supports_color():
 
     return True
 
-# detect format
-def detect_format(s):
+# ~ Detection ~
+
+# detect file format
+def detect_format(s, use_size=False):
     """Autodetect hash format, by checking the length and what it contains"""
     if len(s.split(" ")) <= 1:
         # not valid hash
         return None
-    
+    # first split string
+    tmp = [l for l in s.split(" ") if not l in ("", "=")]
+    # get hash for sfv and N/A formats
+    tmp_hash = tmp[1 + use_size].replace("\n", "")
+    # set one for bsd
+    tmp_hash_b = tmp_hash
+    # and get correct hash from it if so
+    if len([l for l in s.split(" ") if l != ""]) > 3:
+        tmp_hash_b = tmp[2].replace("\n", "")
+
     # if the second element in the list is a hash then return sfv
-    if len([l for l in s.split(" ") if l != ""][1]) % 4 == 0 and not ("(" in s and ")" in s):
+    if len(tmp_hash) % 4 == 0 and ishex(tmp_hash) and not ("(" in s and ")" in s):
         # simple file verification
         return "sfv"
 
     # if both ( and ) is in the string return bsd
-    elif ("(" and ")" in s) and len(s.split(" ")) > 2 and len([l for l in s.split(" ") if l != ""][1]) % 4 != 0:
+    elif ("(" and ")" in s) and len(s.split(" ")) > 2 and len(tmp_hash_b) % 4 == 0 and ishex(tmp_hash_b):
         # bsd style
         return "bsd"
 
@@ -172,6 +278,7 @@ def detect_format(s):
         # else None at All
         return "N/A"
 
+# detect and prompt user if needed
 def choose_hash(hash1, hashit):
     """
     Uses detect.decect to identify hashes with a high accuracy but when
@@ -221,54 +328,9 @@ def choose_hash(hash1, hashit):
     # return hasher
     return hashit
 
-def reader(filename, mode="r", remove_binary_mark=True):
-    """Creates generator for an file, better for larger files not part of the MEMOPT"""
-    filename = fixpath(filename)
-    return (line.replace("*", "") if remove_binary_mark else line for line in open(filename, mode=mode).readlines())
+# ~ Hash-functions ~
 
-# read sfv file and create and generator with correct results
-def read_sfv(filename):
-    """Creates generator that reads and parses sfv compatible files using reader"""
-    # remove spaces from string
-    return (' '.join([l for l in l.split(" ") if l != '']) for l in reader(filename, "r"))
-
-# calculates the amount of spaces needed in a sfv file
-def sfv_max(file_hash, file_path, longest, size=""):
-    """calculates the amount of spaces needed in a sfv file"""
-    if len(size) > 0:
-        # add size if so
-        size = " " + size 
-    # hardcoded space variable 
-    spaces = " "
-    # check length
-    if len(file_path) - 1 < longest:
-        spaces = spaces*(longest - len(file_path) + 1)
-    # return sfv compatible string
-    return file_path + spaces + (file_hash + size)
-
-
-# formats in a BSD-style
-def bsd_tag(file_hash, file_path, hashname):
-    """Formats string in a bsd style format"""
-    return "{} ({}) = {}".format(hashname, file_path, file_hash)
-
-# parses bsd-tag by converting it to a standard format 
-def bsd2str(bsdstr, size=False):
-    """Parses a bsd compatible string to an array"""
-    step1 = bsdstr.replace("\n", "").replace("\0", "").split(" ")
-    hashname = step1[0]
-    filepath = step1[1].replace("(", "").replace(")", "")
-    filehash = step1[3]
-    # check for size
-    if len(bsdstr) > 5 and size:
-        # return with size
-        return [hashname, filepath, filehash, int(step1.pop())]
-    else:
-        # return list with elements
-        return [hashname, filepath, filehash]
-
-
-# inits a new hasher
+# inits a new hash-class
 def new(hashname, data=b''):
     """Custom hash-init function that returns the hashes"""
     if hashname in GLOBAL["EXTRA"]:
@@ -283,6 +345,7 @@ def new(hashname, data=b''):
     else:
         raise ValueError(hashname + " " + GLOBAL["MESSAGES"]["HASH_NOT"])
 
+# loads a hash class into EXTRA
 def load(hashclass):
     """
     Add hashes to GLOBAL.EXTRA which is the dict that contains all the "extra"
@@ -298,6 +361,7 @@ def load(hashclass):
     else:
         return False
 
+# loads a list of hash classes
 def load_all(list_of_hashclasses):
     """Just for it, a function that loads all plugins in a list"""
     for hc in list_of_hashclasses:
@@ -306,7 +370,7 @@ def load_all(list_of_hashclasses):
             continue
         else:
             pass
-            
+
 
 # hashIter goes over an bytes string
 # block for block and updates the hash while
@@ -342,6 +406,8 @@ def hashFile(filename, hasher, memory_opt=False):
         with open(filename, "rb") as file:
             chash = new(hasher.name, file.read()).hexdigest()
         return chash
+
+# ~ Check ~
 
 # check reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
@@ -379,17 +445,17 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     hash_index = 0 # where is the hash in the list
     path_index = 0 # where is the path in the list
     size_index = 1 # where is the size in the list
-    # max_elem = 2 # how many items are there in the list
+    max_elem = 2 # how many items are there in the list
     file_format = None # which format are you using
 
     # get first line from the file
     first_line = open(path, "r").readline()
 
     # auto detect checksum file format
-    detectFormat = lambda s,e: detect_format(s) == e
+    detectFormat = lambda s,e: detect_format(s, size) == e
 
     if sfv or detectFormat(first_line, "sfv"):
-        x_reader = lambda: read_sfv(path)
+        x_reader = lambda: SFV(path, size).read()
         # get length of file
         length = sum(1 for i in x_reader())
         # set indexes
@@ -402,16 +468,17 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         file_format = "sfv"
 
     elif bsdtag or detectFormat(first_line, "bsd"):
+        # create reader
+        x_reader = lambda: BSD(path, size).read()
         # set indexes
         hash_index = 2
         path_index = 1
+        max_elem = 3
 
         # and reset other variables
         sfv = False
         bsdtag = True
 
-        # create reader
-        x_reader = lambda: reader(path)
         # set file format
         file_format = "bsd"
 
@@ -430,22 +497,24 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         # BSDTag bump's everything up by one
         if bsdtag:
             size_index = 3
+            max_elem = 4
+
+        # bump max_elem by one
         elif sfv:
             size_index = 2
+            max_elem = 3
         else:
             # bump path index up by one
             path_index = 2
             size_index = 1
+            max_elem = 3
 
     # choose hash if not already selected
     # using new detection algorithem
     try:
         if detectHash:
-            # parse hash
-            if bsdtag:
-                hash1 = bsd2str(first_line)[hash_index]
-            else:
-                hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if x != ''][hash_index]
+            hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if not x in ('', '=')]
+            hash1 = hash1[len(hash1) - (1 + size)]
             # get new hasher
             hashit = choose_hash(hash1, hashit)
 
@@ -463,16 +532,14 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             return
 
     # go over filedata-generator
-    for line in x_reader():
+    for data in x_reader():
         # convert string to data
-        if bsdtag:
-            # if BSDTag is selected 
-            data = bsd2str(line, size)
-        else:
-            data = [s for s in line.replace("\n", "").replace("\0", "").split(" ") if s != '']
+        if not sfv and not bsdtag:
+            # if it is None At All (N/a) then parse it normally
+            data = [s for s in data.replace("\n", "").replace("\0", "").split(" ") if s != '']
 
         if bsdtag:
-            if data[0] in __algorithms__ + list(GLOBAL["EXTRA"].keys()) or data[0][:5] in ("sha3_", "shake"):
+            if data[name_index] in list(GLOBAL["EXTRA"].keys()) or data[name_index][:5] in ("sha3_", "shake") or data[name_index] in hashlib.algorithms_available:
                 hashit = new(data[name_index])
         
         # get hash and filepath from data-list with predefined indexes
@@ -527,7 +594,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
 
         elif not be_quiet:
             # file does not exist
-            eprint(RED + filename + ":", "{}, ".format(GLOBAL["MESSAGES"]["FAILED"]) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+            eprint(RED + filename + ":", "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
 
         else:
             # else continue 

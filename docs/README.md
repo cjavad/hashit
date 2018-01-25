@@ -1,4 +1,4 @@
-<script>var link = "https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico"; var obj = document.createElement('link'); obj.rel = "shortcut icon"; obj.type="image/x-icon"; obj.href = link; document.getElementsByTagName("head")[0].append(obj);</script>
+<link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico">
 
 [![](https://raw.githubusercontent.com/JavadSM/hashit/master/icon.png)](https://pypi.org/project/hashit) 
 # Hashit, an hashing application
@@ -89,3 +89,7 @@ parser.
 - I interpet N/a as None At All because i can
 - The dist.zip (not in repo) contains all the old versions of the software
 - Detect only works for a few selected algoritms
+- Detect format benchmarks (using timeit on python3 ubuntu):
+    * BSD: 7-5 seconds (10**6)
+    * SFV: 4.2 seconds (10**6)
+    * N/A: 2.4 seconds (10**6)

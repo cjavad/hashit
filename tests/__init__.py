@@ -132,12 +132,12 @@ class Test(unittest.TestCase):
         """
 
     def test_format(self):
-        s = hashit.bsd_tag(FILE_SUM, FILE, "md5")
+        s = hashit.BSD.format(FILE_SUM, FILE, "md5")
         self.assertEqual(s, "md5 ({}) = {}".format(FILE, FILE_SUM))
-        self.assertEqual(hashit.bsd2str(s), ["md5", FILE, FILE_SUM])
+        self.assertEqual(hashit.BSD.parser(s), ["md5", FILE, FILE_SUM])
 
         # check the sfv parser
-        self.assertEqual(hashit.sfv_max("abc", "def", 4), "def  abc")
+        self.assertEqual(hashit.SFV.format("abc", "def", 4), "def  abc")
 
 
 

@@ -42,6 +42,24 @@ NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES
 fixpath(path)
 ```
 Returns full path and supports snap
+<h2 id="hashit.reader">reader</h2>
+
+```python
+reader(filename, mode='r', remove_binary_mark=True)
+```
+Creates generator for an file, better for larger files not part of the MEMOPT
+<h2 id="hashit.SFV">SFV</h2>
+
+```python
+SFV(self, filename=None, size=False)
+```
+Class for parsing and creating sfv strings
+<h2 id="hashit.BSD">BSD</h2>
+
+```python
+BSD(self, filename=None, size=False)
+```
+Parser for bsd and formater
 <h2 id="hashit.eprint">eprint</h2>
 
 ```python
@@ -60,7 +78,7 @@ otherwise.
 <h2 id="hashit.detect_format">detect_format</h2>
 
 ```python
-detect_format(s)
+detect_format(s, use_size=False)
 ```
 Autodetect hash format, by checking the length and what it contains
 <h2 id="hashit.choose_hash">choose_hash</h2>
@@ -72,36 +90,6 @@ choose_hash(hash1, hashit)
 Uses detect.decect to identify hashes with a high accuracy but when
 there if some issues it will take user input.
 
-<h2 id="hashit.reader">reader</h2>
-
-```python
-reader(filename, mode='r', remove_binary_mark=True)
-```
-Creates generator for an file, better for larger files not part of the MEMOPT
-<h2 id="hashit.read_sfv">read_sfv</h2>
-
-```python
-read_sfv(filename)
-```
-Creates generator that reads and parses sfv compatible files using reader
-<h2 id="hashit.sfv_max">sfv_max</h2>
-
-```python
-sfv_max(file_hash, file_path, longest, size='')
-```
-calculates the amount of spaces needed in a sfv file
-<h2 id="hashit.bsd_tag">bsd_tag</h2>
-
-```python
-bsd_tag(file_hash, file_path, hashname)
-```
-Formats string in a bsd style format
-<h2 id="hashit.bsd2str">bsd2str</h2>
-
-```python
-bsd2str(bsdstr, size=False)
-```
-Parses a bsd compatible string to an array
 <h2 id="hashit.new">new</h2>
 
 ```python

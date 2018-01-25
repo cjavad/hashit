@@ -15,6 +15,7 @@ class Crc32:
         self.data += data
 
     def copy(self):
+        """return new Crc32 object with same properties"""
         return Crc32(self.data)
 
     def digest(self):

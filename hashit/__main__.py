@@ -10,8 +10,8 @@ import random
 import traceback
 import argparse
 # Import all from hashit
-from .__init__ import os, hashlib, eprint, hashFile, new, bsd_tag, load, \
-    GLOBAL, Exit, check, generate_data_set, detect, sfv_max, fixpath, \
+from .__init__ import os, hashlib, eprint, hashFile, new, BSD, load, \
+    GLOBAL, Exit, check, generate_data_set, detect, SFV, fixpath, \
     __algorithms__, __author__, __help__, __license__, supports_color
 
 from .extra import LINUX_LIST
@@ -60,10 +60,15 @@ def walk(go_over):
     """Goes over a path an finds all files, appends them to a list and returns that list"""
     walked = []
     for path, _subdirs, files in os.walk(go_over):
+        # if the path does not exist skip it (What)
+        if not os.path.exists(path):
+            continue
         # for each file
         for name in files:
-            # add it to in_files list()
-            walked.append((path  + "/" + name).replace("\\", "/").replace("//", "/"))
+            # add it to in_files list() if it does exist
+            p = (path  + "/" + name).replace("\\", "/").replace("//", "/")
+            if os.path.exists(p):
+                walked.append(p)
 
     # return list with file names
     return walked
@@ -262,6 +267,9 @@ def main_(args):
 
     # if to check use that
     elif argv.check:
+        # set argv.detect to true
+        if "-d" or "--detect" in args:
+            argv.detect = True
         # check for file
         if os.path.exists(argv.check):
             # then check
@@ -330,10 +338,10 @@ def main_(args):
                 size = str(os.stat(fname).st_size)
 
             if argv.sfv:
-                print_str = sfv_max(current_hash, fname, len(longest_filename), size + " ")
+                print_str = SFV.format(current_hash, fname, len(longest_filename), size)
 
             elif argv.bsd:
-                print_str = bsd_tag(current_hash, fname, hash_is.name) + " "  + size
+                print_str = BSD.format(current_hash, fname, hash_is.name) + (size if len(size) <= 0 else " " + size)
 
             else:
                 print_str = current_hash + " " + str(size + " " + fname)
