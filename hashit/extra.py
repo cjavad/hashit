@@ -25,7 +25,7 @@ class Crc32:
         """Digest as hex"""
         buf = (binascii.crc32(self.data) & 0xFFFFFFFF)
         return ("%08X" % buf).lower()
-
+        
 # class for shake hash
 class shake:
     """Top-level api for hashlib.shake"""
