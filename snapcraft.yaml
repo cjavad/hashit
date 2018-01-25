@@ -16,6 +16,7 @@ description: |
   
   hashname + sum, which i thougth was a pretty lame naming convention.
 
+architecture: [all]
 grade: stable
 confinement: strict
 
