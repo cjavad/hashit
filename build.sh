@@ -8,7 +8,7 @@
 PY=python3
 # get version of package
 # combine with name to get filenames
-V="$(${PY} setup.py -V)"
+V="$($PY setup.py -V)"
 TO="release"
 NAME="hashit-${V}"
 ZIP="dist/${NAME}.zip"

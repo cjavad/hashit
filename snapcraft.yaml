@@ -22,7 +22,7 @@ confinement: strict
 apps:
   hashit:
     command: bin/hashit
-    plugs: [home]
+    plugs: [home, removable-media]
 
 parts:
   hashit:

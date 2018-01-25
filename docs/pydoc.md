@@ -1,3 +1,5 @@
+<script>var link = "https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico"; var obj = document.createElement("link"); obj.rel = "shortcut icon"; obj.type="image/x-icon"; obj.href = link; document.getElementsByTagName("head")[0].append(obj);</script>
+
 <h1 id="hashit">hashit</h1>
 
 hashit module for hashit command is contaning all the code for hashit

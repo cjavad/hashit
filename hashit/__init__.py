@@ -81,7 +81,7 @@ GLOBAL = {
     },
     "MESSAGES":{
         "FILE_NOT":"File does not exist",
-        "MAYBE":"Did you maybe mean:",
+        "MAYBE_M":"Did you maybe mean:",
         "HASH_NOT":"is not a valid hash",
         "WRONG_FORMAT":"Checksum-file does not seem to be valid, maybe it is a sfv file? (try -sfv)",
         "EMPTY_CHK":"checksum file is empty",
@@ -194,8 +194,8 @@ def choose_hash(hash1, hashit):
             # for each element in maybe
             for c, h in enumerate(tup.certain + tup.maybe):
                 eprint(h, "(" + str(c) + ")")
-            # get input by printing questing
-            eprint(GLOBAL["MESSAGES"]["MAYBE"], end=" ")
+            # get input by e-printing questing
+            eprint(GLOBAL["MESSAGES"]["MAYBE_M"], end=" ")
             # and getting input as an int
             c_index = int(input())
             # fix output
