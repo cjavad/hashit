@@ -86,7 +86,7 @@ parser.
 
 [pydocmd](pydoc.md) generated with pydocmd
 
-[pydocs](pydocs/hahsit.html) generated with pydocs
+[pydocs](pydocs/hashit.html) generated with pydocs
 
 ## Notes:
 
