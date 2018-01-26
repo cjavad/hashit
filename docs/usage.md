@@ -124,7 +124,7 @@ print(hash_from_file)
 print(new("sha3_256", b'DATA').hexdigest())
 print(new("crc32", b'DATA').hexdigest()) # custom hashes is also supported
 ```
-See [extra](extra.md) for more customatation
+See [extra](extra.md) for more customization
 
 
 [back](README.md)
