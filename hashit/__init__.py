@@ -51,10 +51,10 @@ muliple files on a system. I got the idea from an ubuntu iso image which
 have this hash table, so i got the idea to make such a program using
 python.
 """
-
+int()
 # fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm)
-__algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake", "sha3_") \
-    or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
+__algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake",\
+ "sha3_") or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
 
 # Global config
 GLOBAL = {
@@ -65,6 +65,7 @@ GLOBAL = {
         "MEMOPT":False,
         "SIZE":False,
         "TRACE":False,
+        "STRICT":False,
         "QUIET":False,
         "DETECT":False,
         "APPEND":False,
@@ -80,22 +81,23 @@ GLOBAL = {
         "RESET":"\x1b[0m"
     },
     "MESSAGES":{
-        "FILE_NOT":"File does not exist",
-        "MAYBE_M":"Did you maybe mean:",
-        "HASH_NOT":"is not a valid hash",
-        "WRONG_FORMAT":"Checksum-file does not seem to be valid, maybe it is a sfv file? (try -sfv)",
-        "EMPTY_CHK":"checksum file is empty",
-        "PERM_ERR":"could not be accessed",
-        "CUR_FORM":"current format is",
-        "WORKS_ON":"is not guaranteed to work on your system",
-        "LOAD_FAIL":"Failed to load",
-        "OK":"OK",
-        "FAIL":"FAILED",
-        "MAYBE":"Maybe",
-        "RESULTS_AS":"Same results as"
+        "FILE_NOT":"File does not exist", # Warning when file dont exist
+        "MAYBE_M":"Did you maybe mean:", # Message when selected new hash
+        "HASH_NOT":"is not a valid hash", # Warning when hash is not loaded/exists
+        "WRONG_FORMAT":"Checksum-file does not seem to be valid, maybe it is a sfv file? (try -sfv) or -S (size)", # warning when the file has a wrong format
+        "EMPTY_CHK":"checksum file is empty", # Warning when check-file is empty
+        "PERM_ERR":"could not be accessed", # Warning when we do not have access to a file
+        "CUR_FORM":"current format is", # Message specifing the current fileformat (check)
+        "WORKS_ON":"is not guaranteed to work on your system", # message when hash is not in hashlib.guaranteed
+        "LOAD_FAIL":"Failed to load", # When failed to load a hashclass
+        "OK":"OK", # OK message
+        "FAIL":"FAILED", # FAIL message
+        "MAYBE":"Maybe", # MAYBE Message
+        "RESULTS_AS":"Same results as" # When results match
     },
     "ERRORS":{
         # JOKES in here
+        "IndexError":"Out of range, cause i am not that big :)",
         "ValueError":"Wrong type or mood?! :)",
         "TypeError":"Wrong type used (in cli-arguments) - please use a static programming language",
         "FileNotFoundError":"Error, file seems to be missing calling systemd to confirm 'sure you haved checked the MBR?'",
@@ -107,6 +109,7 @@ GLOBAL = {
             "END":"JDK, so something happend with your os, message: "
         }
     },
+    "IF_NO_ARGS":["--help"], # when no args is used this is the default setup
     "BLANK": (None, True, False),
     "SNAP_PATH":"/var/lib/snapd/hostfs",
     "DEVMODE":True,
@@ -115,7 +118,7 @@ GLOBAL = {
     "WRITE_MODE":"w" # 'w' not 'a'
 }
 
-# exit alias for os.sys.exit
+# exit alias for sys.exit
 Exit = os.sys.exit
 
 # ~ Files ~
@@ -316,7 +319,7 @@ def choose_hash(hash1, hashit):
             else:
                 # if it's out of index
                 # raise IndexError
-                raise IndexError
+                raise IndexError(GLOBAL["ERRORS"]["IndexError"])
         else:
             # the current hash is probaly the rigth one
             pass
@@ -412,7 +415,7 @@ def hashFile(filename, hasher, memory_opt=False):
 # check reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
 
-def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False):
+def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum"""
     # set colors
     RED = ""
@@ -452,7 +455,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     first_line = open(path, "r").readline()
 
     # auto detect checksum file format
-    detectFormat = lambda s,e: detect_format(s, size) == e
+    detectFormat = lambda s, e: detect_format(s, size) == e
 
     if sfv or detectFormat(first_line, "sfv"):
         x_reader = lambda: SFV(path, size).read()
@@ -517,7 +520,6 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             hash1 = hash1[len(hash1) - (1 + size)]
             # get new hasher
             hashit = choose_hash(hash1, hashit)
-
             # check if it is empty
             if hashit == None:
                 # if it is print error message
@@ -525,11 +527,19 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
                 # and return
                 return
     # if indexerror
-    except IndexError:
+    except IndexError as error:
         # if no data in file
         if length <= 0:
             eprint(RED + GLOBAL["MESSAGES"]["EMPTY_CHK"] + RESET)
-            return
+
+        if not be_quiet:
+            eprint(YELLOW + str(error) + RESET)
+
+        if trace:
+            raise error
+
+        if strict:
+            Exit(1)
 
     # go over filedata-generator
     for data in x_reader():
@@ -541,7 +551,17 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
         if bsdtag:
             if data[name_index] in list(GLOBAL["EXTRA"].keys()) or data[name_index][:5] in ("sha3_", "shake") or data[name_index] in hashlib.algorithms_available:
                 hashit = new(data[name_index])
-        
+
+        # check format
+        if len(data) > max_elem:
+            # if scrict exit none zero
+            if strict:
+                eprint(YELLOW + GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format) + RESET)
+                Exit(1)
+            else:
+                # else continue
+                continue
+
         # get hash and filepath from data-list with predefined indexes
         last_hash, filename = data[hash_index], data[path_index]
         # try to hash file again
@@ -556,8 +576,8 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             # current_hash = hashFile(filename, hashit, True)
             current_hash = new(hashit.name, open(filename, "rb").read()).hexdigest()
 
-            current_size = int()
-            last_size = int()
+            current_size = 0
+            last_size = 0
 
             # result of sizecheck
             # default: True
@@ -570,6 +590,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
                 current_size = os.stat(filename).st_size
                 try:
                     SizeCheck = int(last_size) == int(current_size)
+
                 except ValueError:
                     # os returns wrong size format
                     SizeCheck = True
@@ -592,9 +613,12 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
                 print(filename + ":" + GREEN, GLOBAL["MESSAGES"]["OK"], end=RESET + '\n')
 
 
-        elif not be_quiet:
+        elif not be_quiet and not strict:
             # file does not exist
             eprint(RED + filename + ":", "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+        elif strict:
+            eprint(RED + filename + ":", "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+            Exit(1)
 
         else:
             # else continue 

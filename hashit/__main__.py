@@ -96,6 +96,7 @@ def config(parser):
 
     # set commands
     parser.add_argument('path', nargs="?", default=os.getcwd()) # for directroy
+    parser.add_argument("files", nargs="*", default=[]) # for a list of files
 
     # add all the helping arguments
     ghelp.add_argument("-h", "--help", help="show this help message and exit", action=Execute, func=parser.format_help, exit=True)
@@ -114,7 +115,6 @@ def config(parser):
 
     # other, things that are optinional such as single file hashes
     other.add_argument("-a", "--all", help="Calculate all hashes for a single file", metavar="filename")
-    other.add_argument("-f", "--file", help="Hash single a file", metavar="filename")
     other.add_argument("-s", "--string", nargs="?", help="hash a string or a piece of text", default=False, metavar="string")
     other.add_argument("-d", "--detect", nargs="?", help="Enable hash detection for check", metavar="hash", default=GLOBAL["DEFAULTS"]["DETECT"])
     other.add_argument("-c", "--check", help="Verify checksums from a checksum file", metavar="filename", default=GLOBAL["DEFAULTS"]["MEMOPT"])
@@ -124,8 +124,8 @@ def config(parser):
     formats.add_argument("-sfv", "--sfv", help="Outputs in a sfv compatible format", action="store_true")
     formats.add_argument("-bsd", "--bsd", help="output using the bsd checksum-format", action="store_true")
 
-    dev.add_argument("-t", "--trace", help="Print traceback of any error cathed and exit", action="store_true", default=GLOBAL["DEFAULTS"]["TRACE"])
-    
+    dev.add_argument("--trace", help="Print traceback of any error cathed and exit", action="store_true", default=GLOBAL["DEFAULTS"]["TRACE"])
+    dev.add_argument("--strict", help="Exit non-zero on any errors", action="store_true", default=GLOBAL["DEFAULTS"]["STRICT"])
 
     # return parser
     return parser
@@ -140,11 +140,10 @@ def main_(args):
     # check for amount of arguments
     if len(args) == 0:
         # if there is not arguments show help
-        parser.parse_args(["--help"])
+        parser.parse_args(GLOBAL["IF_NO_ARGS"])
 
     # parse args
     argv = parser.parse_args(args)
-
     # Varibles
 
     # set colors
@@ -268,7 +267,7 @@ def main_(args):
     # if to check use that
     elif argv.check:
         # set argv.detect to true
-        if "-d" or "--detect" in args:
+        if "-d" in args or "--detect" in args:
             argv.detect = True
         # check for file
         if os.path.exists(argv.check):
@@ -281,7 +280,8 @@ def main_(args):
                 argv.detect,
                 argv.sfv,
                 argv.size,
-                argv.bsd
+                argv.bsd,
+                argv.strict
             )
 
         else:
@@ -289,20 +289,37 @@ def main_(args):
             # print error message
             eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
             Exit(1) # and exit
+    # ~ Check for files ~
 
-    # check the argv.file argument
-    elif not argv.file in GLOBAL["BLANK"]:
-        in_files = [argv.file]
+    # check the argv.files argument, and the path var
+    # which can be a file.
+    if len(argv.files) > 0 or os.path.isfile(my_path):
+        for f in argv.files + [my_path]:
+            p = fixpath(f) # use fixpath
+            if os.path.exists(p):
+                # if path is file
+                if os.path.isfile(p):
+                    # append to in_files
+                    in_files.append(p)
+            else:
+                # if file not exist then print error
+                eprint(RED + "{}, ".format(p) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+                # if strict exit non-zero
+                if argv.strict:
+                    Exit(1)
 
-    elif argv.recursive:
+    # else if my_path is a dir and r is true
+    elif argv.recursive and os.path.isdir(my_path):
         # walk directory and add files to my_path
         in_files = walk(my_path)
-    else:
-        # else just hash the files in this directory
+    
+    # else if my_path is a dir then just
+    elif os.path.isdir(my_path):
+        # hash all of the files in this directory
         in_files =  [my_path + "/" + f for f in os.listdir(my_path) if os.path.isfile(os.path.join(my_path, f))]
 
     # if there is any files in in_files
-    if in_files: 
+    if in_files:
         # find the longest filename
         longest_filename = max(in_files, key=len)
 
@@ -319,7 +336,7 @@ def main_(args):
 
                 # check if we have access to the file
                 elif isinstance(Error, PermissionError):
-                    eprint(RED + fname + " " + GLOBAL["MESSAGES"] + RESET)
+                    eprint(RED + fname + ", " + GLOBAL["MESSAGES"]["PERM_ERR"] + RESET)
                 
                 # print stack and trace if needed 
                 if argv.trace:
@@ -333,22 +350,25 @@ def main_(args):
             # set print_str
             print_str = current_hash
             size = ""
-
+            
+            # size override size as string
             if argv.size:
                 size = str(os.stat(fname).st_size)
-
+            
+            # if sfv format string
             if argv.sfv:
                 print_str = SFV.format(current_hash, fname, len(longest_filename), size)
-
+            # is bsd format string
             elif argv.bsd:
                 print_str = BSD.format(current_hash, fname, hash_is.name) + (size if len(size) <= 0 else " " + size)
-
+            # else use N/A
             else:
                 print_str = current_hash + " " + str(size + " " + fname)
 
             # check if fullpath path shall be stripped
             if argv.strip_path:
-                print_str = print_str.replace(my_path, ".") 
+                # then replace current path with .
+                print_str = print_str.replace(os.getcwd(), ".") 
             
             # if we should output the result to a file
             if use_out and output != None:
@@ -362,7 +382,7 @@ def main_(args):
         # Exit when done
         Exit(0)
     else:
-        # Else exit
+        # Else exit non-zero
         Exit(1)
 
 """
@@ -381,7 +401,6 @@ def main(args=None):
     if args is None:
         # to sys.args
         args = os.sys.argv[1:]
-
     try:
         # execute main application
         main_(args)

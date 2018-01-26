@@ -21,3 +21,6 @@ dist.zip
 
 # deb
 deb_dist/
+
+# other files
+.chk

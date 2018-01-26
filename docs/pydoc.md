@@ -135,7 +135,7 @@ hashFile is a simple way to hash files using diffrent methods
 <h2 id="hashit.check">check</h2>
 
 ```python
-check(path, hashit, useColors=False, be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False)
+check(path, hashit, useColors=False, be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False)
 ```
 Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
 <h1 id="hashit.__main__">hashit.__main__</h1>

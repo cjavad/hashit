@@ -65,7 +65,9 @@ From python you can do it like this
 
 Changelog
 --------------
-    
+
+    3.3.5 - hashit now supports a list of files such as the wildcard in linux, and can detect if that element is a directory
+
     3.3.4 - Bugfixes and more, fixed parsers added some benchmarks and fixing some more of the snap-related issues
 
     3.3.3 - Full release
