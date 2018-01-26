@@ -1,4 +1,5 @@
 theme: jekyll-theme-midnight
+description: Hashit an hashing application
 show_downloads: True
 
 github:
@@ -12,7 +13,7 @@ author:
 
 layout: default
 markdown: kramdown
-extra: "Hosted with on github"
+extra: "Hosted with love on github"
 
 plugins:
   - jekyll-relative-links
