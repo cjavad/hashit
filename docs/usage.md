@@ -4,10 +4,10 @@
 
 Hashit takes arguments like this:
 ```bash
-   usage: hashit [-h] [-V] [-l] [-hl] [-H hashname] [-C] [-sp] [-A] [-q] [-m]
-              [-r] [-a filename] [-f filename] [-s [string]] [-d [hash]]
-              [-c filename] [-o filename] [-S] [-sfv] [-bsd] [-t]
-              [path]
+usage: hashit [-h] [-V] [-l] [-hl] [-H hashname] [-C] [-sp] [-A] [-q] [-m]
+              [-r] [-a filename] [-s [string]] [-d [hash]] [-c filename]
+              [-o filename] [-S] [-sfv] [-bsd] [--trace] [--strict]
+              [path] [files [files ...]]
 ```
 
 Where the options are at following:
@@ -21,6 +21,7 @@ hash table, so i got the idea to make such a program using python.
 
 positional arguments:
   path
+  files
 
 help:
   -h, --help            show this help message and exit
@@ -47,8 +48,6 @@ settings:
 other:
   -a filename, --all filename
                         Calculate all hashes for a single file
-  -f filename, --file filename
-                        Hash single a file
   -s [string], --string [string]
                         hash a string or a piece of text
   -d [hash], --detect [hash]
@@ -59,7 +58,8 @@ other:
                         output output to an output (file)
 
 devtools:
-  -t, --trace           Print traceback of any error cathed and exit
+  --trace               Print traceback of any error cathed and exit
+  --strict              Exit non-zero on any errors
 
 MIT, Copyrigth (c) 2017-2018 Javad Shafique
 
@@ -125,6 +125,15 @@ $ hashit -s
 secret_key^D
 73eeac3fa1a0ce48f381ca1e6d71f077
 ```
+If you want to hash multiple files with forexample a wildcard(*):
+```bash
+$ hashit *.txt
+d41d8cd98f00b204e9800998ecf8427e empty.txt
+d41d8cd98f00b204e9800998ecf8427e another_0bytefile.txt
+d41d8cd98f00b204e9800998ecf8427e no_data.txt
+```
+
+
 > TIP: add quotes around multi length strings to make them a single argument
 
 ## From python
