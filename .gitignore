@@ -23,4 +23,8 @@ dist.zip
 deb_dist/
 
 # other files
-.chk
+*.chk
+
+# jekyll
+_site/
+.sass-cache/

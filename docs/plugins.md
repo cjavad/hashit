@@ -1,4 +1,6 @@
-<link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico">
+---
+layout: default
+---
 
 With the new release, i have added support for loading thirdparty hashfunction to hashit via load() and GLOBAL
 basicly it adds a new entry to GLOBAL.EXTRA with its' name and class. The way these plugins work are quite simple,

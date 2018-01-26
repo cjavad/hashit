@@ -1,4 +1,6 @@
-<link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico">
+---
+layout: default
+---
 
 List off all supported hashes for all versions
 

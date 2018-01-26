@@ -27,7 +27,7 @@ then
     #find . -name "*.ht*" | while read i; do pandoc -f html -t markdown "$i" -o "${i%.*}.md"; done
     #cd ../..
     # clean/create file
-    printf '<script>var link = "https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico"; var obj = document.createElement("link"); obj.rel = "shortcut icon"; obj.type="image/x-icon"; obj.href = link; document.getElementsByTagName("head")[0].append(obj);</script>\n\n' > ./docs/pydoc.md
+    echo -e "---\nlayout: default\n---\n" > ./docs/pydoc.md
     $PY -c "from pydocmd.__main__ import main; import sys; sys.argv = ['', 'simple', 'hashit+', 'hashit.__main__+', 'hashit.detection+', 'hashit.extra+']; main()" >> ./docs/pydoc.md
     printf "\n\n[back](README.md)" >> ./docs/pydoc.md # add back button
     exit

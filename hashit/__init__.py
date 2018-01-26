@@ -44,14 +44,13 @@ from .detection import detect, generate_data_set, ishex
 __author__ = "Javad Shafique" # copyrigth holder
 __license__ = "MIT, Copyrigth (c) 2017-2018 Javad Shafique" # license for the program
 
-
 # help desciption
 __help__ = """Hashit is an hashing program which can be uses to hash and verify
 muliple files on a system. I got the idea from an ubuntu iso image which
 have this hash table, so i got the idea to make such a program using
 python.
 """
-int()
+
 # fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm)
 __algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake",\
  "sha3_") or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
@@ -277,9 +276,8 @@ def detect_format(s, use_size=False):
         # bsd style
         return "bsd"
 
-    else:
-        # else None at All
-        return "N/A"
+    # else None at All
+    return "N/A"
 
 # detect and prompt user if needed
 def choose_hash(hash1, hashit):
@@ -336,15 +334,19 @@ def choose_hash(hash1, hashit):
 # inits a new hash-class
 def new(hashname, data=b''):
     """Custom hash-init function that returns the hashes"""
+    # if it's a plugin
     if hashname in GLOBAL["EXTRA"]:
         return GLOBAL["EXTRA"][hashname](data)
-
+    
+    # shake hash
     elif hashname[:5] == "shake" and os.sys.version_info[0] == 3:
         return shake(hashname, data)
-
+    
+    # hashlib algorithm
     elif hashname in hashlib.algorithms_available:
         return hashlib.new(hashname, data)
-
+    
+    # else raise value error
     else:
         raise ValueError(hashname + " " + GLOBAL["MESSAGES"]["HASH_NOT"])
 
@@ -361,8 +363,9 @@ def load(hashclass):
         hashname = hashclass().name
         GLOBAL["EXTRA"][hashname] = hashclass
         return True
-    else:
-        return False
+    
+    # else return false
+    return False
 
 # loads a list of hash classes
 def load_all(list_of_hashclasses):
@@ -371,9 +374,6 @@ def load_all(list_of_hashclasses):
         if not load(hc):
             eprint(hc, GLOBAL["MESSAGES"]["LOAD_FAIL"])
             continue
-        else:
-            pass
-
 
 # hashIter goes over an bytes string
 # block for block and updates the hash while
@@ -401,13 +401,16 @@ def blockIter(afile, blocksize=65536):
 # hashfile, the function used for all file hashing-operations
 def hashFile(filename, hasher, memory_opt=False):
     """hashFile is a simple way to hash files using diffrent methods"""
+    # use fixpath
     filename = fixpath(filename)
+    # is memopt is true hashit like that
     if memory_opt:
         return hashIter(blockIter(open(filename, "rb")), hasher, True)
     else:
-        # dont use memory optimatation but close file
+        # else don't use memory optimatation
         with open(filename, "rb") as file:
             chash = new(hasher.name, file.read()).hexdigest()
+        # and return current hash
         return chash
 
 # ~ Check ~
@@ -417,7 +420,7 @@ def hashFile(filename, hasher, memory_opt=False):
 
 def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum"""
-    # set colors
+    # set "global" colors
     RED = ""
     GREEN = ""
     YELLOW = ""
@@ -601,7 +604,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
                 # if the file has changed print notice (md5sum inpired)
                 if not SizeCheck:
                     # change with file increase/decreas
-                    print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash + RESET, YELLOW + str(last_size) + RESET + "->" + YELLOW + str(current_size) , end=RESET + '\n')
+                    print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash + RESET, YELLOW + str(last_size) + RESET + "->" + YELLOW + str(current_size), end=RESET + '\n')
                 else: 
                     # change in hash
                     print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash, end=RESET + '\n')

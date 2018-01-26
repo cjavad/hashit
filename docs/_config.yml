@@ -1,8 +1,8 @@
 theme: jekyll-theme-midnight
-
 show_downloads: True
 
 github:
+  owner_url: https://github.com/JavadSM/hashit/
   tar_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.tar
   zip_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.zip
 
@@ -10,4 +10,9 @@ author:
   name: Javad Shafique
   url: javadsm.wordpress.com
 
+layout: default
 markdown: kramdown
+extra: "Hosted with on github"
+
+plugins:
+  - jekyll-relative-links

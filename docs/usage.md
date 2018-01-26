@@ -1,13 +1,15 @@
-<link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico">
+---
+layout: default
+---
 
 # Usage of hashit
 
 Hashit takes arguments like this:
 ```bash
 usage: hashit [-h] [-V] [-l] [-hl] [-H hashname] [-C] [-sp] [-A] [-q] [-m]
-              [-r] [-a filename] [-s [string]] [-d [hash]] [-c filename]
-              [-o filename] [-S] [-sfv] [-bsd] [--trace] [--strict]
-              [path] [files [files ...]]
+              [-r] [-s [string]] [-d [hash]] [-c filename] [-o filename] [-S]
+              [-sfv] [-bsd] [--trace] [--strict]
+              [path] [files [files ...]
 ```
 
 Where the options are at following:
@@ -46,8 +48,6 @@ settings:
   -r, --recursive       Hash all files in all subdirectories
 
 other:
-  -a filename, --all filename
-                        Calculate all hashes for a single file
   -s [string], --string [string]
                         hash a string or a piece of text
   -d [hash], --detect [hash]
@@ -70,37 +70,12 @@ So if i want to hash a file called fx. icon.png
 $ hashit icon.png
 eade8f2bb7fcb89d396a850b977740fd  icon.png
 ```
-And lets say i wanted all the hashes for that file
-which if returns as json
-```bash
-$ hashit -a icon.png
-{
-    "DSA": "8ad122c24304690d6a0fc46446106bc95e094c9e",
-    "DSA-SHA": "8ad122c24304690d6a0fc46446106bc95e094c9e",
-    "blake2b": "84a6cf8b30a707ef059e53fd1c175107ebd906272bb0146b74a26ebfc43c0811a4c936b0717004eadbd753512277f3443dd1671785e99fdbe80391d58ecf7e8c",
-    "blake2s": "df1551c430efc153a9529c801aead83ba476bb0233e63d530017c6607d926df1",
-    "crc32": "cb2ffbd8",
-    "dsaEncryption": "8ad122c24304690d6a0fc46446106bc95e094c9e",
-    "dsaWithSHA": "8ad122c24304690d6a0fc46446106bc95e094c9e",
-    "ecdsa-with-SHA1": "8ad122c24304690d6a0fc46446106bc95e094c9e",
-    "md4": "baffa3f473f660144d74bf600d29e486",
-    "md5": "eade8f2bb7fcb89d396a850b977740fd",
-    "ripemd160": "6eb4ca72e588805ba585f736ddc0e46d62c157c5",
-    "sha": "6ae22567c9010f75c2d3a3a45a14dd8122538126",
-    "sha1": "8ad122c24304690d6a0fc46446106bc95e094c9e",
-    "sha224": "b9cb9e312457656fc317985167d48cb7f13f3108acc4a65e2ba89a1d",
-    "sha256": "b0ed4e4f1d1ca9785da1162e1d04d3871602f3c9d2300808724d2cc526bdbede",
-    "sha384": "86046011a9bb5bb446210ddef89cf366c98ec7f0b8d5717fcbcd3da7fc7484150756f14c157c8eeb47e724256c5ba2e9",
-    "sha512": "d145cfc23ec8195a39e112fb77d2b1ac186e0de11a9ac9e7594dea56db15fc6a2048ff3dbe4430a26d29ef3de39ebe68b3d526926e373a97127a775ed1ac9f46",
-    "whirlpool": "f0842c319d55159c4309f0e026c642e548c0e0f6bfd825010f41352bd0a1b78f6c4b04ae80c7a58fde755b1dc9b9ad986cdc55fa94bdd5b2d4caf004c9e53121"
-}
-```
 
 Or i wanted to hash the tests directory with lets say blake2s and write it to a file using the bsd format and then verify it
 ```bash
 $ hashit -H blake2s -o output.txt -bsd tests/
 # no need to specify the files format it detects it automaticly
-$ hashit -H blake2s -c output.txt --color
+$ hashit -H blake2s -c output.txt -C # or --color for -C
 tests/speed.py: OK
 tests/test.py: OK
 tests/__init__.py: OK
@@ -149,4 +124,7 @@ print(hash_from_file)
 print(new("sha3_256", b'DATA').hexdigest())
 print(new("crc32", b'DATA').hexdigest()) # custom hashes is also supported
 ```
+See [extra](extra.md) for more customatation
+
+
 [back](README.md)

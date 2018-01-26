@@ -1,11 +1,10 @@
-"""Command line program for hashit
+"""Command line application for hashit
 
 this module "__main__" contains all the code for argparsing, running
 and anything needed for an command lin application such as hashit.
 
 it uses argc another package by me, but i am considering switching to argparse
 """
-import json
 import random
 import traceback
 import argparse
@@ -34,14 +33,14 @@ class Print(argparse.Action):
         print(self.data)
 
         if self.exit:
-            Exit()
+            Exit(0)
 
 class Execute(argparse.Action):
     """Same as Print() but instead of printing an object it calls it takes func (function), and exit (bool)"""
     def __init__(self, nargs=0, **kwargs):
         if nargs != 0:
             raise ValueError('nargs for Execute must be 0; it is just a flag.')
-        
+
         if "func" in kwargs:
             self.data = kwargs.pop("func")
 
@@ -54,7 +53,7 @@ class Execute(argparse.Action):
         print(self.data())
 
         if self.exit:
-            Exit()
+            Exit(0)
 
 def walk(go_over):
     """Goes over a path an finds all files, appends them to a list and returns that list"""
@@ -87,6 +86,17 @@ def config(parser):
 
         return  "\n" + '\n'.join(s) + "\n"
     
+    def help_self():
+        """Launches help() for module"""
+        # get info from self
+        help(os.sys.modules["hashit"])
+        help(os.sys.modules[__name__]) # current
+        help(os.sys.modules["hashit.detection"])
+        help(os.sys.modules["hashit.extra"])
+        help(os.sys.modules["hashit.version"])
+
+        return __help__
+
     # create groups
     ghelp = parser.add_argument_group("help")
     formats = parser.add_argument_group("formats")
@@ -100,6 +110,7 @@ def config(parser):
 
     # add all the helping arguments
     ghelp.add_argument("-h", "--help", help="show this help message and exit", action=Execute, func=parser.format_help, exit=True)
+    ghelp.add_argument("-p", "--page", help="Launch interactive help with python help() (for python api)", action=Execute, func=help_self, exit=True)
     ghelp.add_argument("-V", "--version", help="Print current version and exit", action="version", version="%(prog)s " + __version__)
     ghelp.add_argument("-l", "--license", help="Print license and exit", action=Print, text=__license__, exit=True)
     ghelp.add_argument("-hl", "--hash-list", help="Prints list of all supported hashes and exits", action=Execute, func=hash_list, exit=True)
@@ -113,17 +124,20 @@ def config(parser):
     settings.add_argument("-m", "--memory-optimatation", help="Enables memory optimatation (useful for large files)", action="store_true")
     settings.add_argument("-r", "--recursive", help="Hash all files in all subdirectories", action="store_true", default=GLOBAL["DEFAULTS"]["RECURS"])
 
-    # other, things that are optinional such as single file hashes
-    other.add_argument("-a", "--all", help="Calculate all hashes for a single file", metavar="filename")
+    # other, things that are optinional such as detect and string hashes
+    # other.add_argument("-a", "--all", help="Calculate all hashes for a single file", metavar="filename") NOTE: Removed for now
     other.add_argument("-s", "--string", nargs="?", help="hash a string or a piece of text", default=False, metavar="string")
     other.add_argument("-d", "--detect", nargs="?", help="Enable hash detection for check", metavar="hash", default=GLOBAL["DEFAULTS"]["DETECT"])
+    # ~ More important ~
     other.add_argument("-c", "--check", help="Verify checksums from a checksum file", metavar="filename", default=GLOBAL["DEFAULTS"]["MEMOPT"])
     other.add_argument("-o", "--output", help="output output to an output (file)", metavar="filename")
 
+    # ~ Formatting ~
     formats.add_argument("-S", "--size", help="Adds the file size to the output", action="store_true", default=GLOBAL["DEFAULTS"]["SIZE"])
     formats.add_argument("-sfv", "--sfv", help="Outputs in a sfv compatible format", action="store_true")
     formats.add_argument("-bsd", "--bsd", help="output using the bsd checksum-format", action="store_true")
 
+    # ~ Devtools ~
     dev.add_argument("--trace", help="Print traceback of any error cathed and exit", action="store_true", default=GLOBAL["DEFAULTS"]["TRACE"])
     dev.add_argument("--strict", help="Exit non-zero on any errors", action="store_true", default=GLOBAL["DEFAULTS"]["STRICT"])
 
@@ -138,7 +152,7 @@ def main_(args):
     parser = config(parser)
 
     # check for amount of arguments
-    if len(args) == 0:
+    if not args:
         # if there is not arguments show help
         parser.parse_args(GLOBAL["IF_NO_ARGS"])
 
@@ -197,13 +211,33 @@ def main_(args):
     
 
     # check for new path
-    if len(args) >= 1:
+    if os.path.isdir(argv.path):
         new_path = argv.path
         # check if argument is path else do not change path
         if os.path.exists(new_path) and ("/" in new_path or new_path in (".", "..")):
             my_path = new_path
+    
+    """ NOTE: Removed all for now
+    # check for hash one file
+    if not argv.all in GLOBAL["BLANK"]:
+        if os.path.exists(argv.all):
+            data = open(argv.all, "rb").read()
+            results = {}
+            for algo in __algorithms__:
+                results[algo] = new(algo, data).hexdigest()
 
-    # check for string
+            out = json.dumps(results, indent=4, sort_keys=True)
+
+            if use_out and output != None:
+                output.write(out)
+            else:
+                print(out)
+        else:
+            eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+    """
+
+    # check for string in args needed because argparse
+    # does not support both store_true and store same for detect
     if "-s" in args or "--string" in args:
         data = argv.string
         if not data:
@@ -229,23 +263,6 @@ def main_(args):
         else:
             print(hash_is.hexdigest())
 
-    # check for hash one file
-    elif not argv.all in GLOBAL["BLANK"]:
-        if os.path.exists(argv.all):
-            data = open(argv.all, "rb").read()
-            results = {}
-            for algo in __algorithms__:
-                results[algo] = new(algo, data).hexdigest()
-
-            out = json.dumps(results, indent=4, sort_keys=True)
-
-            if use_out and output != None:
-                output.write(out)
-            else:
-                print(out)
-        else:
-            eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-
     # if detect is choosen use it
     elif not argv.detect in GLOBAL["BLANK"]:
         hashes = detect(argv.detect, generate_data_set("Hallo", __algorithms__, new))
@@ -261,8 +278,6 @@ def main_(args):
                 print(YELLOW + GLOBAL["MESSAGES"]["MAYBE"], item + RESET)
         else:
             print(RED + str(argv.detect) + " " + GLOBAL["MESSAGES"]["HASH_NOT"] + RESET)
-        # exit when done
-        Exit(0)
 
     # if to check use that
     elif argv.check:
@@ -293,8 +308,8 @@ def main_(args):
 
     # check the argv.files argument, and the path var
     # which can be a file.
-    if len(argv.files) > 0 or os.path.isfile(my_path):
-        for f in argv.files + [my_path]:
+    elif argv.files or os.path.isfile(argv.path):
+        for f in argv.files + [argv.path]:
             p = fixpath(f) # use fixpath
             if os.path.exists(p):
                 # if path is file
@@ -381,6 +396,7 @@ def main_(args):
 
         # Exit when done
         Exit(0)
+
     else:
         # Else exit non-zero
         Exit(1)
@@ -444,4 +460,8 @@ def main(args=None):
 
 # if the program is being called
 if __name__ == "__main__":
-    main() # then execute main function
+    # Exit 0 on KeyboardInterrupt
+    try:
+        main() # then execute main function
+    except KeyboardInterrupt:
+        Exit(0)

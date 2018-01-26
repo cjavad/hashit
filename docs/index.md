@@ -1,4 +1,6 @@
-<link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico">
+---
+layout: default
+---
 
 [![](https://raw.githubusercontent.com/JavadSM/hashit/master/icon.png)](https://pypi.org/project/hashit) 
 # Hashit, an hashing application
@@ -83,6 +85,8 @@ parser.
 [extra](extra.md) how to setup hashit (plugins & config)
 
 [pydocmd](pydoc.md) generated with pydocmd
+
+[pydocs](pydocs/hahsit.html) generated with pydocs
 
 ## Notes:
 

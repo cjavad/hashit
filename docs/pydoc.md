@@ -1,4 +1,6 @@
-<script>var link = "https://raw.githubusercontent.com/JavadSM/hashit/master/docs/favicon.ico"; var obj = document.createElement("link"); obj.rel = "shortcut icon"; obj.type="image/x-icon"; obj.href = link; document.getElementsByTagName("head")[0].append(obj);</script>
+---
+layout: default
+---
 
 <h1 id="hashit">hashit</h1>
 
@@ -140,7 +142,7 @@ check(path, hashit, useColors=False, be_quiet=False, detectHash=True, sfv=False,
 Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
 <h1 id="hashit.__main__">hashit.__main__</h1>
 
-Command line program for hashit
+Command line application for hashit
 
 this module "__main__" contains all the code for argparsing, running
 and anything needed for an command lin application such as hashit.
