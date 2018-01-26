@@ -67,7 +67,7 @@ MIT, Copyrigth (c) 2017-2018 Javad Shafique
 
 So if i want to hash a file called fx. icon.png
 ```bash
-$ hashit -f icon.png
+$ hashit icon.png
 eade8f2bb7fcb89d396a850b977740fd  icon.png
 ```
 And lets say i wanted all the hashes for that file
