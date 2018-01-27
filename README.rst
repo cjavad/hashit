@@ -3,8 +3,13 @@
 
 Project is hosted on `pypi <https://pypi.org/project/hashit/>`__
 
+.. image:: icon.png
+   :target:  https://github.com/javadsm/hashit
+   :align: right
 
-See docs for more info
+Hashit, an hashing application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 What is this magic (hashing)
