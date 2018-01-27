@@ -6,31 +6,39 @@ for windows hence the choice of using python. while hashit supports both python 
 i would strongly recommend using python3 because that python3 comes with a newer version
 of hashlib and therefore many new hash-functions, altough it is posible to add these into
 python2 with the load() function which acts like a 'connecter' and enables hashit to use
-third-party hashing-functions as long as the have the same api as specified in docs/README.md 
+third-party hashing-functions as long as the have the same api as specified in docs/index.md
 
-MIT License                                                                      
+The GLOBAL dict contains all the configurations for this program, translations, error messages
+settings, plugins and more.
 
-Copyright (c) 2018 Javad Shafique
-              
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+__algorithms__ is a list that contains all the builtin algorithms including crc32
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+LICENSE:
 
-NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.
+    MIT License
+
+    Copyright (c) 2018 Javad Shafique
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+    NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.
 """
 # import print and with for python2 support
 from __future__ import print_function, with_statement
@@ -51,9 +59,9 @@ have this hash table, so i got the idea to make such a program using
 python.
 """
 
-# fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm)
-__algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake",\
- "sha3_") or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
+# fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm
+__algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake") \
+or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
 
 # Global config
 GLOBAL = {
@@ -124,7 +132,11 @@ Exit = os.sys.exit
 
 # gets fullpath
 def fixpath(path):
-    """Returns full path and supports snap"""
+    """Fixpath converts the releative path into an absolute path
+    and if needed can append the path to the snap host-filesystem 
+    which if the application is in devmode gives hashit access to 
+    the hole filesystem, if you're not in devmode and you're still
+    using snap, then you will need sudo to access the intire system"""
     c_path = os.path.join(os.getcwd(), path).replace("\\", "/")
     # check if you'll need to use snap
     if os.environ.get("SNAP") and GLOBAL["DEVMODE"] and not GLOBAL["ACCESS"]:
@@ -133,7 +145,10 @@ def fixpath(path):
     return c_path
 
 def reader(filename, mode="r", remove_binary_mark=True): # remove binary marker from md5sum
-    """Creates generator for an file, better for larger files not part of the MEMOPT"""
+    """Creates generator for an file, better for larger files not part of the MEMOPT,
+    so an standard reader for most uses. Works like readlines but instead of a list it
+    creates an generator that sortof clean the input before it is parsed by something like
+    BSD() or SFV()."""
     filename = fixpath(filename)
     # return generator
     return ('*'.join(line.split("*")[1:]).replace("\n", "") if line.startswith("*") and remove_binary_mark else \
@@ -142,7 +157,9 @@ def reader(filename, mode="r", remove_binary_mark=True): # remove binary marker 
 # ~ File Formats ~
 
 class SFV:
-    """Class for parsing and creating sfv strings"""
+    """Class for parsing and creating sfv strings
+    SFV() contains all functions needed for parsing,
+    creating and formating SFV strings"""
     def __init__(self, filename=None, size=False):
         """Inits sfv class with file and use_size"""
         self.filename = filename
@@ -157,7 +174,7 @@ class SFV:
     @staticmethod
     def format(file_hash, file_path, longest, size=""):
         """calculates the amount of spaces needed in a sfv file"""
-        if len(size) > 0:
+        if size:
             # add size if so
             size = " " + size 
         # hardcoded space variable 
@@ -190,7 +207,10 @@ class SFV:
 
 
 class BSD:
-    """Parser for bsd and formater"""
+    """Parser for bsd and formater, also the
+    same as SFV() but BSD() instead of sfv uses
+    the bsd checksum output which is like this:
+        hashname (filename) = hash [size]"""
     def __init__(self, filename=None, size=False):
         """Inits bsd class with filename and use_size"""
         self.filename = filename
@@ -251,28 +271,28 @@ def supports_color():
 # ~ Detection ~
 
 # detect file format
-def detect_format(s, use_size=False):
+def detect_format(hashstr, use_size=False):
     """Autodetect hash format, by checking the length and what it contains"""
-    if len(s.split(" ")) <= 1:
+    if len(hashstr.split(" ")) < 0:
         # not valid hash
         return None
     # first split string
-    tmp = [l for l in s.split(" ") if not l in ("", "=")]
+    tmp = [l for l in hashstr.split(" ") if not l in ("", "=")]
     # get hash for sfv and N/A formats
     tmp_hash = tmp[1 + use_size].replace("\n", "")
     # set one for bsd
     tmp_hash_b = tmp_hash
     # and get correct hash from it if so
-    if len([l for l in s.split(" ") if l != ""]) > 3:
+    if len([l for l in hashstr.split(" ") if l != ""]) > 3:
         tmp_hash_b = tmp[2].replace("\n", "")
 
     # if the second element in the list is a hash then return sfv
-    if len(tmp_hash) % 4 == 0 and ishex(tmp_hash) and not ("(" in s and ")" in s):
+    if len(tmp_hash) % 4 == 0 and ishex(tmp_hash) and not ("(" in hashstr and ")" in hashstr):
         # simple file verification
         return "sfv"
 
     # if both ( and ) is in the string return bsd
-    elif ("(" and ")" in s) and len(s.split(" ")) > 2 and len(tmp_hash_b) % 4 == 0 and ishex(tmp_hash_b):
+    elif ("(" and ")" in hashstr) and len(hashstr.split(" ")) > 2 and len(tmp_hash_b) % 4 == 0 and ishex(tmp_hash_b):
         # bsd style
         return "bsd"
 
@@ -295,10 +315,10 @@ def choose_hash(hash1, hashit):
         if tup is None:
             return None
 
-        if len(tup.certain) >= 1 and not (hashit.name in tup.certain or tup.maybe) and len(tup.maybe) <= 0:
+        if tup.certain and not (hashit.name in tup.certain or tup.maybe) and not tup.maybe:
             hashit = new(tup.certain[0])
-        
-        elif len(tup.maybe) >= 1:
+
+        elif tup.maybe:
             # for each element in maybe
             for c, h in enumerate(tup.certain + tup.maybe):
                 eprint(h, "(" + str(c) + ")")
@@ -310,7 +330,7 @@ def choose_hash(hash1, hashit):
             eprint("\n", end="")
 
             # then use the input as an index
-            if len(tup.maybe) - 1 >= c_index:  
+            if len(tup.maybe) - 1 >= c_index:
                 # choose maybe
                 hashit = new((tup.certain + tup.maybe)[c_index])
 
@@ -333,19 +353,24 @@ def choose_hash(hash1, hashit):
 
 # inits a new hash-class
 def new(hashname, data=b''):
-    """Custom hash-init function that returns the hashes"""
+    """Custom hash-init function that returns the hashes
+    depends on hashlib.new and GLOBAL["EXTRA"]. One of its'
+    features is it's support for the python3 only shake-hash
+    scheme were the default hash is shake_256 and the input is
+    taken like this:
+        shake_[amount of output]"""
     # if it's a plugin
     if hashname in GLOBAL["EXTRA"]:
         return GLOBAL["EXTRA"][hashname](data)
-    
+
     # shake hash
     elif hashname[:5] == "shake" and os.sys.version_info[0] == 3:
         return shake(hashname, data)
-    
+
     # hashlib algorithm
     elif hashname in hashlib.algorithms_available:
         return hashlib.new(hashname, data)
-    
+
     # else raise value error
     else:
         raise ValueError(hashname + " " + GLOBAL["MESSAGES"]["HASH_NOT"])
@@ -363,7 +388,7 @@ def load(hashclass):
         hashname = hashclass().name
         GLOBAL["EXTRA"][hashname] = hashclass
         return True
-    
+
     # else return false
     return False
 
@@ -406,12 +431,12 @@ def hashFile(filename, hasher, memory_opt=False):
     # is memopt is true hashit like that
     if memory_opt:
         return hashIter(blockIter(open(filename, "rb")), hasher, True)
-    else:
-        # else don't use memory optimatation
-        with open(filename, "rb") as file:
-            chash = new(hasher.name, file.read()).hexdigest()
-        # and return current hash
-        return chash
+    
+    # else don't use memory optimatation
+    with open(filename, "rb") as file:
+        chash = new(hasher.name, file.read()).hexdigest()
+    # and return current hash
+    return chash
 
 # ~ Check ~
 
@@ -421,7 +446,8 @@ def hashFile(filename, hasher, memory_opt=False):
 def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
     by creating an generator which loops over another generator which parses/reads the file and then it will check
-    if the hash and optionally the size of the files matches the current state of them.
+    if the hash and optionally the size of the files matches the current state of them. For more info on how this work
+    see docs/index.md#technical.
     """
     # using generator to save proccessing power for parsing
     # sfv file not much but for the sake of it.
@@ -508,7 +534,7 @@ def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
         # check format
         if len(data) > max_elem:
             # if there is something wrong with the format yield the error message
-            yield GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format)
+            yield (GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format))
             # and continue
             continue
 
@@ -552,12 +578,11 @@ def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
 
         else:
             # else continue and yield error message if the file does not exist
-            yield filename + ": " + "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"]
-            continue
+            yield (filename + ": " + "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"])
 
-def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
+def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
     """Uses check_() to print the error messages and statuses corrent (for CLI)
-    they are seperated so that you can use the python api i you so please.
+    they are seperated so that you can use the python api, if you so please.
     """
     # set "global" colors
     RED = ""
@@ -566,17 +591,17 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     RESET = ""
     # check if system supports color
     # and check if the colors is enabled
-    if supports_color() and useColors:
+    if supports_color() and usecolors:
         # if so override the vars with the colors
         RED = GLOBAL["COLORS"]["RED"]
         GREEN = GLOBAL["COLORS"]["GREEN"]
-        YELLOW = GLOBAL["COLORS"]["YELLOW"]   
-        RESET = GLOBAL["COLORS"]["RESET"] 
+        YELLOW = GLOBAL["COLORS"]["YELLOW"]
+        RESET = GLOBAL["COLORS"]["RESET"]
 
     # check if file exits
     if not os.path.exists(path):
         eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-        return
+        return 1
 
     # get first line from the file
     first_line = open(path, "r").readline()
@@ -584,18 +609,18 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     # choose hash if not already selected
     # using new detection algorithem
     try:
-        if detectHash:
+        if detecthash:
             hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if not x in ('', '=')]
             file_format = detect_format(first_line)
             hash1 = hash1[(0 + size + bsdtag + sfv)]
             # get new hasher
             hashit = choose_hash(hash1, hashit)
             # check if it is empty
-            if hashit == None:
+            if hashit is None:
                 # if it is print error message
                 eprint(YELLOW + GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format) + RESET)
                 # and return
-                return
+                return 1
 
     # if indexerror
     except IndexError as error:
@@ -608,9 +633,12 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
 
         if trace:
             raise error
-
+        # if strict return 1
         if strict:
-            Exit(1)
+            return 1
+        
+        # Else return exit code 0
+        return 0
 
     for c in check_(path, hashit, first_line, sfv, size, bsdtag):
         if isinstance(c, str):
@@ -620,12 +648,12 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             if not be_quiet and not strict:
                 eprint(YELLOW + c + RESET)
 
-            # if strict exit non zero
+            # if strict return 1
             if strict:
                 eprint(RED + c + RESET)
-                Exit(1)
+                return 1
 
-        # check if there are any changes in the results end 
+        # check if there are any changes in the results end
         # from them that in the file
         # check_ does automaticly check if the values are equal
 
@@ -634,7 +662,7 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             if not c["size_check"]:
                 # change with file increase/decrease
                 print(c["filename"] + ":" + GREEN, c["last_hash"] + RESET, ">", RED + c["current_hash"] + RESET, YELLOW + str(c["last_size"]) + RESET + "->" + YELLOW + str(c["current_size"]), end=RESET + '\n')
-            else: 
+            else:
                 # change in hash
                 print(c["filename"] + ":" + GREEN, c["last_hash"] + RESET, ">", RED + c["current_hash"], end=RESET + '\n')
 
@@ -643,3 +671,6 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             # print OK
             # else print OK if not quiet
             print(c["filename"] + ":" + GREEN, GLOBAL["MESSAGES"]["OK"], end=RESET + '\n')
+
+    # return exit code
+    return 0

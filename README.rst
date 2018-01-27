@@ -6,6 +6,28 @@ Project is hosted on `pypi <https://pypi.org/project/hashit/>`__
 
 See docs for more info
 
+
+What is this magic (hashing)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..
+
+   Hashing - The Greatest Idea In Programming
+
+A quote from `here <http://www.i-programmer.info/babbages-bag/479-hashing.html>`__, which i think sums up the hole thing pretty well.
+Even though, that stament is purely opinion based, i still thing there is some weigth in it, because you can do so many things with "hashing".
+First of all the concept of hashing is that you can, with an matematical algorithm generate a string that is unique to that piece of data, but
+you cannot turn that string into the data again, this is done by generating a string which size is constant (or at least not changing from data to data).
+And this is actually extreamlly useful, because this enables you to generate a string that is smaller than the original while still being totally unique,
+this can be using in databases for bigdata where you can create a lookup table without needing to use the hole amount of data, it can also be used to verify data
+such as passwords and file-checksums, which by the way is what this program is. I use the standard python hashes libary hashlib, which comes with most versions of
+python, some function like crc32 are from other libaries, i use these to hash some files and store the results in a checksum-file, which can be read back and check
+if the files have changed, this is very important when it comes to packaging, and other critical files, were one must be absoulutly sure that the file has not
+been changed, because if it has it could be due to corruption or infection of some kind of malware, so by making sure that the package is the same as the original.
+Some file systems use these hashes to make sure that the files havn't been alteret externally.
+
+For more see `docs/hashes <docs/hashes.md>`__ and the `wikipedia page <https://en.wikipedia.org/wiki/Hash_function>`__
+
+
 Background
 ~~~~~~~~~~
 
@@ -44,6 +66,8 @@ See `docs/usage <docs/usage.md>`__
 
 Changelog
 --------------
+
+    3.3.8 - Added more documentation and added sha3 (Keccak) support for detect
 
     3.3.7 - Refractored the hashit.check code so you can now use it from python! (see `docs/extra.md#gui <docs/extra.md#gui>`__ for an example)
 

@@ -4,7 +4,7 @@ show_downloads: True
 
 github:
   owner_url: https://github.com/JavadSM/hashit/
-  tar_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.tar
+  tar_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.tar.gz
   zip_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.zip
 
 author:

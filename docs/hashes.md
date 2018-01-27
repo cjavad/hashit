@@ -2,6 +2,8 @@
 layout: default
 ---
 
+## Supported
+
 List off all supported hashes for all versions
 
 For all versions crc32 is supported
@@ -31,16 +33,15 @@ For python3 is all from python2 and more:
 ## Experimental
 
 And for python3 a special syntax for the shake hash
-
 where by default shake-256 is used like this
-
-shake_(length)
+```shake_(length)```
 
 so 
 
 ```bash
 $ touch file
-$ python3 -m hashit -H shake_2 -f file
-49b9 file
+$ python3 -m hashit -H shake_2 file -sp
+49b9 ./file
 ```
-[back](README.md)
+
+[back](index.md)

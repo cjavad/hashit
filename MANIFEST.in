@@ -2,3 +2,4 @@ include README.rst
 include LICENSE
 include icon.png
 include snapcraft.yaml
+include docs/*.md

@@ -12,56 +12,76 @@ for windows hence the choice of using python. while hashit supports both python 
 i would strongly recommend using python3 because that python3 comes with a newer version
 of hashlib and therefore many new hash-functions, altough it is posible to add these into
 python2 with the load() function which acts like a 'connecter' and enables hashit to use
-third-party hashing-functions as long as the have the same api as specified in docs/README.md
+third-party hashing-functions as long as the have the same api as specified in docs/index.md
 
-MIT License
+The GLOBAL dict contains all the configurations for this program, translations, error messages
+settings, plugins and more.
 
-Copyright (c) 2018 Javad Shafique
+__algorithms__ is a list that contains all the builtin algorithms including crc32
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+LICENSE:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    MIT License
 
-NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.
+    Copyright (c) 2018 Javad Shafique
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+    NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.
 
 <h2 id="hashit.fixpath">fixpath</h2>
 
 ```python
 fixpath(path)
 ```
-Returns full path and supports snap
+Fixpath converts the releative path into an absolute path
+and if needed can append the path to the snap host-filesystem
+which if the application is in devmode gives hashit access to
+the hole filesystem, if you're not in devmode and you're still
+using snap, then you will need sudo to access the intire system
 <h2 id="hashit.reader">reader</h2>
 
 ```python
 reader(filename, mode='r', remove_binary_mark=True)
 ```
-Creates generator for an file, better for larger files not part of the MEMOPT
+Creates generator for an file, better for larger files not part of the MEMOPT,
+so an standard reader for most uses. Works like readlines but instead of a list it
+creates an generator that sortof clean the input before it is parsed by something like
+BSD() or SFV().
 <h2 id="hashit.SFV">SFV</h2>
 
 ```python
 SFV(self, filename=None, size=False)
 ```
 Class for parsing and creating sfv strings
+SFV() contains all functions needed for parsing,
+creating and formating SFV strings
 <h2 id="hashit.BSD">BSD</h2>
 
 ```python
 BSD(self, filename=None, size=False)
 ```
-Parser for bsd and formater
+Parser for bsd and formater, also the
+same as SFV() but BSD() instead of sfv uses
+the bsd checksum output which is like this:
+    hashname (filename) = hash [size]
 <h2 id="hashit.eprint">eprint</h2>
 
 ```python
@@ -80,7 +100,7 @@ otherwise.
 <h2 id="hashit.detect_format">detect_format</h2>
 
 ```python
-detect_format(s, use_size=False)
+detect_format(hashstr, use_size=False)
 ```
 Autodetect hash format, by checking the length and what it contains
 <h2 id="hashit.choose_hash">choose_hash</h2>
@@ -98,6 +118,11 @@ there if some issues it will take user input. CLI-only
 new(hashname, data=b'')
 ```
 Custom hash-init function that returns the hashes
+depends on hashlib.new and GLOBAL["EXTRA"]. One of its'
+features is it's support for the python3 only shake-hash
+scheme were the default hash is shake_256 and the input is
+taken like this:
+    shake_[amount of output]
 <h2 id="hashit.load">load</h2>
 
 ```python
@@ -141,15 +166,16 @@ check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False)
 ```
 Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
 by creating an generator which loops over another generator which parses/reads the file and then it will check
-if the hash and optionally the size of the files matches the current state of them.
+if the hash and optionally the size of the files matches the current state of them. For more info on how this work
+see docs/index.md#technical.
 
 <h2 id="hashit.check">check</h2>
 
 ```python
-check(path, hashit, useColors=False, be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False)
+check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False)
 ```
 Uses check_() to print the error messages and statuses corrent (for CLI)
-they are seperated so that you can use the python api i you so please.
+they are seperated so that you can use the python api, if you so please.
 
 <h1 id="hashit.__main__">hashit.__main__</h1>
 
@@ -370,4 +396,4 @@ shake(self, hashname, data=b'')
 Top-level api for hashlib.shake
 
 
-[back](README.md)
+[back](index.md)

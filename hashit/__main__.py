@@ -77,8 +77,7 @@ def config(parser):
 
     def hash_list():
         """Generates an easy-to-read list"""
-        algos = set((__algorithms__ + ["sha3_224", "sha3_256", "sha3_384", "sha3_512"] if os.sys.version_info[0] == 3 else __algorithms__)\
-             + list(GLOBAL["EXTRA"].keys())) # add extras
+        algos = set((__algorithms__ + list(GLOBAL["EXTRA"].keys()))) # add extras
         # sort set
         s = [sorted(algos)[x:x+2] for x in range(0, len(algos), 2)]
         for c, l in enumerate(s):
@@ -208,7 +207,7 @@ def main_(args):
         # else set it to false
         use_out = False
 
-    
+
 
     # check for new path
     if os.path.isdir(argv.path):
@@ -216,7 +215,7 @@ def main_(args):
         # check if argument is path else do not change path
         if os.path.exists(new_path) and ("/" in new_path or new_path in (".", "..")):
             my_path = new_path
-    
+
     """ NOTE: Removed all for now
     # check for hash one file
     if not argv.all in GLOBAL["BLANK"]:
@@ -256,7 +255,7 @@ def main_(args):
 
         # then hash-it
         hash_is.update(data)
-        
+
         # check for output methods
         if use_out and output != None:
             output.write(hash_is.hexdigest())
@@ -271,7 +270,7 @@ def main_(args):
                 print(GREEN + GLOBAL["MESSAGES"]["RESULTS_AS"], item + RESET)
 
             # print sepetator if there is a need for one
-            if len(hashes.maybe) >= 1 and len(hashes.certain) >= 1:
+            if hashes.maybe and hashes.certain:
                 print("")
 
             for item in hashes.maybe:
@@ -287,7 +286,7 @@ def main_(args):
         # check for file
         if os.path.exists(argv.check):
             # then check
-            check(
+            return check(
                 argv.check,
                 hash_is,
                 argv.color,
@@ -303,7 +302,13 @@ def main_(args):
             # if the file does not exist
             # print error message
             eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-            Exit(1) # and exit
+
+            if argv.strict:
+                return 1 # and exit non-zero
+
+            # Else return 0
+            return 0 
+
     # ~ Check for files ~
 
     # check the argv.files argument, and the path var
@@ -321,13 +326,16 @@ def main_(args):
                 eprint(RED + "{}, ".format(p) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
                 # if strict exit non-zero
                 if argv.strict:
-                    Exit(1)
+                    return 1
+
+                # else return zero
+                return 0
 
     # else if my_path is a dir and r is true
     elif argv.recursive and os.path.isdir(my_path):
         # walk directory and add files to my_path
         in_files = walk(my_path)
-    
+
     # else if my_path is a dir then just
     elif os.path.isdir(my_path):
         # hash all of the files in this directory
@@ -352,8 +360,8 @@ def main_(args):
                 # check if we have access to the file
                 elif isinstance(Error, PermissionError):
                     eprint(RED + fname + ", " + GLOBAL["MESSAGES"]["PERM_ERR"] + RESET)
-                
-                # print stack and trace if needed 
+
+                # print stack and trace if needed
                 if argv.trace:
                     eprint(YELLOW, end="")
                     traceback.print_stack(file=os.sys.stderr)
@@ -361,15 +369,15 @@ def main_(args):
                     eprint(RESET, end="")
 
                 continue
-            
+
             # set print_str
             print_str = current_hash
             size = ""
-            
+
             # size override size as string
             if argv.size:
                 size = str(os.stat(fname).st_size)
-            
+
             # if sfv format string
             if argv.sfv:
                 print_str = SFV.format(current_hash, fname, len(longest_filename), size)
@@ -383,8 +391,8 @@ def main_(args):
             # check if fullpath path shall be stripped
             if argv.strip_path:
                 # then replace current path with .
-                print_str = print_str.replace(os.getcwd(), ".") 
-            
+                print_str = print_str.replace(os.getcwd(), ".")
+
             # if we should output the result to a file
             if use_out and output != None:
                 # write result to an file
@@ -394,12 +402,8 @@ def main_(args):
                 # else print it
                 print(print_str)
 
-        # Exit when done
-        Exit(0)
-
-    else:
-        # Else exit non-zero
-        Exit(1)
+    # return ExitCode
+    return 0
 
 """
 Hashit __main__.py can be executed directly with python(3) -m hashit "commands"
@@ -419,7 +423,7 @@ def main(args=None):
         args = os.sys.argv[1:]
     try:
         # execute main application
-        main_(args)
+        Exit(main_(args)) # Exit with return code
     except Exception as error:
         # define colors
         RD = ""
@@ -439,7 +443,7 @@ def main(args=None):
 
         elif isinstance(error, FileNotFoundError):
             eprint(YL + GLOBAL["ERRORS"]["FileNotFoundError"] + RE)
-        
+
         elif isinstance(error, OSError):
             eprint(YL + GLOBAL["ERRORS"]["OSError"]["windows"])
             eprint(GLOBAL["ERRORS"]["OSError"]["macos"])
@@ -455,13 +459,13 @@ def main(args=None):
         else:
             # else print error
             eprint(RD + str(error) + RE)
-        
+
         os._exit(1) # force exit
 
 # if the program is being called
 if __name__ == "__main__":
-    # Exit 0 on KeyboardInterrupt
+    # Exit 0 on KeyboardInterruptExit
     try:
         main() # then execute main function
     except KeyboardInterrupt:
-        Exit(0)
+        Exit(130) # According to the posix standard

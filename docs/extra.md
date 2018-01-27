@@ -63,4 +63,4 @@ see [plugins](plugins.md) for more about the loading of plugins
 One of my goals with this project is to create an easy-to-use gui, which i have yet to acomplish
 for now see [this](../tests/spec/gui.py) file for an example of how to create an gui for hashit
 
-[back](README.md)
+[back](index.md)

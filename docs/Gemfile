@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 gem "jekyll-theme-midnight"
 # Plugins
-gem 'jekyll-relative-link'
+gem 'jekyll-relative-links'

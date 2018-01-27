@@ -12,7 +12,7 @@ V="$($PY setup.py -V)"
 TO="release"
 NAME="hashit-${V}"
 ZIP="dist/${NAME}.zip"
-TAR="dist/${NAME}.tar"
+TAR="dist/${NAME}.tar.gz"
 
 if [ "$1" == "docs" ]
 then
@@ -22,25 +22,33 @@ then
     $PY -m pydoc -w hashit.detection
     $PY -m pydoc -w hashit.extra
     $PY -m pydoc -w hashit.version
-    mv *.html ./docs/pydocs
+    mv -f *.html ./docs/pydocs
     #cd ./docs/pydocs
     #find . -name "*.ht*" | while read i; do pandoc -f html -t markdown "$i" -o "${i%.*}.md"; done
     #cd ../..
     # clean/create file
     echo -e "---\nlayout: default\n---\n" > ./docs/pydoc.md
     $PY -c "from pydocmd.__main__ import main; import sys; sys.argv = ['', 'simple', 'hashit+', 'hashit.__main__+', 'hashit.detection+', 'hashit.extra+']; main()" >> ./docs/pydoc.md
-    printf "\n\n[back](README.md)" >> ./docs/pydoc.md # add back button
+    printf "\n\n[back](index.md)" >> ./docs/pydoc.md # add back button
     
     # push new documentation to wiki
-    cp ./docs/*.md ../hashit.wiki
-    mv ../hashit.wiki/index.md ../hashit.wiki/Home.md
+    sudo cp ./docs/*.md ../hashit.wiki
+    sudo mv ../hashit.wiki/index.md ../hashit.wiki/Home.md
     cd ../hashit.wiki
     # remove layout
-    sed -i '/layout: default/d' *.md
-    sed -i '/---/d' *.md
+    sudo sed -i '/layout: default/d' *.md
+    sudo sed -i '/---/d' *.md
     # push to git
     sudo git add .
     sudo git commit -m "Updated wiki"
+    exit
+fi
+
+if [ "$1" == "push" ]
+then
+    echo push hashit
+    git push
+    cd ../hashit.wiki
     echo "PUSH wiki"
     sudo git push
     exit
@@ -60,11 +68,11 @@ then
     rm -rf ./dist
 else
     # Move and print messages
-    SILENT="$($PY setup.py sdist --quiet --formats zip,tar)"
+    SILENT="$($PY setup.py sdist --quiet --formats zip,gztar)"
     echo "Version, $V at $ZIP and $TAR"
     mv $ZIP "${TO}/hashit.zip"
-    mv $TAR "${TO}/hashit.tar"
-    echo "Moved to ${TO}/hashit.zip and ${TO}/hashit.tar"
+    mv $TAR "${TO}/hashit.tar.gz"
+    echo "Moved to ${TO}/hashit.zip and ${TO}/hashit.tar.gz"
     rm -r dist/
 
     if [ "$1" == "deb" ]

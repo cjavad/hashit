@@ -68,15 +68,15 @@ class Test(unittest.TestCase):
         self.assertTrue(correct1 in cl1.maybe)
 
         # only one left should be true
-        self.assertTrue(correct2 in cl2.certain)
+        self.assertTrue(correct2 in (cl2.certain if cl2.certain else cl2.maybe))
         self.assertTrue(correct4 in cl4.certain)
         # and if it is to check hash with it
-        self.assertEqual(hashit.new(correct2, b'Hallo').hexdigest(), hashit.new(cl2.certain[0], b'Hallo').hexdigest())
+        self.assertEqual(hashit.new(correct2, b'Hallo').hexdigest(), hashit.new(cl2.certain[0] if cl2.certain else cl2.maybe[0], b'Hallo').hexdigest())
 
         # for sha1 more options should be avaible
         self.assertTrue(len(cl3.certain) > 1)
         # and work
-        self.assertEqual(h3, hashit.hashIter(hashit.blockIter(open(FILE, "rb")), hashit.new(cl3.certain[0])))
+        self.assertEqual(h3, hashit.hashIter(hashit.blockIter(open(FILE, "rb")), hashit.new(cl3.maybe[0])))
 
     def test_detect_format(self):
         # create shortcut
@@ -99,7 +99,8 @@ class Test(unittest.TestCase):
         h3 = hashit.hashIter(hashit.blockIter(open(FILE, "rb")), hashit.new(algo))
 
         # just checking
-        self.assertEqual(hashit.detect(hashit.hashFile(FILE, hashit.new("sha224"), False), hashit.generate_data_set("HALLO", hashit.__algorithms__, hashit.new)).certain[0], "sha224")
+        d = hashit.detect(hashit.hashFile(FILE, hashit.new("sha224"), False), hashit.generate_data_set("HALLO", hashit.__algorithms__, hashit.new))
+        self.assertEqual(d.certain[0] if d.certain else d.maybe[0], "sha224")
 
         self.assertTrue(h1 == h2 == h3 == FILE_SUM)
     

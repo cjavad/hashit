@@ -127,4 +127,4 @@ print(new("crc32", b'DATA').hexdigest()) # custom hashes is also supported
 See [extra](extra.md) for more customization
 
 
-[back](README.md)
+[back](index.md)

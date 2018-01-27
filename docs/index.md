@@ -25,10 +25,12 @@ by seperating each hash into a different tool (yes i am aware of that these tool
 
 See [docs/hashes.md](hashes.md) for the diffrent types of hashes supported
 
+[](#usage)
 ## Usage
 see [docs/usage.md](usage.md)
 
 
+[](#installing)
 ## Installing
 
 I would recommend installing it from pypi like this
@@ -40,6 +42,7 @@ But you can also install it from snap
     snap install hashit (--devmode or --classic is recommend)
 
 ## Technical Notes
+[](#technical)
 ```
 There where a memory leak in the check function which caused wrong hashes to be resolved from my observatitions it
 has something to do with pythons generators, i fixed it by added an read-all mode (normal) and made it default in 
@@ -51,7 +54,7 @@ The check function works by detect/selecting hashtype and file format then apply
 such as the hash, path and filesize. These indexes can then be used on the lists we create from the line in the file using the file formats
 parser.
 
-Due to some interface problems with snap, is it not posible to access devices than home and external drives. therefore i would recommend you to install it in --devmode but if you want you can also use classic.
+Due to some interface problems with snap, is it not posible to access devices than home and external drives. therefore i would recommend you to install it in --devmode but if you want you can also use classic. (Bypass: use sudo)
 ```
 
 >
@@ -84,6 +87,7 @@ Due to some interface problems with snap, is it not posible to access devices th
 >```
 
 ## Links
+[](#links)
 [extra](extra.md) how to setup hashit (plugins & config)
 
 [pydocmd](pydoc.md) generated with pydocmd
@@ -91,10 +95,11 @@ Due to some interface problems with snap, is it not posible to access devices th
 [pydocs](pydocs/hashit.html) generated with pydocs
 
 ## Notes:
+[](#notes)
 
 - I interpet N/a as None At All because i can
 - The dist.zip (not in repo) contains all the old versions of the software
-- Detect only works for a few selected algoritms
+- Detect does not work with shake due to its integration
 - I would not recommend using -S --size because then you will have to specify it everytime you check
 - Detect format benchmarks (using timeit on python3 ubuntu):
     * BSD: 7-5 seconds (10**6)
