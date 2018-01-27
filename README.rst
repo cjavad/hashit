@@ -40,28 +40,7 @@ in the same file, good for multi-sized file validation. (remember -m)
 Usage
 --------------
 
-Command line wise
-
-.. code:: bash
-
-    (python3 -m) hashit [options] $path
-
-From python you can do it like this
-
-.. code:: py
-
-    from hashit import hashlib, blockIter, hashIter, hashFile, new
-
-    file = open("somefile", "rb")
-
-    """ memory efficent generator """
-    hash1 = hashIter(blockIter(file, blocksize=65536), hasher=new("md5"), ashexstr=True)
-
-    """ easy access """
-    hash2 = hashFile("somefile", new("md5"), False)  # enable memory effienct generator (False)
-
-    assert hash1 == hash2
-    print(hash1, hash2)
+See `docs/usage <docs/usage.md>`__
 
 Changelog
 --------------
