@@ -47,9 +47,11 @@ the check function and other systems to, but by given the application ```-m``` y
 the initial hash, which so far hasn't shown any memory leaks but the check function will still be running on the default
 read-all mode.
 
-The check function works by detect/selecting hashtype and fileformat then applying the data by creating indexes for diffrent values
-such as the hash, path and filesize. These indexes can then be used on the lists we create from the line in the file using the fileformats̈́
+The check function works by detect/selecting hashtype and file format then applying the data by creating indexes for diffrent values
+such as the hash, path and filesize. These indexes can then be used on the lists we create from the line in the file using the file formats
 parser.
+
+Due to some interface problems with snap, is it not posible to access devices than home and external drives. therefore i would recommend you to install it in --devmode but if you want you can also use classic.
 ```
 
 >
