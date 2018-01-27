@@ -66,6 +66,8 @@ From python you can do it like this
 Changelog
 --------------
 
+    3.3.7 - Refractored the hashit.check code so you can now use it from python! (see `docs/extra.md#gui <docs/extra.md#gui>`__ for an example)
+
     3.3.6 - Minor bugfixes and removed -a, added -p --page for a help-page in the terminal for the python-api
 
     3.3.5 - hashit now supports a list of files such as the wildcard in linux, and can detect if that element is a directory

@@ -283,7 +283,7 @@ def detect_format(s, use_size=False):
 def choose_hash(hash1, hashit):
     """
     Uses detect.decect to identify hashes with a high accuracy but when
-    there if some issues it will take user input.
+    there if some issues it will take user input. CLI-only
     """
     # check for valid hash
     if hasattr(hashit, "name"):
@@ -415,30 +415,14 @@ def hashFile(filename, hasher, memory_opt=False):
 
 # ~ Check ~
 
-# check reads an file generate with hashit or md5sum (or sfv compatible files) and
+# check_ reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
 
-def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
-    """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum"""
-    # set "global" colors
-    RED = ""
-    GREEN = ""
-    YELLOW = ""
-    RESET = ""
-    # check if system supports color
-    # and check if the colors is enabled
-    if supports_color() and useColors:
-        # if so override the vars with the colors
-        RED = GLOBAL["COLORS"]["RED"]
-        GREEN = GLOBAL["COLORS"]["GREEN"]
-        YELLOW = GLOBAL["COLORS"]["YELLOW"]   
-        RESET = GLOBAL["COLORS"]["RESET"] 
-
-    # check if file exits
-    if not os.path.exists(path):
-        eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-        return
-
+def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
+    """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
+    by creating an generator which loops over another generator which parses/reads the file and then it will check
+    if the hash and optionally the size of the files matches the current state of them.
+    """
     # using generator to save proccessing power for parsing
     # sfv file not much but for the sake of it.
 
@@ -454,16 +438,12 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     max_elem = 2 # how many items are there in the list
     file_format = None # which format are you using
 
-    # get first line from the file
-    first_line = open(path, "r").readline()
 
     # auto detect checksum file format
     detectFormat = lambda s, e: detect_format(s, size) == e
 
     if sfv or detectFormat(first_line, "sfv"):
         x_reader = lambda: SFV(path, size).read()
-        # get length of file
-        length = sum(1 for i in x_reader())
         # set indexes
         hash_index = 1
         path_index = 0
@@ -491,7 +471,6 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
     else:
         # create reader
         x_reader = lambda: reader(path)
-        length = sum(1 for i in x_reader())
         # set indexes
         hash_index = 0
         path_index = 1
@@ -515,35 +494,6 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             size_index = 1
             max_elem = 3
 
-    # choose hash if not already selected
-    # using new detection algorithem
-    try:
-        if detectHash:
-            hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if not x in ('', '=')]
-            hash1 = hash1[len(hash1) - (1 + size)]
-            # get new hasher
-            hashit = choose_hash(hash1, hashit)
-            # check if it is empty
-            if hashit == None:
-                # if it is print error message
-                eprint(YELLOW + GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format) + RESET)
-                # and return
-                return
-    # if indexerror
-    except IndexError as error:
-        # if no data in file
-        if length <= 0:
-            eprint(RED + GLOBAL["MESSAGES"]["EMPTY_CHK"] + RESET)
-
-        if not be_quiet:
-            eprint(YELLOW + str(error) + RESET)
-
-        if trace:
-            raise error
-
-        if strict:
-            Exit(1)
-
     # go over filedata-generator
     for data in x_reader():
         # convert string to data
@@ -557,13 +507,10 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
 
         # check format
         if len(data) > max_elem:
-            # if scrict exit none zero
-            if strict:
-                eprint(YELLOW + GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format) + RESET)
-                Exit(1)
-            else:
-                # else continue
-                continue
+            # if there is something wrong with the format yield the error message
+            yield GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format)
+            # and continue
+            continue
 
         # get hash and filepath from data-list with predefined indexes
         last_hash, filename = data[hash_index], data[path_index]
@@ -579,12 +526,14 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
             # current_hash = hashFile(filename, hashit, True)
             current_hash = new(hashit.name, open(filename, "rb").read()).hexdigest()
 
-            current_size = 0
-            last_size = 0
+            current_size = None
+            last_size = None
 
-            # result of sizecheck
+            # result of size_check
             # default: True
-            SizeCheck = True
+            size_check = True
+            # set hashcheck
+            hash_check = str(last_hash) == str(current_hash)
 
             # if we shall check the size diffrence
             # get last and current size
@@ -592,37 +541,105 @@ def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=F
                 last_size = data[size_index]
                 current_size = os.stat(filename).st_size
                 try:
-                    SizeCheck = int(last_size) == int(current_size)
+                    size_check = int(last_size) == int(current_size)
 
                 except ValueError:
                     # os returns wrong size format
-                    SizeCheck = True
+                    size_check = True
 
-            # check if there are any changes in the results end 
-            # from them that in the file
-            if not current_hash == last_hash or not SizeCheck:
-                # if the file has changed print notice (md5sum inpired)
-                if not SizeCheck:
-                    # change with file increase/decreas
-                    print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash + RESET, YELLOW + str(last_size) + RESET + "->" + YELLOW + str(current_size), end=RESET + '\n')
-                else: 
-                    # change in hash
-                    print(filename + ":" + GREEN, last_hash + RESET, ">", RED + current_hash, end=RESET + '\n')
-
-            # if not to be quiet
-            elif not be_quiet:
-                # print OK
-                # else print OK if not quiet
-                print(filename + ":" + GREEN, GLOBAL["MESSAGES"]["OK"], end=RESET + '\n')
-
-
-        elif not be_quiet and not strict:
-            # file does not exist
-            eprint(RED + filename + ":", "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-        elif strict:
-            eprint(RED + filename + ":", "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-            Exit(1)
+            # yield results
+            yield {"filename":filename, "last_hash":last_hash, "current_hash":current_hash, "last_size":last_size, "current_size":current_size, "size_check":size_check, "hash_check":hash_check}
 
         else:
-            # else continue 
+            # else continue and yield error message if the file does not exist
+            yield filename + ": " + "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"]
             continue
+
+def check(path, hashit, useColors=False,  be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
+    """Uses check_() to print the error messages and statuses corrent (for CLI)
+    they are seperated so that you can use the python api i you so please.
+    """
+    # set "global" colors
+    RED = ""
+    GREEN = ""
+    YELLOW = ""
+    RESET = ""
+    # check if system supports color
+    # and check if the colors is enabled
+    if supports_color() and useColors:
+        # if so override the vars with the colors
+        RED = GLOBAL["COLORS"]["RED"]
+        GREEN = GLOBAL["COLORS"]["GREEN"]
+        YELLOW = GLOBAL["COLORS"]["YELLOW"]   
+        RESET = GLOBAL["COLORS"]["RESET"] 
+
+    # check if file exits
+    if not os.path.exists(path):
+        eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+        return
+
+    # get first line from the file
+    first_line = open(path, "r").readline()
+
+    # choose hash if not already selected
+    # using new detection algorithem
+    try:
+        if detectHash:
+            hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if not x in ('', '=')]
+            file_format = detect_format(first_line)
+            hash1 = hash1[(0 + size + bsdtag + sfv)]
+            # get new hasher
+            hashit = choose_hash(hash1, hashit)
+            # check if it is empty
+            if hashit == None:
+                # if it is print error message
+                eprint(YELLOW + GLOBAL["MESSAGES"]["WRONG_FORMAT"] + " {} '{}' ".format(GLOBAL["MESSAGES"]["CUR_FORM"], file_format) + RESET)
+                # and return
+                return
+
+    # if indexerror
+    except IndexError as error:
+        # if no data in file
+        if not first_line:
+            eprint(RED + GLOBAL["MESSAGES"]["EMPTY_CHK"] + RESET)
+
+        if not be_quiet:
+            eprint(YELLOW + str(error) + RESET)
+
+        if trace:
+            raise error
+
+        if strict:
+            Exit(1)
+
+    for c in check_(path, hashit, first_line, sfv, size, bsdtag):
+        if isinstance(c, str):
+            # if return value is string then it's a error
+            # so print it
+
+            if not be_quiet and not strict:
+                eprint(YELLOW + c + RESET)
+
+            # if strict exit non zero
+            if strict:
+                eprint(RED + c + RESET)
+                Exit(1)
+
+        # check if there are any changes in the results end 
+        # from them that in the file
+        # check_ does automaticly check if the values are equal
+
+        if not c["hash_check"] or not c["size_check"]:
+            # if the file has changed print notice (md5sum inpired)
+            if not c["size_check"]:
+                # change with file increase/decrease
+                print(c["filename"] + ":" + GREEN, c["last_hash"] + RESET, ">", RED + c["current_hash"] + RESET, YELLOW + str(c["last_size"]) + RESET + "->" + YELLOW + str(c["current_size"]), end=RESET + '\n')
+            else: 
+                # change in hash
+                print(c["filename"] + ":" + GREEN, c["last_hash"] + RESET, ">", RED + c["current_hash"], end=RESET + '\n')
+
+        # if not to be quiet
+        elif not be_quiet:
+            # print OK
+            # else print OK if not quiet
+            print(c["filename"] + ":" + GREEN, GLOBAL["MESSAGES"]["OK"], end=RESET + '\n')

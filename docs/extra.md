@@ -55,6 +55,12 @@ if __name__ == "__main__":
 and then you can call the program as such
 ```python3 hit.py -H hash_3-2-1```
 
-see [plugins](plugins.md) for more
+see [plugins](plugins.md) for more about the loading of plugins
+
+## GUI
+[create an anchor](#gui)
+
+One of my goals with this project is to create an easy-to-use gui, which i have yet to acomplish
+for now see [this](../tests/spec/gui.py) file for an example of how to create an gui for hashit
 
 [back](README.md)

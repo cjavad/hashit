@@ -93,6 +93,7 @@ parser.
 - I interpet N/a as None At All because i can
 - The dist.zip (not in repo) contains all the old versions of the software
 - Detect only works for a few selected algoritms
+- I would not recommend using -S --size because then you will have to specify it everytime you check
 - Detect format benchmarks (using timeit on python3 ubuntu):
     * BSD: 7-5 seconds (10**6)
     * SFV: 4.2 seconds (10**6)

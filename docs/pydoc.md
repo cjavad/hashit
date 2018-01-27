@@ -90,7 +90,7 @@ choose_hash(hash1, hashit)
 ```
 
 Uses detect.decect to identify hashes with a high accuracy but when
-there if some issues it will take user input.
+there if some issues it will take user input. CLI-only
 
 <h2 id="hashit.new">new</h2>
 
@@ -134,12 +134,23 @@ Will create a generator for reading a file
 hashFile(filename, hasher, memory_opt=False)
 ```
 hashFile is a simple way to hash files using diffrent methods
+<h2 id="hashit.check_">check_</h2>
+
+```python
+check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False)
+```
+Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
+by creating an generator which loops over another generator which parses/reads the file and then it will check
+if the hash and optionally the size of the files matches the current state of them.
+
 <h2 id="hashit.check">check</h2>
 
 ```python
 check(path, hashit, useColors=False, be_quiet=False, detectHash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False)
 ```
-Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
+Uses check_() to print the error messages and statuses corrent (for CLI)
+they are seperated so that you can use the python api i you so please.
+
 <h1 id="hashit.__main__">hashit.__main__</h1>
 
 Command line application for hashit
