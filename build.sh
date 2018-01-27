@@ -30,6 +30,19 @@ then
     echo -e "---\nlayout: default\n---\n" > ./docs/pydoc.md
     $PY -c "from pydocmd.__main__ import main; import sys; sys.argv = ['', 'simple', 'hashit+', 'hashit.__main__+', 'hashit.detection+', 'hashit.extra+']; main()" >> ./docs/pydoc.md
     printf "\n\n[back](README.md)" >> ./docs/pydoc.md # add back button
+    
+    # push new documentation to wiki
+    cp ./docs/*.md ../hashit.wiki
+    mv ../hashit.wiki/index.md ../hashit.wiki/Home.md
+    cd ../hashit.wiki
+    # remove layout
+    sed -i '/layout: default/d' *.md
+    sed -i '/---/d' *.md
+    # push to git
+    sudo git add .
+    sudo git commit -m "Updated wiki"
+    echo "PUSH wiki"
+    sudo git push
     exit
 fi
 
