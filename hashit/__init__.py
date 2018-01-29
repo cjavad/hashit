@@ -13,7 +13,6 @@ settings, plugins and more.
 
 __algorithms__ is a list that contains all the builtin algorithms including crc32
 
-
 LICENSE:
 
     MIT License
@@ -76,7 +75,7 @@ GLOBAL = {
         "QUIET":False,
         "DETECT":False,
         "APPEND":False,
-        "RECURS":True
+        "RECURS":False
     },
     "EXTRA":{
         "crc32":Crc32
@@ -119,6 +118,7 @@ GLOBAL = {
     "IF_NO_ARGS":["--help"], # when no args is used this is the default setup
     "BLANK": (None, True, False),
     "SNAP_PATH":"/var/lib/snapd/hostfs",
+    "PLATFORM":os.sys.platform,
     "DEVMODE":True,
     "ACCESS": (os.access("/home", os.R_OK) if os.path.exists("/home") else False),
     "HASH_STR":"Hello World!", # String that detect uses to generate the dataset
@@ -136,23 +136,34 @@ def fixpath(path):
     and if needed can append the path to the snap host-filesystem 
     which if the application is in devmode gives hashit access to 
     the hole filesystem, if you're not in devmode and you're still
-    using snap, then you will need sudo to access the intire system"""
+    using snap, then you will need sudo to access the intire system.
+    Also replaces / with \\ on windows"""
     c_path = os.path.join(os.getcwd(), path).replace("\\", "/")
     # check if you'll need to use snap
     if os.environ.get("SNAP") and GLOBAL["DEVMODE"] and not GLOBAL["ACCESS"]:
         c_path = GLOBAL["SNAP_PATH"] + c_path
 
+    # check if we are on windows
+    if GLOBAL["PLATFORM"] == "win32":
+        c_path = c_path.replace("/", "\\")
+
     return c_path
 
-def reader(filename, mode="r", remove_binary_mark=True): # remove binary marker from md5sum
+def reader(filename, mode="r", comments=True):
     """Creates generator for an file, better for larger files not part of the MEMOPT,
     so an standard reader for most uses. Works like readlines but instead of a list it
     creates an generator that sortof clean the input before it is parsed by something like
     BSD() or SFV()."""
     filename = fixpath(filename)
     # return generator
-    return ('*'.join(line.split("*")[1:]).replace("\n", "") if line.startswith("*") and remove_binary_mark else \
-            line.replace("\n", "") for line in open(filename, mode=mode).readlines())
+    for line in open(filename, mode=mode).readlines():
+        # if the line starts with and comments is enabled 
+        if line.startswith(";") and comments:
+            # then skip the line
+            continue
+
+        yield line.replace("\n", "")
+    
 
 # ~ File Formats ~
 
@@ -189,7 +200,7 @@ class SFV:
     @staticmethod
     def parser(line, use_size=False):
         # split line by spaces
-        line = line.split(" ")
+        line = str(line).strip().split(" ")
         # set size to None
         size = None
 
@@ -230,7 +241,7 @@ class BSD:
     def parser(line, use_size=False):
         """Parses bsd string"""
         # split line by spaces
-        line = str(line).split(" ") #[:-(0 + (not use_size))]
+        line = str(line).strip().split(" ") #[:-(0 + (not use_size))]
         line.remove("=")
         size = None
 
@@ -539,7 +550,7 @@ def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
             continue
 
         # get hash and filepath from data-list with predefined indexes
-        last_hash, filename = data[hash_index], data[path_index]
+        last_hash, filename = data[hash_index], fixpath(data[path_index]) # fix filename
         # try to hash file again
         # and print correct results
         if os.path.exists(filename):
@@ -604,15 +615,23 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
         return 1
 
     # get first line from the file
-    first_line = open(path, "r").readline()
+    first_line = next(reader(path, "r"))
 
     # choose hash if not already selected
     # using new detection algorithem
     try:
         if detecthash:
-            hash1 = [x for x in first_line.replace("\n", "").replace("\0", "").split(" ") if not x in ('', '=')]
+            hash1 = first_line
             file_format = detect_format(first_line)
-            hash1 = hash1[(0 + size + bsdtag + sfv)]
+            # parse string and get hash
+            if file_format == "sfv":
+                hash1 = SFV.parser(first_line, size)[1]
+
+            elif file_format == "bsd":
+                hash1 = BSD.parser(first_line, size)[2]
+
+            else:
+                hash1 = [x for x in first_line.strip().replace("\n", "").split(" ") if x != ''][0]
             # get new hasher
             hashit = choose_hash(hash1, hashit)
             # check if it is empty
@@ -641,17 +660,19 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
         return 0
 
     for c in check_(path, hashit, first_line, sfv, size, bsdtag):
-        if isinstance(c, str):
+        if not isinstance(c, dict):
             # if return value is string then it's a error
             # so print it
 
             if not be_quiet and not strict:
-                eprint(YELLOW + c + RESET)
+                eprint(YELLOW + str(c) + RESET)
 
             # if strict return 1
             if strict:
-                eprint(RED + c + RESET)
+                eprint(RED + str(c) + RESET)
                 return 1
+            # and continue
+            continue
 
         # check if there are any changes in the results end
         # from them that in the file

@@ -44,7 +44,7 @@ class shake:
         self.hash.update(data)
 
     def copy(self):
-        return shake(self.name, self.data)
+        return self.hash.copy()
 
     def digest(self, length=None):
         """Digest binary"""

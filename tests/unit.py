@@ -158,6 +158,12 @@ class Test(unittest.TestCase):
 
         # just checking
         self.assertEqual(hashit.__author__, "Javad Shafique")
+    
+    def test_exclude(self):
+        list_with_paths = ["/home/file.sh", "/home/compact.min.js", "/only/file/left.py", "/only/path/left"]
+        excludes = [".sh", ".min."]
+        o = hashit.__main__.exclude(list_with_paths, excludes)
+        self.assertEqual(o, ["/only/file/left.py", "/only/path/left"])
 
 class TestLoad(unittest.TestCase):
     def test_load(self):

@@ -36,6 +36,7 @@ then
     sudo mv ../hashit.wiki/index.md ../hashit.wiki/Home.md
     cd ../hashit.wiki
     # remove layout
+    sudo chmod 777 *.md
     sudo sed -i '/layout: default/d' *.md
     sudo sed -i '/---/d' *.md
     # push to git

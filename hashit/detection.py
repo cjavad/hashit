@@ -149,8 +149,6 @@ def detect(s, table, maybe=True):
     if not (len(s) % 4 == 0 and ishex(s)):
         return None
 
-
-
     so = list()
     so_far = list()
     length = len(s)

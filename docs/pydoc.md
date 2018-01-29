@@ -19,7 +19,6 @@ settings, plugins and more.
 
 __algorithms__ is a list that contains all the builtin algorithms including crc32
 
-
 LICENSE:
 
     MIT License
@@ -52,36 +51,45 @@ LICENSE:
 fixpath(path)
 ```
 Fixpath converts the releative path into an absolute path
-and if needed can append the path to the snap host-filesystem
-which if the application is in devmode gives hashit access to
-the hole filesystem, if you're not in devmode and you're still
-using snap, then you will need sudo to access the intire system
-<h2 id="hashit.reader">reader</h2>
+    and if needed can append the path to the snap host-filesystem 
+    which if the application is in devmode gives hashit access to 
+    the hole filesystem, if you're not in devmode and you're still
+    using snap, then you will need sudo to access the intire system.
+    Also replaces / with \ on windows
+<h2 id="hashit.hashFile">hashFile</h2>
 
 ```python
-reader(filename, mode='r', remove_binary_mark=True)
+hashFile(filename, hasher, memory_opt=False)
 ```
-Creates generator for an file, better for larger files not part of the MEMOPT,
-so an standard reader for most uses. Works like readlines but instead of a list it
-creates an generator that sortof clean the input before it is parsed by something like
-BSD() or SFV().
-<h2 id="hashit.SFV">SFV</h2>
+hashFile is a simple way to hash files using diffrent methods
+<h2 id="hashit.detect_format">detect_format</h2>
 
 ```python
-SFV(self, filename=None, size=False)
+detect_format(hashstr, use_size=False)
 ```
-Class for parsing and creating sfv strings
-SFV() contains all functions needed for parsing,
-creating and formating SFV strings
-<h2 id="hashit.BSD">BSD</h2>
+Autodetect hash format, by checking the length and what it contains
+<h2 id="hashit.load">load</h2>
 
 ```python
-BSD(self, filename=None, size=False)
+load(hashclass)
 ```
-Parser for bsd and formater, also the
-same as SFV() but BSD() instead of sfv uses
-the bsd checksum output which is like this:
-    hashname (filename) = hash [size]
+
+Add hashes to GLOBAL.EXTRA which is the dict that contains all the "extra"
+hash-functions such as Crc32, which allows external hashing algorithms to 
+be used as long as the have the same api as specified in docs/README.md
+
+returns True/False based on whether or not the data is loaded
+
+<h2 id="hashit.check_">check_</h2>
+
+```python
+check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False)
+```
+Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
+    by creating an generator which loops over another generator which parses/reads the file and then it will check
+    if the hash and optionally the size of the files matches the current state of them. For more info on how this work
+    see docs/index.md`technical`.
+
 <h2 id="hashit.eprint">eprint</h2>
 
 ```python
@@ -97,44 +105,24 @@ supports_color()
 Returns True if the running system's terminal supports color, and False
 otherwise.
 
-<h2 id="hashit.detect_format">detect_format</h2>
+<h2 id="hashit.BSD">BSD</h2>
 
 ```python
-detect_format(hashstr, use_size=False)
+BSD(self, filename=None, size=False)
 ```
-Autodetect hash format, by checking the length and what it contains
-<h2 id="hashit.choose_hash">choose_hash</h2>
+Parser for bsd and formater, also the
+    same as SFV() but BSD() instead of sfv uses
+    the bsd checksum output which is like this:
+        hashname (filename) = hash [size]
+<h2 id="hashit.reader">reader</h2>
 
 ```python
-choose_hash(hash1, hashit)
+reader(filename, mode='r', comments=True)
 ```
-
-Uses detect.decect to identify hashes with a high accuracy but when
-there if some issues it will take user input. CLI-only
-
-<h2 id="hashit.new">new</h2>
-
-```python
-new(hashname, data=b'')
-```
-Custom hash-init function that returns the hashes
-depends on hashlib.new and GLOBAL["EXTRA"]. One of its'
-features is it's support for the python3 only shake-hash
-scheme were the default hash is shake_256 and the input is
-taken like this:
-    shake_[amount of output]
-<h2 id="hashit.load">load</h2>
-
-```python
-load(hashclass)
-```
-
-Add hashes to GLOBAL.EXTRA which is the dict that contains all the "extra"
-hash-functions such as Crc32, which allows external hashing algorithms to
-be used as long as the have the same api as specified in docs/README.md
-
-returns True/False based on whether or not the data is loaded
-
+Creates generator for an file, better for larger files not part of the MEMOPT,
+    so an standard reader for most uses. Works like readlines but instead of a list it
+    creates an generator that sortof clean the input before it is parsed by something like
+    BSD() or SFV().
 <h2 id="hashit.load_all">load_all</h2>
 
 ```python
@@ -147,35 +135,47 @@ Just for it, a function that loads all plugins in a list
 hashIter(bytesiter, hasher, ashexstr=True)
 ```
 Will hash the blockIter generator and return digest
+<h2 id="hashit.new">new</h2>
+
+```python
+new(hashname, data=b'')
+```
+Custom hash-init function that returns the hashes
+    depends on hashlib.new and GLOBAL["EXTRA"]. One of its'
+    features is it's support for the python3 only shake-hash
+    scheme were the default hash is shake_256 and the input is
+    taken like this:
+        shake_[amount of output]
 <h2 id="hashit.blockIter">blockIter</h2>
 
 ```python
 blockIter(afile, blocksize=65536)
 ```
 Will create a generator for reading a file
-<h2 id="hashit.hashFile">hashFile</h2>
+<h2 id="hashit.SFV">SFV</h2>
 
 ```python
-hashFile(filename, hasher, memory_opt=False)
+SFV(self, filename=None, size=False)
 ```
-hashFile is a simple way to hash files using diffrent methods
-<h2 id="hashit.check_">check_</h2>
-
-```python
-check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False)
-```
-Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
-by creating an generator which loops over another generator which parses/reads the file and then it will check
-if the hash and optionally the size of the files matches the current state of them. For more info on how this work
-see docs/index.md#technical.
-
+Class for parsing and creating sfv strings
+    SFV() contains all functions needed for parsing,
+    creating and formating SFV strings
 <h2 id="hashit.check">check</h2>
 
 ```python
 check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False)
 ```
 Uses check_() to print the error messages and statuses corrent (for CLI)
-they are seperated so that you can use the python api, if you so please.
+    they are seperated so that you can use the python api, if you so please.
+
+<h2 id="hashit.choose_hash">choose_hash</h2>
+
+```python
+choose_hash(hash1, hashit)
+```
+
+Uses detect.decect to identify hashes with a high accuracy but when
+there if some issues it will take user input. CLI-only
 
 <h1 id="hashit.__main__">hashit.__main__</h1>
 
@@ -186,12 +186,6 @@ and anything needed for an command lin application such as hashit.
 
 it uses argc another package by me, but i am considering switching to argparse
 
-<h2 id="hashit.__main__.Print">Print</h2>
-
-```python
-Print(self, nargs=0, **kwargs)
-```
-Print action for argparse, takes one kwarg which is text the varible which contains the string to be printed
 <h2 id="hashit.__main__.Execute">Execute</h2>
 
 ```python
@@ -204,18 +198,30 @@ Same as Print() but instead of printing an object it calls it takes func (functi
 walk(go_over)
 ```
 Goes over a path an finds all files, appends them to a list and returns that list
-<h2 id="hashit.__main__.config">config</h2>
-
-```python
-config(parser)
-```
-Sets argvs' config and commands with argparse and returns it for good sake
 <h2 id="hashit.__main__.main_">main_</h2>
 
 ```python
 main_(args)
 ```
 Main function which is the cli parses arguments and runs appropriate commands
+<h2 id="hashit.__main__.exclude">exclude</h2>
+
+```python
+exclude(items, excludes)
+```
+Exclude removes all items in a list that is in the excludes list (for dirs)
+<h2 id="hashit.__main__.config">config</h2>
+
+```python
+config(parser)
+```
+Sets argvs' config and commands with argparse and returns it for good sake
+<h2 id="hashit.__main__.Print">Print</h2>
+
+```python
+Print(self, nargs=0, **kwargs)
+```
+Print action for argparse, takes one kwarg which is text the varible which contains the string to be printed
 <h2 id="hashit.__main__.main">main</h2>
 
 ```python
@@ -232,7 +238,7 @@ errors.
 
 Copyrigth (c) 2018-present Javad Shafique
 
-this module using length and connections to find a match
+this module using length and connections to find a match 
 for an hashing algorithem. It's basicly a matching algorigtem
 it can be used for almost any pure function in this case for hashes.
 
@@ -243,7 +249,7 @@ __This 'Software' can't be used without permission__
 __from Javad Shafique.__
 
 
-__this module using length and connections to find a match__
+__this module using length and connections to find a match __
 
 __for an hashing algorithem. It's basicly a matching algorigtem__
 
@@ -277,11 +283,12 @@ def generate_some_dataset(datatoworkon = "some data"):
             else:
                 continue
 
-    # return finished dataset
+__return finished dataset__
+
 
     return dict_for_storing_set
 
-__and for parsing that infomation__
+__and for parsing that infomation __
 
 __you can use the detect function__
 
@@ -321,7 +328,8 @@ def detect(string, table, maybe = True):
 
     if len(so_far) >= 0 and len(so) == 1:
 
-        # if there only is one option then use it
+__if there only is one option then use it__
+
 
         return tup(certain=so, maybe=[])
     else:
@@ -336,7 +344,7 @@ __it can generate data that can compare__
 __diffrences between the results__
 
 
-__if works by categorizing the hashes into__
+__if works by categorizing the hashes into __
 
 __two categorizes. one for thoose who look alike__
 
@@ -355,18 +363,6 @@ PRIORITY = {
     "sha1":["dsaEncryption", "DSA", "ecdsa-with-SHA1", "dsaWithSHA", "DSA-SHA"]
 }
 
-<h2 id="hashit.detection.ishex">ishex</h2>
-
-```python
-ishex(hexstr)
-```
-Checks if string is hexidecimal
-<h2 id="hashit.detection.generate_data_set">generate_data_set</h2>
-
-```python
-generate_data_set(hashon, algos, hasher_that_takes_new)
-```
-Generates dataset based on data and list of strings that can be used to create objects to use that data
 <h2 id="hashit.detection.NTUPLE">Closest</h2>
 
 ```python
@@ -379,6 +375,18 @@ Closest(certain, maybe)
 detect(s, table, maybe=True)
 ```
 Compares result from datasets, finds connections and eleminates contestants
+<h2 id="hashit.detection.ishex">ishex</h2>
+
+```python
+ishex(hexstr)
+```
+Checks if string is hexidecimal
+<h2 id="hashit.detection.generate_data_set">generate_data_set</h2>
+
+```python
+generate_data_set(hashon, algos, hasher_that_takes_new)
+```
+Generates dataset based on data and list of strings that can be used to create objects to use that data
 <h1 id="hashit.extra">hashit.extra</h1>
 
 Extra functions and classes for hashit

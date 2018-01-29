@@ -43,7 +43,7 @@ But you can also install it from snap
 
 ## Technical Notes
 [](#technical)
-```
+
 There where a memory leak in the check function which caused wrong hashes to be resolved from my observatitions it
 has something to do with pythons generators, i fixed it by added an read-all mode (normal) and made it default in 
 the check function and other systems to, but by given the application ```-m``` you will enable the generator for
@@ -55,7 +55,15 @@ such as the hash, path and filesize. These indexes can then be used on the lists
 parser.
 
 Due to some interface problems with snap, is it not posible to access devices than home and external drives. therefore i would recommend you to install it in --devmode but if you want you can also use classic. (Bypass: use sudo)
+
+Due to the way exclude works it is not needed to use a wildcard '*' to exclude specific extentions for that just to '.ext'.
+it works by doing: 
+```py
+if 'exclude-string`' in 'path':
+    remove_from_list('path')
 ```
+
+### Extra, see [extra](extra.md) for more
 
 >
 >  The hash-classes are built like so

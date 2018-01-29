@@ -72,6 +72,15 @@ def walk(go_over):
     # return list with file names
     return walked
 
+# exclude function faster then last implementation
+def exclude(items, excludes):
+    """Exclude removes all items in a list that is in the excludes list (for dirs)"""
+
+    for ex in excludes:
+        items = [x for x in items if not ex in x]
+    # return items
+    return items
+
 def config(parser):
     """Sets argvs' config and commands with argparse and returns it for good sake"""
 
@@ -116,6 +125,7 @@ def config(parser):
 
     # all the options that sets something
     settings.add_argument("-H", "--hash", help="Select hash use -hl --hash-list for more info", metavar="hashname", default=GLOBAL["DEFAULTS"]["HASH"])
+    settings.add_argument("-e", "--exclude", help="list of files and directories to exclude", default=[], metavar="excludes", nargs="+")
     settings.add_argument("-C", "--color", help="Enable colored output where it is supported", action="store_true", default=GLOBAL["DEFAULTS"]["COLORS"])
     settings.add_argument("-sp", "--strip-path", help="Strips fullpath from the results", action="store_true", default=GLOBAL["DEFAULTS"]["STRIP"])
     settings.add_argument("-A", "--append", help="Instead of writing to a file you will append to it", action="store_true", default=GLOBAL["DEFAULTS"]["APPEND"])
@@ -339,10 +349,20 @@ def main_(args):
     # else if my_path is a dir then just
     elif os.path.isdir(my_path):
         # hash all of the files in this directory
-        in_files =  [my_path + "/" + f for f in os.listdir(my_path) if os.path.isfile(os.path.join(my_path, f))]
+        in_files =  [os.path.join(my_path, f) for f in os.listdir(my_path) if os.path.isfile(os.path.join(my_path, f))]
 
     # if there is any files in in_files
     if in_files:
+        # check if we should remove any files
+        if argv.exclude:
+            # exclude files and fix paths
+            in_files = exclude([fixpath(f) for f in in_files], argv.exclude)
+
+
+            if not in_files:
+                # no more files in in_files
+                return 0
+
         # find the longest filename
         longest_filename = max(in_files, key=len)
 

@@ -6,10 +6,11 @@ layout: default
 
 Hashit takes arguments like this:
 ```bash
-usage: hashit [-h] [-V] [-l] [-hl] [-H hashname] [-C] [-sp] [-A] [-q] [-m]
-              [-r] [-s [string]] [-d [hash]] [-c filename] [-o filename] [-S]
+usage: hashit [-h] [-p] [-V] [-l] [-hl] [-H hashname]
+              [-e excludes [excludes ...]] [-C] [-sp] [-A] [-q] [-m] [-r]
+              [-s [string]] [-d [hash]] [-c filename] [-o filename] [-S]
               [-sfv] [-bsd] [--trace] [--strict]
-              [path] [files [files ...]
+              [path] [files [files ...]]
 ```
 
 Where the options are at following:
@@ -27,6 +28,8 @@ positional arguments:
 
 help:
   -h, --help            show this help message and exit
+  -p, --page            Launch interactive help with python help() (for python
+                        api)
   -V, --version         Print current version and exit
   -l, --license         Print license and exit
   -hl, --hash-list      Prints list of all supported hashes and exits
@@ -39,6 +42,8 @@ formats:
 settings:
   -H hashname, --hash hashname
                         Select hash use -hl --hash-list for more info
+  -e excludes [excludes ...], --exclude excludes [excludes ...]
+                        list of files and directories to exclude
   -C, --color           Enable colored output where it is supported
   -sp, --strip-path     Strips fullpath from the results
   -A, --append          Instead of writing to a file you will append to it
@@ -62,7 +67,6 @@ devtools:
   --strict              Exit non-zero on any errors
 
 MIT, Copyrigth (c) 2017-2018 Javad Shafique
-
 ```
 
 So if i want to hash a file called fx. icon.png
