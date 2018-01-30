@@ -1,4 +1,4 @@
-#!/bin/bash
+    #!/bin/bash
 
 
 # this script manages this project by building pydocs, uploading to pypi
@@ -80,7 +80,7 @@ else
     then
         cd release
         rm -rf deb_dist
-        py2dsc-deb hashit.zip
+        py2dsc hashit.zip
         exit
     fi
 fi

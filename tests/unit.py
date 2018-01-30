@@ -66,7 +66,6 @@ class Test(unittest.TestCase):
 
         # md5 or md4
         self.assertTrue(correct1 in cl1.maybe)
-
         # only one left should be true
         self.assertTrue(correct2 in (cl2.certain if cl2.certain else cl2.maybe))
         self.assertTrue(correct4 in cl4.certain)

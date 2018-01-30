@@ -223,7 +223,7 @@ def main_(args):
     if os.path.isdir(argv.path):
         new_path = argv.path
         # check if argument is path else do not change path
-        if os.path.exists(new_path) and ("/" in new_path or new_path in (".", "..")):
+        if os.path.exists(new_path) and os.path.isdir(new_path):
             my_path = new_path
 
     """ NOTE: Removed all for now
@@ -324,16 +324,16 @@ def main_(args):
     # check the argv.files argument, and the path var
     # which can be a file.
     elif argv.files or os.path.isfile(argv.path):
-        for f in argv.files + [argv.path]:
-            p = fixpath(f) # use fixpath
-            if os.path.exists(p):
+        for fname in argv.files + [argv.path]:
+            path = fixpath(fname) # use fixpath
+            if os.path.exists(path):
                 # if path is file
-                if os.path.isfile(p):
+                if os.path.isfile(path):
                     # append to in_files
-                    in_files.append(p)
+                    in_files.append(path)
             else:
                 # if file not exist then print error
-                eprint(RED + "{}, ".format(p) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+                eprint(RED + "{}, ".format(path) + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
                 # if strict exit non-zero
                 if argv.strict:
                     return 1
@@ -343,8 +343,8 @@ def main_(args):
 
     # else if my_path is a dir and r is true
     elif argv.recursive and os.path.isdir(my_path):
-        # walk directory and add files to my_path
-        in_files = walk(my_path)
+        # walk directory and add files to in_files (use fixpath)
+        in_files = [fixpath(fname) for fname in walk(my_path)]
 
     # else if my_path is a dir then just
     elif os.path.isdir(my_path):

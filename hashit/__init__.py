@@ -552,8 +552,8 @@ def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
         # get hash and filepath from data-list with predefined indexes
         last_hash, filename = data[hash_index], fixpath(data[path_index]) # fix filename
         # try to hash file again
-        # and print correct results
-        if os.path.exists(filename):
+        # and yield the correct results
+        try:
             # hash file again
             '''
             Using generator to check for file because there is a memory leak when using a generator to check for it,
@@ -587,9 +587,13 @@ def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
             # yield results
             yield {"filename":filename, "last_hash":last_hash, "current_hash":current_hash, "last_size":last_size, "current_size":current_size, "size_check":size_check, "hash_check":hash_check}
 
-        else:
-            # else continue and yield error message if the file does not exist
-            yield (filename + ": " + "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"])
+        except (FileNotFoundError, PermissionError) as Error:
+            # else continue and yield error message if the file does not exist or we dont havea access to it
+            if isinstance(Error, FileNotFoundError):
+                yield (filename + ": " + "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["FILE_NOT"])
+            # else if its a permisstion error then do
+            elif isinstance(Error, PermissionError):
+                yield (filename + ": " + "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["PERM_ERR"])
 
 def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
     """Uses check_() to print the error messages and statuses corrent (for CLI)
@@ -671,6 +675,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
             if strict:
                 eprint(RED + str(c) + RESET)
                 return 1
+            
             # and continue
             continue
 

@@ -72,6 +72,8 @@ See `docs/usage <docs/usage.md>`__
 Changelog
 --------------
 
+    3.3.9 - windows bugfixes.
+
     3.3.8 - Added more documentation and added sha3 (Keccak) support for detect, also added -e --exclude that can exclude dirs from list
 
     3.3.7 - Refractored the hashit.check code so you can now use it from python! (see `docs/extra.md#gui <docs/extra.md#gui>`__ for an example)
