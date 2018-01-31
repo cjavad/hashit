@@ -63,6 +63,35 @@ then
     exit
 fi
 
+if [ "$1" == "clean" ]
+then
+    if [ -d "hashit.egg-info" ]
+    then
+        rm -rf "hashit.egg-info"
+        echo "Removed egg-info"
+    fi
+
+    if [ -d "dist" ]
+    then
+        rm -rf "dist"
+        echo "Removed dist"
+    fi
+
+    if [ -d "build" ]
+    then
+        rm -rf "build"
+        echo "Removed build"
+    fi
+
+    if [ -d "release/deb_dist" ]
+    then
+        rm -rf "release/deb_dist"
+        echo "Removed deb_dist"
+    fi
+
+    exit
+fi
+
 
 if [ "$1" == "upload" ]
 then
@@ -81,7 +110,8 @@ else
     then
         cd release
         rm -rf deb_dist
-        py2dsc hashit.zip
+        py2dsc-deb hashit.zip
+        mv deb_dist/*.deb .
         exit
     fi
 fi
