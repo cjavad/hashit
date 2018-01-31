@@ -1,8 +1,10 @@
 ---
 layout: default
 ---
-### Pretty jif
-![](../img/demo.gif)
+# Hashit Usage
+
+### Pretty Gif
+![](https://raw.githubusercontent.com/JavadSM/hashit/master/img/demo.gif)
 
 ## Usage
 Hashit takes arguments like this:
