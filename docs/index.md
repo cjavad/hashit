@@ -56,7 +56,7 @@ parser.
 
 Due to some interface problems with snap, is it not posible to access devices than home and external drives. therefore i would recommend you to install it in --devmode but if you want you can also use classic. (Bypass: use sudo)
 
-Due to the way exclude works it is not needed to use a wildcard '*' to exclude specific extentions for that just to '.ext'.
+Due to the way exclude works it is not needed to use a wildcard '*' to exclude specific extentions for that just do '.ext'.
 it works by doing: 
 ```py
 if 'exclude-string`' in 'path':
