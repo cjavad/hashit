@@ -39,6 +39,7 @@ then
     sudo chmod 777 *.md
     sudo sed -i '/layout: default/d' *.md
     sudo sed -i '/---/d' *.md
+    sudo sed -e 's/\.md//g' -i *.md
     # push to git
     sudo git add .
     sudo git commit -m "Updated wiki"
