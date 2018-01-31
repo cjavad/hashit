@@ -11,6 +11,10 @@ Hashit, an hashing application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. image:: img/demo.gif
+    :target: https://asciinema.org/a/TZQCel3DNy2sCWOFBtQcqVMMM
+    :alt: asciinema demo usage.
+
 
 What is this magic (hashing)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
