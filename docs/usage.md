@@ -1,9 +1,10 @@
 ---
 layout: default
 ---
+### Pretty jif
+![](../img/demo.gif)
 
-# Usage of hashit
-
+## Usage
 Hashit takes arguments like this:
 ```bash
 usage: hashit [-h] [-p] [-V] [-l] [-hl] [-H hashname]
