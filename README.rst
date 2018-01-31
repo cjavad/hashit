@@ -3,7 +3,7 @@
 
 Project is hosted on `pypi <https://pypi.org/project/hashit/>`__
 
-.. image:: icon.png
+.. image:: img/icon.png
    :target:  https://github.com/javadsm/hashit
    :align: right
 
