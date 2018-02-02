@@ -72,10 +72,10 @@ devtools:
 MIT, Copyrigth (c) 2017-2018 Javad Shafique
 ```
 
-So if i want to hash a file called fx. icon.png
+So if i want to hash a file called fx. icon.png in the img dir
 ```bash
 $ hashit icon.png
-eade8f2bb7fcb89d396a850b977740fd  icon.png
+eade8f2bb7fcb89d396a850b977740fd  img/icon.png
 ```
 
 Or i wanted to hash the tests directory with lets say blake2s and write it to a file using the bsd format and then verify it

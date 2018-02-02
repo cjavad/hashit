@@ -69,13 +69,14 @@ GLOBAL = {
         "STRIP":False,
         "COLORS":True, # if supported colors are on by default
         "MEMOPT":False,
-        "SIZE":False,
+        "SIZE":False, 
         "TRACE":False,
         "STRICT":False,
         "QUIET":False,
         "DETECT":False,
-        "APPEND":False,
-        "RECURS":False
+        "APPEND":False, # not really the best idea to set to True
+        "RECURS":False,
+        "DRYRUN":False # this should always be false unless you are only testing the output
     },
     "EXTRA":{
         "crc32":Crc32
@@ -99,7 +100,8 @@ GLOBAL = {
         "OK":"OK", # OK message
         "FAIL":"FAILED", # FAIL message
         "MAYBE":"Maybe", # MAYBE Message
-        "RESULTS_AS":"Same results as" # When results match
+        "RESULTS_AS":"Same results as", # When results match
+        "DRYRUN_NOT":"Does not support --dry-run"
     },
     "ERRORS":{
         # JOKES in here
@@ -374,8 +376,8 @@ def new(hashname, data=b''):
     if hashname in GLOBAL["EXTRA"]:
         return GLOBAL["EXTRA"][hashname](data)
 
-    # shake hash
-    elif hashname[:5] == "shake" and os.sys.version_info[0] == 3:
+    # shake hash (only for python3.6)
+    elif "shake" in hashname and os.sys.version_info.major == 3 and os.sys.version_info.minor == 6:
         return shake(hashname, data)
 
     # hashlib algorithm
@@ -454,7 +456,7 @@ def hashFile(filename, hasher, memory_opt=False):
 # check_ reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
 
-def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
+def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False, dry_run=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
     by creating an generator which loops over another generator which parses/reads the file and then it will check
     if the hash and optionally the size of the files matches the current state of them. For more info on how this work
@@ -551,6 +553,12 @@ def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
 
         # get hash and filepath from data-list with predefined indexes
         last_hash, filename = data[hash_index], fixpath(data[path_index]) # fix filename
+
+        # if dry run then yield the return messages
+        if dry_run:
+            yield "Hashing {} with {} and old hash = {} (CHECK)".format(filename, hashit.name, last_hash)
+            continue
+
         # try to hash file again
         # and yield the correct results
         try:
@@ -595,7 +603,7 @@ def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False):
             elif isinstance(Error, PermissionError):
                 yield (filename + ": " + "{}, ".format(GLOBAL["MESSAGES"]["FAIL"]) + GLOBAL["MESSAGES"]["PERM_ERR"])
 
-def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False):
+def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False, dry_run=False):
     """Uses check_() to print the error messages and statuses corrent (for CLI)
     they are seperated so that you can use the python api, if you so please.
     """
@@ -663,8 +671,15 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
         # Else return exit code 0
         return 0
 
-    for c in check_(path, hashit, first_line, sfv, size, bsdtag):
-        if not isinstance(c, dict):
+    for c in check_(path, hashit, first_line, sfv, size, bsdtag, dry_run):
+        # check for dryrun
+        if dry_run and isinstance(c, str):
+            # if so print string
+            print(c)
+            # and continue
+            continue
+
+        elif not isinstance(c, dict):
             # if return value is string then it's a error
             # so print it
 
@@ -678,6 +693,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
             
             # and continue
             continue
+
 
         # check if there are any changes in the results end
         # from them that in the file

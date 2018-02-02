@@ -30,12 +30,19 @@ class Crc32:
 # class for shake hash
 class shake:
     """Top-level api for hashlib.shake"""
-    def __init__(self, hashname, data=b''):
+    def __init__(self, hashn, data=b''):
         """Init class create hasher and data"""
-        if hashname[:5] == "shake":
-            self.hash = hashlib.shake_256(data)
-            self.name = hashname
-            self.length = int(hashname.split("_")[1])
+        # split hashname with _
+        hashname = hashn.split("_")
+
+        if len(hashname) == 3:
+            if hashname[1] in ("256", "128"):
+                self.hash = hashlib.new("shake_{}".format(hashname[1]), data)
+            else:
+                raise ValueError("{} is not a valid hash".format(hashn))
+
+            self.name = hashn
+            self.length = int(hashname[2])
         else:
             raise ValueError
 

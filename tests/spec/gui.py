@@ -10,7 +10,7 @@ from hashit import new, __algorithms__, __help__, hashFile, check_
 from hashit.__main__ import walk
 
 def showhelp():
-    gui.buttonbox(__help__, "HASHIT - HELP", choices=["OK"], image="../../icon.png")
+    gui.buttonbox(__help__, "HASHIT - HELP", choices=["OK"], image="../../img/icon.png")
 
 def selecthash():
     return gui.choicebox("Select an hash", "HASHIT", __algorithms__)

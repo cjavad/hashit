@@ -129,7 +129,7 @@ def config(parser):
     settings.add_argument("-C", "--color", help="Enable colored output where it is supported", action="store_true", default=GLOBAL["DEFAULTS"]["COLORS"])
     settings.add_argument("-sp", "--strip-path", help="Strips fullpath from the results", action="store_true", default=GLOBAL["DEFAULTS"]["STRIP"])
     settings.add_argument("-A", "--append", help="Instead of writing to a file you will append to it", action="store_true", default=GLOBAL["DEFAULTS"]["APPEND"])
-    settings.add_argument("-q", "--quiet", help="Reduces output", action="store_true")
+    settings.add_argument("-q", "--quiet", help="Reduces output, (silences warnings)", action="store_true")
     settings.add_argument("-m", "--memory-optimatation", help="Enables memory optimatation (useful for large files)", action="store_true")
     settings.add_argument("-r", "--recursive", help="Hash all files in all subdirectories", action="store_true", default=GLOBAL["DEFAULTS"]["RECURS"])
 
@@ -147,6 +147,7 @@ def config(parser):
     formats.add_argument("-bsd", "--bsd", help="output using the bsd checksum-format", action="store_true")
 
     # ~ Devtools ~
+    dev.add_argument("--dry-run", help="prints the list of files that is doing to be hashed (and how) and the output type", action="store_true", default=GLOBAL["DEFAULTS"]["DRYRUN"])
     dev.add_argument("--trace", help="Print traceback of any error cathed and exit", action="store_true", default=GLOBAL["DEFAULTS"]["TRACE"])
     dev.add_argument("--strict", help="Exit non-zero on any errors", action="store_true", default=GLOBAL["DEFAULTS"]["STRICT"])
 
@@ -212,7 +213,9 @@ def main_(args):
     if not argv.output in GLOBAL["BLANK"]:
         # if it is open file
         use_out = True
-        output = open(fixpath(argv.output), GLOBAL["WRITE_MODE"])
+        # if dryrun dont open file
+        if not argv.dry_run:
+            output = open(fixpath(argv.output), GLOBAL["WRITE_MODE"])
     else:
         # else set it to false
         use_out = False
@@ -248,6 +251,15 @@ def main_(args):
     # check for string in args needed because argparse
     # does not support both store_true and store same for detect
     if "-s" in args or "--string" in args:
+        # Check if dryrun is true
+        if argv.dry_run and not argv.quiet:
+            # if it is, print warning
+            eprint(YELLOW + "-s --string, {}".format(GLOBAL["MESSAGES"]["DRYRUN_NOT"]) + RESET)
+            
+            # exit if strict
+            if argv.strict:
+                return 1
+
         data = argv.string
         if not data:
             # reed from stdin like md5sum
@@ -274,6 +286,15 @@ def main_(args):
 
     # if detect is choosen use it
     elif not argv.detect in GLOBAL["BLANK"]:
+        # Check if dryrun is true
+        if argv.dry_run and not argv.quiet:
+            # if it is, print warning
+            eprint(YELLOW + "-d --detect, {}".format(GLOBAL["MESSAGES"]["DRYRUN_NOT"]) + RESET)
+            
+            # exit if strict
+            if argv.strict:
+                return 1
+
         hashes = detect(argv.detect, generate_data_set("Hallo", __algorithms__, new))
         if hashes != None:
             for item in hashes.certain:
@@ -295,7 +316,7 @@ def main_(args):
             argv.detect = True
         # check for file
         if os.path.exists(argv.check):
-            # then check
+            # then check (return exitcode)
             return check(
                 argv.check,
                 hash_is,
@@ -305,18 +326,20 @@ def main_(args):
                 argv.sfv,
                 argv.size,
                 argv.bsd,
-                argv.strict
+                argv.strict,
+                argv.trace,
+                argv.dry_run
             )
 
         else:
             # if the file does not exist
             # print error message
             eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-
+            # check if strict
             if argv.strict:
-                return 1 # and exit non-zero
+                return 1 # if so then exit non-zero
 
-            # Else return 0
+            # Else exit 0
             return 0 
 
     # ~ Check for files ~
@@ -368,6 +391,11 @@ def main_(args):
 
         # go over files and hash them all
         for fname in in_files:
+            # if dry run just print filename and hash
+            if argv.dry_run:
+                print("Hashing {} with {} and outputting to {}".format(fname, hash_is.name, ("stdout" if not use_out else argv.output)))
+                # and continue
+                continue
             try:
                 # hash file
                 current_hash = hashFile(fname, hash_is, argv.memory_optimatation)

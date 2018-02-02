@@ -112,6 +112,12 @@ else
         rm -rf deb_dist
         py2dsc-deb hashit.zip
         mv deb_dist/*.deb .
+        read -p "Delete deb_dist (y/n)?" choice
+        case "$choice" in 
+            y|Y ) rm -rf deb_dist;;
+            n|N ) exit;;
+        * ) echo exit;;
+        esac 
         exit
     fi
 fi

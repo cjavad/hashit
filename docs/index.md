@@ -2,7 +2,7 @@
 layout: default
 ---
 
-[![](https://raw.githubusercontent.com/JavadSM/hashit/master/icon.png)](https://pypi.org/project/hashit) 
+[![](https://raw.githubusercontent.com/JavadSM/hashit/master/img/icon.png)](https://pypi.org/project/hashit) 
 # Hashit, an hashing application
 
 Hashit is an command line hashing application that supports a large varity of fileformats and hashing algorithms

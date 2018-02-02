@@ -32,9 +32,8 @@ For python3 is all from python2 and more:
 
 ## Experimental
 
-And for python3 a special syntax for the shake hash
-where by default shake-256 is used like this
-```shake_(length)```
+And for python3 a special syntax for the shake hash is used like this
+```shake_(type)_(length)```
 
 so 
 

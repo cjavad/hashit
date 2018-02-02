@@ -115,7 +115,7 @@ class Test(unittest.TestCase):
             all_gen.append(c_str)
             c_str = generate()
 
-        print(c_str, "in list (COLLISION FOUND) after", len(all_gen), "Tries, which translates into", unhexlify(c_str))
+        print(c_str, "in list (COLLISION FOUND) after", len(all_gen), "Tries, which translates into", int(c_str, 16))
         self.assertTrue(c_str in all_gen)
         
     def test_crc32(self):
