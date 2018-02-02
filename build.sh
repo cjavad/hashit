@@ -1,8 +1,9 @@
-    #!/bin/bash
+#!/bin/bash
 
+# in here all the tools for this project is automatazied
 
 # this script manages this project by building pydocs, uploading to pypi
-# and compiling the source
+# and compiling the source running tests pushing to launchpad and more
 
 # set python version
 PY=python3
@@ -30,7 +31,7 @@ then
     echo -e "---\nlayout: default\n---\n" > ./docs/pydoc.md
     $PY -c "from pydocmd.__main__ import main; import sys; sys.argv = ['', 'simple', 'hashit+', 'hashit.__main__+', 'hashit.detection+', 'hashit.extra+']; main()" >> ./docs/pydoc.md
     printf "\n\n[back](index.md)" >> ./docs/pydoc.md # add back button
-    
+
     # push new documentation to wiki
     sudo cp ./docs/*.md ../hashit.wiki
     sudo mv ../hashit.wiki/index.md ../hashit.wiki/Home.md
@@ -49,7 +50,8 @@ fi
 if [ "$1" == "push" ]
 then
     echo push hashit
-    git push
+    git push origin master
+    git push launchpad master
     cd ../hashit.wiki
     echo "PUSH wiki"
     sudo git push
@@ -60,6 +62,16 @@ if [ "$1" == "install" ]
 then
     $PY setup.py install
     rm -rf ./dist
+    exit
+fi
+
+
+if [ "$1" == "test" ]
+then
+    python3 setup.py test
+    python setup.py test
+    rm */*.pyc # remove .pyc files from python2
+    # and exit
     exit
 fi
 
@@ -111,13 +123,25 @@ else
         cd release
         rm -rf deb_dist
         py2dsc-deb hashit.zip
-        mv deb_dist/*.deb .
+        cd deb_dist
+        
+        # for launchpad dailybuilds
+	    git init
+	    # add remote and force push deb package
+	    git remote add origin git+ssh://javadsm@git.launchpad.net/python3-hashit
+	    git add . # add all files
+	    git commit -m "DEB DIST BRANCH"
+	    git push --force --set-upstream origin master
+        # delete tmp files
         read -p "Delete deb_dist (y/n)?" choice
         case "$choice" in 
             y|Y ) rm -rf deb_dist;;
             n|N ) exit;;
-        * ) echo exit;;
-        esac 
+            * ) echo exit;;
+        esac
+        # exit
         exit
     fi
+    # exit
+    exit
 fi
