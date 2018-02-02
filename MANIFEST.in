@@ -3,3 +3,4 @@ include LICENSE
 include img/icon.png
 include snapcraft.yaml
 include docs/*.md
+include tests/*.py

@@ -153,7 +153,6 @@ class Test(unittest.TestCase):
             
             with self.assertRaises(SystemExit):
                 hashit.__main__.main(["--check", "file_name"])
-            
 
         # just checking
         self.assertEqual(hashit.__author__, "Javad Shafique")

@@ -265,12 +265,28 @@ def eprint(*args, **kwargs):
     """Prints to stderr usefull for warnings and error messages"""
     print(*args, file=os.sys.stderr, **kwargs)
 
-# check if terminal supports color from django
+# check if terminal supports color from django + some of my own work
 def supports_color():
     """
     Returns True if the running system's terminal supports color, and False
     otherwise.
     """
+    try:
+        import curses
+        curses.setupterm()
+        # if the terminal supports 256-bit colors 
+        # return true
+        if curses.tigetnum("colors") == 256:
+            return True
+        else:
+            # else continue to use the django method
+            pass
+
+    except Exception: # either ImportError or _curses.error
+        # Using windows
+        pass
+
+    # get platform
     plat = os.sys.platform
     supported_platform = plat != 'Pocket PC' and (plat != 'win32' or
                                                   'ANSICON' in os.environ)

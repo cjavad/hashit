@@ -76,9 +76,9 @@ See `docs/usage <docs/usage.md>`__
 Changelog
 --------------
 
-    3.4.0 - Added the --dry-run option and fixed the shake hash to you can now to shake_128_32
+    3.4.0 - Added the --dry-run option and fixed the shake hash to you can now to shake_128_32. And bugfixes
 
-    3.3.9 - windows bugfixes.
+    3.3.9 - Windows bugfixes.
 
     3.3.8 - Added more documentation and added sha3 (Keccak) support for detect, also added -e --exclude that can exclude dirs from list
 
