@@ -101,6 +101,9 @@ then
         echo "Removed deb_dist"
     fi
 
+    # delete pycache
+    find . -name "__pycache__" -exec rm -rf {} + 
+    rm -rf */*.pyc
     exit
 fi
 
