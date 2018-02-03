@@ -124,6 +124,8 @@ else
         cd release
         rm -rf deb_dist
         py2dsc-deb hashit.zip
+        # copy deb
+        cp deb_dist/*.deb .
         cd "deb_dist/hashit-${V}" # cd into debian folder
         
         # for launchpad dailybuilds
