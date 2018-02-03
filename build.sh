@@ -120,28 +120,10 @@ else
 
     if [ "$1" == "deb" ]
     then
-        $BUILD_DEB = 1 # set env 
-        cd release
-        rm -rf deb_dist
-        py2dsc-deb hashit.zip
-        # copy deb
-        cp deb_dist/*.deb .
-        cd "deb_dist/hashit-${V}" # cd into debian folder
-        
         # for launchpad dailybuilds
-	    git init
 	    # add remote and force push deb package
-	    git remote add origin git+ssh://javadsm@git.launchpad.net/python3-hashit
-	    git add . # add all files
-	    git commit -m "DEB DIST BRANCH"
-	    git push --force --set-upstream origin master
-        # delete tmp files
-        read -p "Delete deb_dist (y/n)?" choice
-        case "$choice" in 
-            y|Y ) rm -rf deb_dist;;
-            n|N ) exit;;
-            * ) echo exit;;
-        esac
+	    git remote add launchpad git+ssh://javadsm@git.launchpad.net/python3-hashit
+	    git push --force --set-upstream launchpad master
         # exit
         exit
     fi

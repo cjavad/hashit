@@ -1,0 +1,27 @@
+Source: hashit
+Maintainer: Javad Shafique <javadshafique@hotmail.com>
+Section: python
+Priority: optional
+Build-Depends: python3-setuptools, python3-all, debhelper (>= 7.4.3)
+Standards-Version: 3.9.1
+
+
+
+
+
+Package: python3-hashit
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: Hashing Application with muliple modes, settings and more!
+  Hashit is an hashing program which can be uses to hash and verify muliple files on a system.
+  I got the idea from an ubuntu iso image which have this hash table, so i got the idea to make
+  such a program using python.
+  I also found that the linux 'standard' hashing commands was named like this
+  
+        md5sum
+        sha1sum
+        sha256sum
+        cksum
+        sum
+  
+  hashname + sum, which i thougth was a pretty lame naming convention.
