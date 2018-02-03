@@ -101,7 +101,8 @@ GLOBAL = {
         "FAIL":"FAILED", # FAIL message
         "MAYBE":"Maybe", # MAYBE Message
         "RESULTS_AS":"Same results as", # When results match
-        "DRYRUN_NOT":"Does not support --dry-run"
+        "DRYRUN_NOT":"Does not support --dry-run",
+        "LENGTH_NOT":"The files does not have the same length"
     },
     "ERRORS":{
         # JOKES in here
@@ -151,7 +152,7 @@ def fixpath(path):
 
     return c_path
 
-def reader(filename, mode="r", comments=True):
+def reader(filename, mode="r", comments=True, newlines=False):
     """Creates generator for an file, better for larger files not part of the MEMOPT,
     so an standard reader for most uses. Works like readlines but instead of a list it
     creates an generator that sortof clean the input before it is parsed by something like
@@ -469,10 +470,10 @@ def hashFile(filename, hasher, memory_opt=False):
 
 # ~ Check ~
 
-# check_ reads an file generate with hashit or md5sum (or sfv compatible files) and
+# check_files reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
 
-def check_(path, hashit, first_line, sfv=False, size=False, bsdtag=False, dry_run=False):
+def check_files(path, hashit, first_line, sfv=False, size=False, bsdtag=False, dry_run=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
     by creating an generator which loops over another generator which parses/reads the file and then it will check
     if the hash and optionally the size of the files matches the current state of them. For more info on how this work
@@ -687,7 +688,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
         # Else return exit code 0
         return 0
 
-    for c in check_(path, hashit, first_line, sfv, size, bsdtag, dry_run):
+    for c in check_files(path, hashit, first_line, sfv, size, bsdtag, dry_run):
         # check for dryrun
         if dry_run and isinstance(c, str):
             # if so print string

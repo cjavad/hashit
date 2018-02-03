@@ -10,7 +10,7 @@ import traceback
 import argparse
 # Import all from hashit
 from .__init__ import os, hashlib, eprint, hashFile, new, BSD, load, \
-    GLOBAL, Exit, check, generate_data_set, detect, SFV, fixpath, \
+    GLOBAL, Exit, check, generate_data_set, detect, SFV, fixpath, reader, \
     __algorithms__, __author__, __help__, __license__, supports_color
 
 from .extra import LINUX_LIST
@@ -120,7 +120,7 @@ def config(parser):
     ghelp.add_argument("-h", "--help", help="show this help message and exit", action=Execute, func=parser.format_help, exit=True)
     ghelp.add_argument("-p", "--page", help="Launch interactive help with python help() (for python api)", action=Execute, func=help_self, exit=True)
     ghelp.add_argument("-V", "--version", help="Print current version and exit", action="version", version="%(prog)s " + __version__)
-    ghelp.add_argument("-l", "--license", help="Print license and exit", action=Print, text=__license__, exit=True)
+    ghelp.add_argument("-L", "--license", help="Print license and exit", action=Print, text=__license__, exit=True)
     ghelp.add_argument("-hl", "--hash-list", help="Prints list of all supported hashes and exits", action=Execute, func=hash_list, exit=True)
 
     # all the options that sets something
@@ -130,15 +130,17 @@ def config(parser):
     settings.add_argument("-sp", "--strip-path", help="Strips fullpath from the results", action="store_true", default=GLOBAL["DEFAULTS"]["STRIP"])
     settings.add_argument("-A", "--append", help="Instead of writing to a file you will append to it", action="store_true", default=GLOBAL["DEFAULTS"]["APPEND"])
     settings.add_argument("-q", "--quiet", help="Reduces output, (silences warnings)", action="store_true")
-    settings.add_argument("-m", "--memory-optimatation", help="Enables memory optimatation (useful for large files)", action="store_true")
+    settings.add_argument("-m", "--memory-optimatation", help="Enables memory optimatation (useful for large files)", action="store_true", default=GLOBAL["DEFAULTS"]["MEMOPT"])
     settings.add_argument("-r", "--recursive", help="Hash all files in all subdirectories", action="store_true", default=GLOBAL["DEFAULTS"]["RECURS"])
 
     # other, things that are optinional such as detect and string hashes
     # other.add_argument("-a", "--all", help="Calculate all hashes for a single file", metavar="filename") NOTE: Removed for now
     other.add_argument("-s", "--string", nargs="?", help="hash a string or a piece of text", default=False, metavar="string")
     other.add_argument("-d", "--detect", nargs="?", help="Enable hash detection for check", metavar="hash", default=GLOBAL["DEFAULTS"]["DETECT"])
+    other.add_argument("-l", "--list", help="Takes a file (list) of strings and hashes each of them", metavar="list")
+    other.add_argument("-cl", "--check-list", help="Takes two arguments, hashlist and stringlist", nargs=2, metavar="list")
     # ~ More important ~
-    other.add_argument("-c", "--check", help="Verify checksums from a checksum file", metavar="filename", default=GLOBAL["DEFAULTS"]["MEMOPT"])
+    other.add_argument("-c", "--check", help="Verify checksums from a checksum file", metavar="filename")
     other.add_argument("-o", "--output", help="output output to an output (file)", metavar="filename")
 
     # ~ Formatting ~
@@ -283,6 +285,8 @@ def main_(args):
             output.write(hash_is.hexdigest())
         else:
             print(hash_is.hexdigest())
+        
+        return 0
 
     # if detect is choosen use it
     elif not argv.detect in GLOBAL["BLANK"]:
@@ -341,6 +345,79 @@ def main_(args):
 
             # Else exit 0
             return 0 
+    # ~ Check for list ~
+    elif not argv.list in GLOBAL["BLANK"]:
+        if os.path.exists(argv.list) and os.path.isfile(argv.list):
+            for line in reader(argv.list, "r", False):
+                hashstr = new(hash_is.name, line.encode()).hexdigest()
+
+                if use_out and output != None:
+                    output.write(hashstr + "\n")
+                else:
+                    print(hashstr)
+
+
+        else:
+             # if the file does not exist
+            # print error message
+            eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+            # check if strict
+            if argv.strict:
+                return 1 # if so then exit non-zero
+
+        # Else exit 0
+        return 0
+    
+    elif not argv.check_list in GLOBAL["BLANK"]:
+        hash_list = argv.check_list[0]
+        cstr_list = argv.check_list[1]
+
+        if os.path.exists(hash_list) and os.path.exists(cstr_list):
+            # read both files
+            hash_list = [s.replace("\n", "") for s in open(hash_list).readlines()]
+            cstr_list = [s.replace("\n", "") for s in open(cstr_list).readlines()]
+
+            count = 0
+
+            # check if they have the same length
+            if len(hash_list) != len(cstr_list):
+                eprint(RED + GLOBAL["MESSAGES"]["LENGTH_NOT"] + RESET)
+
+                if argv.strict:
+                    return 1
+            
+            while len(hash_list) > count:
+                # check if there is an error
+                if count > len(cstr_list):
+                    break
+
+                hashstr = hash_list[count]
+                s = cstr_list[count]
+                newhashstr = new(hash_is.name, s.encode()).hexdigest()
+
+                print_str = s + ": {}"
+                
+                # print correct results
+                if hashstr == newhashstr and not argv.quiet:
+                    print(print_str.format(GREEN + GLOBAL["MESSAGES"]["OK"] + RESET))
+                
+                elif hashstr != newhashstr:
+                    print(print_str.format(RED + GLOBAL["MESSAGES"]["FAIL"] + RESET))
+
+                count += 1
+
+
+        else:
+             # if the files does not exist
+            # print error message
+            eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
+            # check if strict
+            if argv.strict:
+                return 1 # if so then exit non-zero
+
+        # Else exit 0
+        return 0
+
 
     # ~ Check for files ~
 

@@ -9,10 +9,11 @@ layout: default
 ## Usage
 Hashit takes arguments like this:
 ```bash
-usage: hashit [-h] [-p] [-V] [-l] [-hl] [-H hashname]
+usage: hashit [-h] [-p] [-V] [-L] [-hl] [-H hashname]
               [-e excludes [excludes ...]] [-C] [-sp] [-A] [-q] [-m] [-r]
-              [-s [string]] [-d [hash]] [-c filename] [-o filename] [-S]
-              [-sfv] [-bsd] [--trace] [--strict]
+              [-s [string]] [-d [hash]] [-l list] [-cl list list]
+              [-c filename] [-o filename] [-S] [-sfv] [-bsd] [--dry-run]
+              [--trace] [--strict]
               [path] [files [files ...]]
 ```
 
@@ -34,7 +35,7 @@ help:
   -p, --page            Launch interactive help with python help() (for python
                         api)
   -V, --version         Print current version and exit
-  -l, --license         Print license and exit
+  -L, --license         Print license and exit
   -hl, --hash-list      Prints list of all supported hashes and exits
 
 formats:
@@ -50,7 +51,7 @@ settings:
   -C, --color           Enable colored output where it is supported
   -sp, --strip-path     Strips fullpath from the results
   -A, --append          Instead of writing to a file you will append to it
-  -q, --quiet           Reduces output
+  -q, --quiet           Reduces output, (silences warnings)
   -m, --memory-optimatation
                         Enables memory optimatation (useful for large files)
   -r, --recursive       Hash all files in all subdirectories
@@ -60,12 +61,17 @@ other:
                         hash a string or a piece of text
   -d [hash], --detect [hash]
                         Enable hash detection for check
+  -l list, --list list  Takes a file (list) of strings and hashes each of them
+  -cl list list, --check-list list list
+                        Takes two arguments, hashlist and stringlist
   -c filename, --check filename
                         Verify checksums from a checksum file
   -o filename, --output filename
                         output output to an output (file)
 
 devtools:
+  --dry-run             prints the list of files that is doing to be hashed
+                        (and how) and the output type
   --trace               Print traceback of any error cathed and exit
   --strict              Exit non-zero on any errors
 

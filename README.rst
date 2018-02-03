@@ -76,6 +76,8 @@ See `docs/usage <docs/usage.md>`__
 Changelog
 --------------
 
+    3.4.1 - Added the --list and --check-list option to verify lists of text
+
     3.4.0 - Added the --dry-run option and fixed the shake hash to you can now to shake_128_32. And bugfixes
 
     3.3.9 - Windows bugfixes.
