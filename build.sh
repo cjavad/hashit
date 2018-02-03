@@ -120,10 +120,11 @@ else
 
     if [ "$1" == "deb" ]
     then
+        $BUILD_DEB = 1 # set env 
         cd release
         rm -rf deb_dist
         py2dsc-deb hashit.zip
-        cd deb_dist
+        cd "deb_dist/hashit-${V}" # cd into debian folder
         
         # for launchpad dailybuilds
 	    git init
