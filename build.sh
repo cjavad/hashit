@@ -49,7 +49,7 @@ fi
 
 if [ "$1" == "push" ]
 then
-    echo push hashit
+    echo "push hashit to origin (github) and launchpad (ppa)"
     git push origin master
     git push launchpad master
     cd ../hashit.wiki
