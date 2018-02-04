@@ -1,0 +1,13 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: hashit
+Source: https://github.com/javadsm/hashit
+
+Files: *
+Copyright: Copyright (C) 2018 Javad Shafique
+License: MIT
+    From: https://opensource.org/licenses/MIT
+
+Files: img/icon.png
+Copyright: Copyright (C) freepik.com
+License: Proprietary
+    Icon from freepik.com all rights reserved
