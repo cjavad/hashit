@@ -1,7 +1,7 @@
 .. image:: https://build.snapcraft.io/badge/JavadSM/hashit.svg
    :target: https://build.snapcraft.io/user/JavadSM/hashit
 
-Project is hosted on `pypi <https://pypi.org/project/hashit/>`__
+Project is hosted on `pypi <https://pypi.org/project/hashit/>`__ and `launchpad <https://launchpad.net/python3-hashit>`__
 
 .. image:: img/icon.png
    :target:  https://github.com/javadsm/hashit
@@ -43,7 +43,7 @@ For more see `docs/hashes <docs/hashes.md>`__ and the `wikipedia page <https://e
 
 
 Background
-~~~~~~~~~~
+~~~~~~~~~~nd
 
 Hashit is an hashing program which can be uses to hash and verify
 muliple files on a system. I got the idea from an ubuntu iso image which

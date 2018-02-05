@@ -33,13 +33,19 @@ see [docs/usage.md](usage.md)
 [](#installing)
 ## Installing
 
-I would recommend installing it from pypi like this
+I would recommend installing it from pypi like this 
     
     pip(3) install hashit
 
-But you can also install it from snap
+But you can also install it from snap (linux only)
 
     snap install hashit (--devmode or --classic is recommend)
+
+And if you're using an debian based distro, you can use my ppa
+
+    sudo add-apt-repository ppa:javadsm/javads
+    sudo apt-get update
+    sudo apt-get install hashit
 
 ## Technical Notes
 [](#technical)
