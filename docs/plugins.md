@@ -59,4 +59,7 @@ load(tph)
 hasher = new("hashname")
 print(hashFile("somefile.ext", hasher, True))
 ```
+
+See [extra](extra.md) for more
+
 [back](index.md)

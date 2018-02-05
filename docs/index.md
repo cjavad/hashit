@@ -112,10 +112,10 @@ if 'exclude-string`' in 'path':
 [](#notes)
 
 - I interpet N/a as None At All because i can
-- The dist.zip (not in repo) contains all the old versions of the software
+- Now -s --string (input) is the default option so it is posix compatible
 - Detect does not work with shake due to its integration
 - I would not recommend using -S --size because then you will have to specify it everytime you check
 - Detect format benchmarks (using timeit on python3 ubuntu):
-    * BSD: 7-5 seconds (10**6)
-    * SFV: 4.2 seconds (10**6)
-    * N/A: 2.4 seconds (10**6)
+    * BSD: 7-5 seconds (10**6 times)
+    * SFV: 4.2 seconds (10**6 times)
+    * N/A: 2.4 seconds (10**6 times)
