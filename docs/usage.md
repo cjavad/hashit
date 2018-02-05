@@ -121,6 +121,48 @@ d41d8cd98f00b204e9800998ecf8427e another_0bytefile.txt
 d41d8cd98f00b204e9800998ecf8427e no_data.txt
 ```
 
+Fun fact the -l --list option can also be used if you really want to check an file, because it
+reads a file line by line can it be used for checking each and every line in any file like this:
+
+> Chances of hash collisions = 0% (JDK, haven't done any statitics but
+> technicly a lesser chances for bigger files (more lines more security!)
+
+```
+$ hashit -l LICENSE -o license.chk
+$ hashit -cl license.chk LICENSE
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\: OK
+©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©: OK
+©-------------------------------------------------------------------------------©: OK
+©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©: OK
+MIT License                                         : OK
+: OK
+Copyright (c) 2018 Javad Shafique: OK
+: OK
+Permission is hereby granted, free of charge, to any person obtaining a copy: OK
+of this software and associated documentation files (the "Software"), to deal: OK
+in the Software without restriction, including without limitation the rights: OK
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell: OK
+copies of the Software, and to permit persons to whom the Software is: OK
+furnished to do so, subject to the following conditions:: OK
+: OK
+The above copyright notice and this permission notice shall be included in all: OK
+copies or substantial portions of the Software.: OK
+: OK
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR: OK
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,: OK
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE: OK
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER: OK
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,: OK
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE: OK
+SOFTWARE.: OK
+: OK
+NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.: OK
+: OK
+Icon from freepik.com all rights reserved: OK
+©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©: OK
+©-------------------------------------------------------------------------------©: OK
+```
+
 
 > TIP: add quotes around multi length strings to make them a single argument
 
@@ -137,7 +179,7 @@ print(hash_from_file)
 print(new("sha3_256", b'DATA').hexdigest())
 print(new("crc32", b'DATA').hexdigest()) # custom hashes is also supported
 ```
-See [extra](extra.md) for more customization
+See [extra](extra.md) for more customization and extended api usage from python
 
 
 [back](index.md)

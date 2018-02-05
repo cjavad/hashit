@@ -20,6 +20,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+from hashit.version import __version__
 
 
 # -- General configuration ------------------------------------------------
@@ -57,7 +58,7 @@ author = 'Javad Shafique'
 # built documents.
 #
 # The short X.Y version.
-version = ''
+version = __version__
 # The full version, including alpha/beta/rc tags.
 release = ''
 

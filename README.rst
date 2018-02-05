@@ -43,7 +43,7 @@ For more see `docs/hashes <docs/hashes.md>`__ and the `wikipedia page <https://e
 
 
 Background
-~~~~~~~~~~nd
+~~~~~~~~~~
 
 Hashit is an hashing program which can be uses to hash and verify
 muliple files on a system. I got the idea from an ubuntu iso image which
@@ -80,6 +80,7 @@ See `docs/usage <docs/usage.md>`__
 
 Changelog
 --------------
-See `debian/changelog <debian/changelog>`__
-sphinx-quickstart
+See `debian/changelog <changelog>`__
+
+
 Works with python2 and python3. (python3 is recommended)

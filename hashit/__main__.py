@@ -231,24 +231,7 @@ def main_(args):
         if os.path.exists(new_path) and os.path.isdir(new_path):
             my_path = new_path
 
-    """ NOTE: Removed all for now
-    # check for hash one file
-    if not argv.all in GLOBAL["BLANK"]:
-        if os.path.exists(argv.all):
-            data = open(argv.all, "rb").read()
-            results = {}
-            for algo in __algorithms__:
-                results[algo] = new(algo, data).hexdigest()
-
-            out = json.dumps(results, indent=4, sort_keys=True)
-
-            if use_out and output != None:
-                output.write(out)
-            else:
-                print(out)
-        else:
-            eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
-    """
+    # ~ Argument taking options ~
 
     # check for string in args needed because argparse
     # does not support both store_true and store same for detect
@@ -313,6 +296,7 @@ def main_(args):
         else:
             print(RED + str(argv.detect) + " " + GLOBAL["MESSAGES"]["HASH_NOT"] + RESET)
 
+    # ~ Check functions ~
     # if to check use that
     elif argv.check:
         # set argv.detect to true
@@ -347,7 +331,11 @@ def main_(args):
             return 0 
     # ~ Check for list ~
     elif not argv.list in GLOBAL["BLANK"]:
-        if os.path.exists(argv.list) and os.path.isfile(argv.list):
+        # check for dry_run
+        if argv.dry_run:
+            print("Reading {} and hashing strings".format(argv.list))
+
+        elif os.path.exists(argv.list) and os.path.isfile(argv.list):
             for line in reader(argv.list, "r", False):
                 hashstr = new(hash_is.name, line.encode()).hexdigest()
 
@@ -369,32 +357,40 @@ def main_(args):
         return 0
     
     elif not argv.check_list in GLOBAL["BLANK"]:
+        # if check list is true then find the listnames
         hash_list = argv.check_list[0]
         cstr_list = argv.check_list[1]
+        # first check for dry_run
+        if argv.dry_run:
+            print("Checking if {} matches {}".format(cstr_list, hash_list))
 
-        if os.path.exists(hash_list) and os.path.exists(cstr_list):
-            # read both files
-            hash_list = [s.replace("\n", "") for s in open(hash_list).readlines()]
-            cstr_list = [s.replace("\n", "") for s in open(cstr_list).readlines()]
-
+        # else check if the exists
+        elif os.path.exists(hash_list) and os.path.exists(cstr_list):
+            # if they do read both files
+            hash_list = [s.replace("\n", "") for s in open(hash_list, "r").readlines()]
+            cstr_list = [s.replace("\n", "") for s in open(cstr_list, "r").readlines()]
+            # and set count to 0
             count = 0
 
             # check if they have the same length
             if len(hash_list) != len(cstr_list):
                 eprint(RED + GLOBAL["MESSAGES"]["LENGTH_NOT"] + RESET)
-
+                # print error if needed and check for strict
                 if argv.strict:
                     return 1
-            
+            # loop over files
             while len(hash_list) > count:
                 # check if there is an error
                 if count > len(cstr_list):
                     break
 
+                # get last hash
                 hashstr = hash_list[count]
+                # get current string
                 s = cstr_list[count]
+                # hash current string
                 newhashstr = new(hash_is.name, s.encode()).hexdigest()
-
+                # set base print_str
                 print_str = s + ": {}"
                 
                 # print correct results
@@ -404,18 +400,19 @@ def main_(args):
                 elif hashstr != newhashstr:
                     print(print_str.format(RED + GLOBAL["MESSAGES"]["FAIL"] + RESET))
 
+                # add 1 to count
                 count += 1
 
 
         else:
-             # if the files does not exist
+            # if the files does not exist
             # print error message
             eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
             # check if strict
             if argv.strict:
                 return 1 # if so then exit non-zero
 
-        # Else exit 0
+        # Exit 0
         return 0
 
 
