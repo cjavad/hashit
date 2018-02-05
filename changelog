@@ -1,6 +1,6 @@
 hashit (3.4.2) stable; urgency=low
 
-    * 3.4.2 - Fixed some bugs, improved performance and set -s to the default command (posix)
+    * 3.4.2 - Fixed some bugs, improved performance and set -s to the default command (posix). updated docs
     
     * 3.4.1 - Added the --list and --check-list option to verify lists of text
 
