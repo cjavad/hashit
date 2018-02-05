@@ -166,7 +166,7 @@ def main_(args):
     # check for amount of arguments
     if not args:
         # if there is not arguments show help
-        parser.parse_args(GLOBAL["IF_NO_ARGS"])
+        args = GLOBAL["IF_NO_ARGS"]
 
     # parse args
     argv = parser.parse_args(args)

@@ -15,6 +15,11 @@ Hashit, an hashing application
     :target: https://asciinema.org/a/TZQCel3DNy2sCWOFBtQcqVMMM
     :alt: asciinema demo usage.
 
+Description
+~~~~~~~~~~~
+Hashit, is an hashing application used as an verification tool, intendet to replace the "standard" linux hashing utilities such as
+md5sum, sha1sum and so on. One of the main reasons why this program was develop was to create an easy-to-use command line tool for 
+newcomers and professionals alike to hash/verify files and other data. For more see our homepage at `javadsm.github.io/hashit <https://javadsm.github.io/hashit>`__ 
 
 What is this magic (hashing)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,79 +80,6 @@ See `docs/usage <docs/usage.md>`__
 
 Changelog
 --------------
-
-    3.4.1 - Added the --list and --check-list option to verify lists of text
-
-    3.4.0 - Added the --dry-run option and fixed the shake hash to you can now to shake_128_32. And bugfixes
-
-    3.3.9 - Windows bugfixes.
-
-    3.3.8 - Added more documentation and added sha3 (Keccak) support for detect, also added -e --exclude that can exclude dirs from list
-
-    3.3.7 - Refractored the hashit.check code so you can now use it from python! (see `docs/extra.md#gui <docs/extra.md#gui>`__ for an example)
-
-    3.3.6 - Minor bugfixes and removed -a, added -p --page for a help-page in the terminal for the python-api
-
-    3.3.5 - hashit now supports a list of files such as the wildcard in linux, and can detect if that element is a directory
-
-    3.3.4 - Bugfixes and more, fixed parsers added some benchmarks and fixing some more of the snap-related issues
-
-    3.3.3 - Full release
-
-    3.3.3a3 - Extended Configs working on homepage and docs
-
-    3.3.3a2 - Added --trace and fixed some of the issues with detect and argparse
-
-    3.3.0a1 - removed argc depend, using argparse
-
-    3.3.0a0 - Fixing snap releated issues
-
-    3.3.1 - Fixed bug in windows where \ would not be replaced by / in hashit.fixpath
-
-    3.3.0 - Added BSD Style output and check format detection. Also an -s option that can hash a piece of text see `docs <https://github.com/JavadSM/hashit/blob/master/docs/>`__ for more
-
-    3.2.1 - ReRelease for snap
-
-    3.2.0 - Full support for snap
-
-    3.1.5 - Skipped 3.1.4 cause i have been renaming varibles, cleaning code and improving performance.
-
-    3.1.2-3.1.3 - fixed this document
-
-    3.1.0 - A bunch of bugfixes in comparing of hashes, shake and more
-
-    3.0.2 - Fixed size positioning
-
-    3.0.1 - Added --size option that allows the program to check file sizes to
-
-    3.0.0 - New release, added tests full color-support and CRC32 hashing! (Also added an -a option)
-
-    2.3.0 - Fixed a bunch of code, made it faster better more powerful. Full support for sfv and more!
-
-    2.1.3 - Fixed detect bugs added unit tests and some fixes
-
-    2.1.2 - Done with detect.py working hash detection
-
-    2.1.1 - Some more bugfixed, started working on detect.py
-
-    2.1.0 - Updated to support newest version of argc
-
-    2.0.1 - Bugfixes
-
-    1.2.0 - Full Release
-
-    1.1.0 - Added support for python2 and 
-
-    1.0.2 - Double exits' fixed
-
-    1.0.1 - Fixed printing bug
-
-    1.0.0 - Major version
-
-    0.0.3 - Added documentation and license
-
-    0.0.2 - Fixing script bugs
-
-    0.0.1 - Initial release, ready for use
-
-Works with python2 and python3. 
+See `debian/changelog <debian/changelog>`__
+sphinx-quickstart
+Works with python2 and python3. (python3 is recommended)

@@ -118,7 +118,7 @@ GLOBAL = {
             "END":"JDK, so something happend with your os, message: "
         }
     },
-    "IF_NO_ARGS":["--help"], # when no args is used this is the default setup
+    "IF_NO_ARGS":["--string"], # when no args is used, this will be executed
     "BLANK": (None, True, False),
     "SNAP_PATH":"/var/lib/snapd/hostfs",
     "PLATFORM":os.sys.platform,

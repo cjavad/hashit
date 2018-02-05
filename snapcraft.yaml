@@ -1,20 +1,12 @@
 name: hashit
-version: 3.4.1
+version: 3.4.2
 summary: hashit is an replacement for (md5sum, sha1sum, and so on)
 icon: img/icon.png
 description: |
-  Hashit is an hashing program which can be uses to hash and verify muliple files on a system.
-  I got the idea from an ubuntu iso image which have this hash table, so i got the idea to make
-  such a program using python.
-  I also found that the linux 'standard' hashing commands was named like this
-  
-        md5sum
-        sha1sum
-        sha256sum
-        cksum
-        sum
-  
-  hashname + sum, which i thougth was a pretty lame naming convention.
+  Hashit, is an hashing application used as an verification tool, intendet to replace the "standard" linux hashing utilities such as
+  md5sum, sha1sum and so on. One of the main reasons why this program was develop was to create an easy-to-use command line tool for 
+  newcomers and professionals alike to hash/verify files and other data. For more see our homepage at https://javadsm.github.io/hashit 
+
 
 grade: stable
 confinement: strict

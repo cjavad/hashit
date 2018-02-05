@@ -28,3 +28,8 @@ deb_dist/
 # jekyll
 _site/
 .sass-cache/
+
+# sphinx
+_build/
+_static/
+_templates/

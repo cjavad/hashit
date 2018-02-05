@@ -1,8 +1,6 @@
 from setuptools import setup
 from hashit.version import __version__
 
-LONG_DES = open("README.rst", "r").read()
-
 setup(
     name = "hashit",
     author = "Javad Shafique",
@@ -19,8 +17,12 @@ setup(
     },
     url="https://github.com/JavadSM/hashit",
     packages=["hashit"],
-    description = "Hashing Application with muliple modes, settings and more!",
-    long_description = LONG_DES,
+    description = """Hashing Application with muliple modes, settings and more!\n
+    Hashit, is an hashing application used as an verification tool, intendet to replace the "standard" linux hashing utilities such as
+    md5sum, sha1sum and so on. One of the main reasons why this program was develop was to create an easy-to-use command line tool for 
+    newcomers and professionals alike to hash/verify files and other data. For more see our homepage at https://javadsm.github.io/hashit
+    """,
+    long_description = open("README.rst", "r").read(),
     classifiers = [
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",
