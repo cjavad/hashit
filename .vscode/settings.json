@@ -1,0 +1,12 @@
+{
+    "python.unitTest.unittestArgs": [
+        "-v",
+        "-s",
+        "./.vscode",
+        "-p",
+        "*_tests.py"
+    ],
+    "python.unitTest.unittestEnabled": true,
+    "python.linting.enabled": true,
+    "restructuredtext.confPath": "/home/javad/Dropbox/Projekter/hashit/hashit"
+}
