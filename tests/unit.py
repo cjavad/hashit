@@ -75,7 +75,7 @@ class Test(unittest.TestCase):
         # for sha1 more options should be avaible
         self.assertTrue(len(cl3.certain) > 1)
         # and work
-        self.assertEqual(h3, hashit.hashIter(hashit.blockIter(open(FILE, "rb")), hashit.new(cl3.maybe[0])))
+        self.assertEqual(h3, hashit.hashIter(hashit.blockIter(open(FILE, "rb")), hashit.new(cl3.certain[0])))
 
     def test_detect_format(self):
         # create shortcut

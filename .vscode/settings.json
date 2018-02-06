@@ -8,5 +8,6 @@
     ],
     "python.unitTest.unittestEnabled": true,
     "python.linting.enabled": true,
-    "restructuredtext.confPath": "/home/javad/Dropbox/Projekter/hashit/hashit"
+    "restructuredtext.confPath": "/home/javad/Dropbox/Projekter/hashit/hashit",
+    "python.pythonPath": "/usr/bin/python3.6"
 }

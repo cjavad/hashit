@@ -110,6 +110,12 @@ then
         echo "Removed deb_dist"
     fi
 
+    if [ -d "_build" ]
+    then
+        rm -rf "_build"
+        echo "Removed _build"
+    fi
+
     # clean debian dir
     cd debian
     if [ -d "hashit" ]; then rm -rf "hashit"; echo "Removed debian/hashit/*"; fi
