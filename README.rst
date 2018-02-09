@@ -9,7 +9,6 @@ Project is hosted on `pypi <https://pypi.org/project/hashit/>`__ and `launchpad 
 
 Hashit, an hashing application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: img/demo.gif
     :target: https://asciinema.org/a/TZQCel3DNy2sCWOFBtQcqVMMM

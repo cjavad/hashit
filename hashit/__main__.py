@@ -513,7 +513,7 @@ def main_(args):
             # check if fullpath path shall be stripped
             if argv.strip_path:
                 # then replace current path with .
-                print_str = print_str.replace(os.getcwd(), ".")
+                print_str = print_str.replace(os.path.join(os.getcwd(), ""), "")
 
             # if we should output the result to a file
             if use_out and output != None:
