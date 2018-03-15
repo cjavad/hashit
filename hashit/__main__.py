@@ -5,6 +5,7 @@ and anything needed for an command lin application such as hashit.
 
 it uses argc another package by me, but i am considering switching to argparse
 """
+
 import random
 import traceback
 import argparse
@@ -512,8 +513,9 @@ def main_(args):
 
             # check if fullpath path shall be stripped
             if argv.strip_path:
-                # then replace current path with .
+                # then replace current path with
                 print_str = print_str.replace(os.path.join(os.getcwd(), ""), "")
+                print_str = print_str.replace("./", "") # if the file is in the current dir
 
             # if we should output the result to a file
             if use_out and output != None:

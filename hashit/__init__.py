@@ -47,7 +47,7 @@ import hashlib
 
 from .extra import Crc32, shake
 from .detection import detect, generate_data_set, ishex
-
+    
 __author__ = "Javad Shafique" # copyrigth holder
 __license__ = "MIT, Copyrigth (c) 2017-2018 Javad Shafique" # license for the program
 
@@ -125,6 +125,7 @@ GLOBAL = {
     "DEVMODE":True,
     "ACCESS": (os.access("/home", os.R_OK) if os.path.exists("/home") else False),
     "HASH_STR":"Hello World!", # String that detect uses to generate the dataset
+    "RM_APN_STAR":True, # Remove * from filenames (LINUX-SUM tools binary option)
     "WRITE_MODE":"w" # 'w' not 'a'
 }
 
@@ -141,6 +142,9 @@ def fixpath(path):
     the hole filesystem, if you're not in devmode and you're still
     using snap, then you will need sudo to access the intire system.
     Also replaces / with \\ on windows"""
+    if path.startswith("*") and GLOBAL["RM_APN_STAR"]:
+        path = path[1:] # remove * from start of string
+
     c_path = os.path.join(os.getcwd(), path).replace("\\", "/")
     # check if you'll need to use snap
     if os.environ.get("SNAP") and GLOBAL["DEVMODE"] and not GLOBAL["ACCESS"]:

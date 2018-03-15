@@ -138,6 +138,7 @@ if [ "$1" == "upload" ]
 then
     $PY setup.py sdist upload
     rm -rf ./dist
+    exit
 fi
 
 if [ "$1" == "build" ]

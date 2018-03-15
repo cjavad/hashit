@@ -1,6 +1,6 @@
+# python files/temps
 *.egg-info
 *.pyc
-
 __pycache__/
 dist/
 build/
@@ -15,14 +15,13 @@ stage/
 *.snap*
 *.bz2
 
-# old
-dist.zip
-
-# deb
+# other folders
 deb_dist/
+.vs*/
 
 # other files
 *.chk
+dist.zip
 
 # jekyll
 _site/
