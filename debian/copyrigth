@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: hashit
-Source: https://github.com/javadsm/hashit
+Source: https://github.com/cjavad/hashit
 
 Files: *
 Copyright: Copyright (C) 2018 Javad Shafique
