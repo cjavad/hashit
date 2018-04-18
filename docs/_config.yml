@@ -3,9 +3,9 @@ description: Hashit an hashing application
 show_downloads: True
 
 github:
-  owner_url: https://github.com/JavadSM/hashit/
-  tar_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.tar.gz
-  zip_url: https://github.com/JavadSM/hashit/raw/master/release/hashit.zip
+  owner_url: https://github.com/cjavad/hashit/
+  tar_url: https://github.com/cjavad/hashit/raw/master/release/hashit.tar.gz
+  zip_url: https://github.com/cjavad/hashit/raw/master/release/hashit.zip
 
 author:
   name: Javad Shafique
