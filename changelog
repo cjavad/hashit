@@ -33,7 +33,7 @@ hashit (3.4.4) stable; urgency=low
 
     * 3.3.1 - Fixed bug in windows where \ would not be replaced by / in hashit.fixpath
 
-    * 3.3.0 - Added BSD Style output and check format detection. Also an -s option that can hash a piece of text see `docs <https://github.com/JavadSM/hashit/blob/master/docs/>`__ for more
+    * 3.3.0 - Added BSD Style output and check format detection. Also an -s option that can hash a piece of text see `docs <https://github.com/cjavad/hashit/blob/master/docs/>`__ for more
 
     * 3.2.1 - ReRelease for snap
 
