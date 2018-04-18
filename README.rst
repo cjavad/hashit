@@ -1,10 +1,10 @@
-.. image:: https://build.snapcraft.io/badge/JavadSM/hashit.svg
-   :target: https://build.snapcraft.io/user/JavadSM/hashit
+.. image:: https://build.snapcraft.io/badge/cjavad/hashit.svg
+   :target: https://build.snapcraft.io/user/cjavad/hashit
 
 Project is hosted on `pypi <https://pypi.org/project/hashit/>`__ and `launchpad <https://launchpad.net/python3-hashit>`__
 
 .. image:: img/icon.png
-   :target:  https://github.com/javadsm/hashit
+   :target:  https://github.com/cjavad/hashit
    :align: right
 
 Hashit, an hashing application
@@ -18,7 +18,7 @@ Description
 ~~~~~~~~~~~
 Hashit, is an hashing application used as an verification tool, intendet to replace the "standard" linux hashing utilities such as
 md5sum, sha1sum and so on. One of the main reasons why this program was develop was to create an easy-to-use command line tool for 
-newcomers and professionals alike to hash/verify files and other data. For more see our homepage at `javadsm.github.io/hashit <https://javadsm.github.io/hashit>`__ 
+newcomers and professionals alike to hash/verify files and other data. For more see our homepage at `cjavad.github.io/hashit <https://cjavad.github.io/hashit>`__ 
 
 What is this magic (hashing)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
