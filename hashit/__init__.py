@@ -60,7 +60,7 @@ python.
 
 # fix algo list by sorting it trough (sha3_ is out because it interfears with the detection algoritm
 __algorithms__ = sorted([s for s in hashlib.algorithms_available if not (s[:5] in ("shake") \
-or s[:3] in {"SHA", "MD5", "MD4", "RIP"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
+or s[:3] in {"SHA", "MD5", "MD4", "RIP",  "MDC"})] + ["crc32"], key=len) # add crc32 cause' it's a builtin
 
 # Global config
 GLOBAL = {

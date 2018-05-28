@@ -13,6 +13,7 @@ FILE_SUMS = {
     "ecdsa-with-SHA1": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
     "md4": "1901cf76521dfb68b0a88df72c995345",
     "md5": "c11869fc956d819d2a336c74f4cc6000",
+    "mdc2":"e8746a342b753d68e2c44dbdfdc52950",
     "ripemd160": "7fbabc556593e015495d752a0f8ba1d99eee0f8a",
     "sha": "597018a568e01f2434ce967be416beaefff02536",
     "sha1": "05d9842ff5ab98ea012b1cbe2693a0714a33547a",
