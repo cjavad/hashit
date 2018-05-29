@@ -83,3 +83,8 @@ See `debian/changelog <changelog>`__
 
 
 Works with python2 and python3. (python3 is recommended)
+
+
+.. image:: https://badges.gitter.im/cjavad/hashit.svg
+   :alt: Join the chat at https://gitter.im/cjavad/hashit
+   :target: https://gitter.im/cjavad/hashit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
