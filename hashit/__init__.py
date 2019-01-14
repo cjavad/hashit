@@ -19,7 +19,8 @@ LICENSE:
 
     Copyright (c) 2018 Javad Shafique
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
+    Permission is hereby granted, free of charge, to any person obtaining a 
+    
     of this software and associated documentation files (the "Software"), to deal
     in the Software without restriction, including without limitation the rights
     to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -48,8 +49,8 @@ import hashlib
 from .extra import Crc32, shake
 from .detection import detect, generate_data_set, ishex
     
-__author__ = "Javad Shafique" # copyrigth holder
-__license__ = "MIT, Copyrigth (c) 2017-2018 Javad Shafique" # license for the program
+__author__ = "Javad Shafique" # copyright holder
+__license__ = "MIT, Copyright (c) 2017-2018 Javad Shafique" # license for the program
 
 # help desciption
 __help__ = """Hashit is an hashing program which can be uses to hash and verify
