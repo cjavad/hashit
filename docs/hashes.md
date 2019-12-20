@@ -12,6 +12,7 @@ For python2 is
 
 - md4
 - md5
+- mdc2
 - sha
 - sha1 ('DSA-SHA', 'ecdsa-with-SHA1', 'dsaEncryption', 'DSA', 'dsaWithSHA')
 - sha224
