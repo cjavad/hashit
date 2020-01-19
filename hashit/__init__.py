@@ -17,7 +17,7 @@ LICENSE:
 
     MIT License
 
-    Copyright (c) 2018 Javad Shafique
+    Copyright (c) 2020 Javad Shafique
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@ from .extra import Crc32, shake
 from .detection import detect, generate_data_set, ishex
     
 __author__ = "Javad Shafique" # copyright holder
-__license__ = "MIT, Copyright (c) 2017-2018 Javad Shafique" # license for the program
+__license__ = "MIT, Copyright (c) 2017-2020 Javad Shafique" # license for the program
 
 # help desciption
 __help__ = """Hashit is an hashing program which can be uses to hash and verify
@@ -157,13 +157,16 @@ def fixpath(path):
     return c_path
 
 def reader(filename, mode="r", comments=True, newlines=False):
-    """Creates generator for an file, better for larger files not part of the MEMOPT,
+    """Creates generator for a file or stdin, better for larger files not part of the MEMOPT,
     so an standard reader for most uses. Works like readlines but instead of a list it
     creates an generator that sortof clean the input before it is parsed by something like
     BSD() or SFV()."""
-    filename = fixpath(filename)
+
+    # check for stdin 
+    file = os.sys.stdin if len(filename) == 0 else open(fixpath(filename), mode=mode)
+
     # return generator
-    for line in open(filename, mode=mode).readlines():
+    for line in file.readlines():
         # if the line starts with and comments is enabled 
         if line.startswith(";") and comments:
             # then skip the line
@@ -183,9 +186,9 @@ class SFV:
         self.filename = filename
         self.size = size
 
-    def read(self, filename=None, size=False):
-        """Creates generator that reads and parses sfv compatible files using reader"""
-        for line in reader(self.filename or filename, "r"):
+    def read(self, filename=None, size=False, reader=None):
+        """Creates generator or uses generator that reads and parses sfv compatible files using reader"""
+        for line in reader or reader(self.filename or filename, "r"):
             # read sfv file and create and generator with correct results
             yield self.parser(line, self.size or size)
 
@@ -234,9 +237,9 @@ class BSD:
         self.filename = filename
         self.size = size
 
-    def read(self, filename=None, size=False):
-        """Creates generator that reads and parses bsd strings"""
-        for line in reader(self.filename or filename, "r"):
+    def read(self, filename=None, size=False, reader=None):
+        """Creates generator or uses generator that reads and parses bsd strings"""
+        for line in reader or reader(self.filename or filename, "r"):
             yield self.parser(line, self.size or size)
 
     @staticmethod
@@ -334,7 +337,7 @@ def detect_format(hashstr, use_size=False):
     return "N/A"
 
 # detect and prompt user if needed
-def choose_hash(hash1, hashit):
+def choose_hash(hash1, hashit, cli=True):
     """
     Uses detect.decect to identify hashes with a high accuracy but when
     there if some issues it will take user input. CLI-only
@@ -352,7 +355,7 @@ def choose_hash(hash1, hashit):
         if tup.certain and not (hashit.name in tup.certain or tup.maybe) and not tup.maybe:
             hashit = new(tup.certain[0])
 
-        elif tup.maybe:
+        elif tup.maybe and cli:
             # for each element in maybe
             for c, h in enumerate(tup.certain + tup.maybe):
                 eprint(h, "(" + str(c) + ")")
@@ -477,7 +480,7 @@ def hashFile(filename, hasher, memory_opt=False):
 # check_files reads an file generate with hashit or md5sum (or sfv compatible files) and
 # compares the results by re-hashing the files and prints if there is any changes
 
-def check_files(path, hashit, first_line, sfv=False, size=False, bsdtag=False, dry_run=False):
+def check_files(file_read, hashit, first_line, sfv=False, size=False, bsdtag=False, dry_run=False):
     """Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
     by creating an generator which loops over another generator which parses/reads the file and then it will check
     if the hash and optionally the size of the files matches the current state of them. For more info on how this work
@@ -503,7 +506,7 @@ def check_files(path, hashit, first_line, sfv=False, size=False, bsdtag=False, d
     detectFormat = lambda s, e: detect_format(s, size) == e
 
     if sfv or detectFormat(first_line, "sfv"):
-        x_reader = lambda: SFV(path, size).read()
+        x_reader = lambda: SFV(size=size).read(reader=file_read)
         # set indexes
         hash_index = 1
         path_index = 0
@@ -515,7 +518,7 @@ def check_files(path, hashit, first_line, sfv=False, size=False, bsdtag=False, d
 
     elif bsdtag or detectFormat(first_line, "bsd"):
         # create reader
-        x_reader = lambda: BSD(path, size).read()
+        x_reader = lambda: BSD(size=size).read(reader=file_read)
         # set indexes
         hash_index = 2
         path_index = 1
@@ -530,7 +533,7 @@ def check_files(path, hashit, first_line, sfv=False, size=False, bsdtag=False, d
 
     else:
         # create reader
-        x_reader = lambda: reader(path)
+        x_reader = lambda: file_read
         # set indexes
         hash_index = 0
         path_index = 1
@@ -642,13 +645,15 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
         YELLOW = GLOBAL["COLORS"]["YELLOW"]
         RESET = GLOBAL["COLORS"]["RESET"]
 
-    # check if file exits
-    if not os.path.exists(path):
+    # check if file exits or alternativly if sys.stdin should be used
+    if not os.path.exists(path) and len(path) != 0:
         eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
         return 1
 
-    # get first line from the file
-    first_line = next(reader(path, "r"))
+    file_read = list(reader(path, "r"))
+
+    # get first line from the file or stdin
+    first_line = file_read[0]
 
     # choose hash if not already selected
     # using new detection algorithem
@@ -665,8 +670,8 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
 
             else:
                 hash1 = [x for x in first_line.strip().replace("\n", "").split(" ") if x != ''][0]
-            # get new hasher
-            hashit = choose_hash(hash1, hashit)
+            # get new hasher (if reading stdin disable CLI interface)
+            hashit = choose_hash(hash1, hashit, cli = False if len(path) == 0 else True)
             # check if it is empty
             if hashit is None:
                 # if it is print error message
@@ -692,7 +697,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
         # Else return exit code 0
         return 0
 
-    for c in check_files(path, hashit, first_line, sfv, size, bsdtag, dry_run):
+    for c in check_files(file_read, hashit, first_line, sfv, size, bsdtag, dry_run):
         # check for dryrun
         if dry_run and isinstance(c, str):
             # if so print string

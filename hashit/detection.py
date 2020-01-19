@@ -1,11 +1,11 @@
 """
-Copyrigth (c) 2018-present Javad Shafique
+Copyrigth (c) 2020-present Javad Shafique
 
 this module using length and connections to find a match 
 for an hashing algorithem. It's basicly a matching algorigtem
 it can be used for almost any pure function in this case for hashes.
 
-# Copyright (c) 2018-present Javad Shafique
+# Copyright (c) 2020-present Javad Shafique
 # This 'Software' can't be used without permission
 # from Javad Shafique.
 

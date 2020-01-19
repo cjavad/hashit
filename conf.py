@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # hashit documentation build configuration file, created by
-# sphinx-quickstart on Mon Feb  5 16:07:13 2018.
+# sphinx-quickstart on Mon Feb  5 16:07:13 2020.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -50,7 +50,7 @@ master_doc = 'README'
 
 # General information about the project.
 project = 'hashit'
-copyright = '2018, Javad Shafique'
+copyright = '2020, Javad Shafique'
 author = 'Javad Shafique'
 
 # The version info for the project you're documenting, acts as replacement for

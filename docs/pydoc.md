@@ -2,8 +2,7 @@
 layout: default
 ---
 
-<h1 id="hashit">hashit</h1>
-
+# hashit
 hashit module for hashit command is contaning all the code for hashit
 
 hashit is an hashing application which main purpose is to replace all the 'default'
@@ -23,7 +22,7 @@ LICENSE:
 
     MIT License
 
-    Copyright (c) 2018 Javad Shafique
+    Copyright (c) 2020 Javad Shafique
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -45,8 +44,7 @@ LICENSE:
 
     NO ONE CAN CLAIM OWNERSHIP OF THIS "SOFTWARE" AND ASSOCIATED DOCUMENTATION FILES.
 
-<h2 id="hashit.fixpath">fixpath</h2>
-
+## fixpath
 ```python
 fixpath(path)
 ```
@@ -56,25 +54,22 @@ which if the application is in devmode gives hashit access to
 the hole filesystem, if you're not in devmode and you're still
 using snap, then you will need sudo to access the intire system.
 Also replaces / with \ on windows
-<h2 id="hashit.reader">reader</h2>
-
+## reader
 ```python
 reader(filename, mode='r', comments=True, newlines=False)
 ```
-Creates generator for an file, better for larger files not part of the MEMOPT,
+Creates generator for a file or stdin, better for larger files not part of the MEMOPT,
 so an standard reader for most uses. Works like readlines but instead of a list it
 creates an generator that sortof clean the input before it is parsed by something like
 BSD() or SFV().
-<h2 id="hashit.SFV">SFV</h2>
-
+## SFV
 ```python
 SFV(self, filename=None, size=False)
 ```
 Class for parsing and creating sfv strings
 SFV() contains all functions needed for parsing,
 creating and formating SFV strings
-<h2 id="hashit.BSD">BSD</h2>
-
+## BSD
 ```python
 BSD(self, filename=None, size=False)
 ```
@@ -82,14 +77,12 @@ Parser for bsd and formater, also the
 same as SFV() but BSD() instead of sfv uses
 the bsd checksum output which is like this:
     hashname (filename) = hash [size]
-<h2 id="hashit.eprint">eprint</h2>
-
+## eprint
 ```python
 eprint(*args, **kwargs)
 ```
 Prints to stderr usefull for warnings and error messages
-<h2 id="hashit.supports_color">supports_color</h2>
-
+## supports_color
 ```python
 supports_color()
 ```
@@ -97,23 +90,20 @@ supports_color()
 Returns True if the running system's terminal supports color, and False
 otherwise.
 
-<h2 id="hashit.detect_format">detect_format</h2>
-
+## detect_format
 ```python
 detect_format(hashstr, use_size=False)
 ```
 Autodetect hash format, by checking the length and what it contains
-<h2 id="hashit.choose_hash">choose_hash</h2>
-
+## choose_hash
 ```python
-choose_hash(hash1, hashit)
+choose_hash(hash1, hashit, cli=True)
 ```
 
 Uses detect.decect to identify hashes with a high accuracy but when
 there if some issues it will take user input. CLI-only
 
-<h2 id="hashit.new">new</h2>
-
+## new
 ```python
 new(hashname, data=b'')
 ```
@@ -123,8 +113,7 @@ features is it's support for the python3 only shake-hash
 scheme were the default hash is shake_256 and the input is
 taken like this:
     shake_[amount of output]
-<h2 id="hashit.load">load</h2>
-
+## load
 ```python
 load(hashclass)
 ```
@@ -135,50 +124,43 @@ be used as long as the have the same api as specified in docs/README.md
 
 returns True/False based on whether or not the data is loaded
 
-<h2 id="hashit.load_all">load_all</h2>
-
+## load_all
 ```python
 load_all(list_of_hashclasses)
 ```
 Just for it, a function that loads all plugins in a list
-<h2 id="hashit.hashIter">hashIter</h2>
-
+## hashIter
 ```python
 hashIter(bytesiter, hasher, ashexstr=True)
 ```
 Will hash the blockIter generator and return digest
-<h2 id="hashit.blockIter">blockIter</h2>
-
+## blockIter
 ```python
 blockIter(afile, blocksize=65536)
 ```
 Will create a generator for reading a file
-<h2 id="hashit.hashFile">hashFile</h2>
-
+## hashFile
 ```python
 hashFile(filename, hasher, memory_opt=False)
 ```
 hashFile is a simple way to hash files using diffrent methods
-<h2 id="hashit.check_files">check_files</h2>
-
+## check_files
 ```python
-check_files(path, hashit, first_line, sfv=False, size=False, bsdtag=False, dry_run=False)
+check_files(file_read, hashit, first_line, sfv=False, size=False, bsdtag=False, dry_run=False)
 ```
 Will read an file which have a SFV compatible checksum-file or a standard one and verify the files checksum
 by creating an generator which loops over another generator which parses/reads the file and then it will check
 if the hash and optionally the size of the files matches the current state of them. For more info on how this work
 see docs/index.md#technical.
 
-<h2 id="hashit.check">check</h2>
-
+## check
 ```python
 check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=False, size=False, bsdtag=False, strict=False, trace=False, dry_run=False)
 ```
 Uses check_() to print the error messages and statuses corrent (for CLI)
 they are seperated so that you can use the python api, if you so please.
 
-<h1 id="hashit.__main__">hashit.__main__</h1>
-
+# hashit.__main__
 Command line application for hashit
 
 this module "__main__" contains all the code for argparsing, running
@@ -186,44 +168,37 @@ and anything needed for an command lin application such as hashit.
 
 it uses argc another package by me, but i am considering switching to argparse
 
-<h2 id="hashit.__main__.Print">Print</h2>
-
+## Print
 ```python
 Print(self, nargs=0, **kwargs)
 ```
 Print action for argparse, takes one kwarg which is text the varible which contains the string to be printed
-<h2 id="hashit.__main__.Execute">Execute</h2>
-
+## Execute
 ```python
 Execute(self, nargs=0, **kwargs)
 ```
 Same as Print() but instead of printing an object it calls it takes func (function), and exit (bool)
-<h2 id="hashit.__main__.walk">walk</h2>
-
+## walk
 ```python
 walk(go_over)
 ```
 Goes over a path an finds all files, appends them to a list and returns that list
-<h2 id="hashit.__main__.exclude">exclude</h2>
-
+## exclude
 ```python
 exclude(items, excludes)
 ```
 Exclude removes all items in a list that is in the excludes list (for dirs)
-<h2 id="hashit.__main__.config">config</h2>
-
+## config
 ```python
 config(parser)
 ```
 Sets argvs' config and commands with argparse and returns it for good sake
-<h2 id="hashit.__main__.main_">main_</h2>
-
+## main_
 ```python
 main_(args)
 ```
 Main function which is the cli parses arguments and runs appropriate commands
-<h2 id="hashit.__main__.main">main</h2>
-
+## main
 ```python
 main(args=None)
 ```
@@ -233,16 +208,15 @@ Main function with error catching, can force-exit with os._exit(1)
 this main function calls main_() and cathes any error while giving the user some "pretty"
 errors.
 
-<h1 id="hashit.detection">hashit.detection</h1>
+# hashit.detection
 
-
-Copyrigth (c) 2018-present Javad Shafique
+Copyrigth (c) 2020-present Javad Shafique
 
 this module using length and connections to find a match
 for an hashing algorithem. It's basicly a matching algorigtem
 it can be used for almost any pure function in this case for hashes.
 
-__Copyright (c) 2018-present Javad Shafique__
+__Copyright (c) 2020-present Javad Shafique__
 
 __This 'Software' can't be used without permission__
 
@@ -361,41 +335,34 @@ PRIORITY = {
     "sha1":["dsaEncryption", "DSA", "ecdsa-with-SHA1", "dsaWithSHA", "DSA-SHA"]
 }
 
-<h2 id="hashit.detection.NTUPLE">Closest</h2>
-
+## Closest
 ```python
 Closest(self, /, *args, **kwargs)
 ```
 Closest(certain, maybe)
-<h2 id="hashit.detection.ishex">ishex</h2>
-
+## ishex
 ```python
 ishex(hexstr)
 ```
 Checks if string is hexidecimal
-<h2 id="hashit.detection.generate_data_set">generate_data_set</h2>
-
+## generate_data_set
 ```python
 generate_data_set(hashon, algos, hasher_that_takes_new)
 ```
 Generates dataset based on data and list of strings that can be used to create objects to use that data
-<h2 id="hashit.detection.detect">detect</h2>
-
+## detect
 ```python
 detect(s, table, maybe=True)
 ```
 Compares result from datasets, finds connections and eleminates contestants
-<h1 id="hashit.extra">hashit.extra</h1>
-
+# hashit.extra
 Extra functions and classes for hashit
-<h2 id="hashit.extra.Crc32">Crc32</h2>
-
+## Crc32
 ```python
 Crc32(self, data=b'')
 ```
 This class is an api for the crc32 function that is compatible with mor
-<h2 id="hashit.extra.shake">shake</h2>
-
+## shake
 ```python
 shake(self, hashn, data=b'')
 ```

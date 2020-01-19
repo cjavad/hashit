@@ -75,7 +75,7 @@ devtools:
   --trace               Print traceback of any error cathed and exit
   --strict              Exit non-zero on any errors
 
-MIT, Copyrigth (c) 2017-2018 Javad Shafique
+MIT, Copyrigth (c) 2017-2020 Javad Shafique
 ```
 
 So if i want to hash a file called fx. icon.png in the img dir
@@ -136,7 +136,7 @@ $ hashit -cl license.chk LICENSE
 ©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©©: OK
 MIT License                                         : OK
 : OK
-Copyright (c) 2018 Javad Shafique: OK
+Copyright (c) 2020 Javad Shafique: OK
 : OK
 Permission is hereby granted, free of charge, to any person obtaining a copy: OK
 of this software and associated documentation files (the "Software"), to deal: OK

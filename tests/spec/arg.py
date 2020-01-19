@@ -32,7 +32,7 @@ class Execute(argparse.Action):
         if self.exit:
             exit()
 
-parser = argparse.ArgumentParser("hashit", "hashit [options] $path", "hashit is an hashing application...", "MIT License, Copyrigth (c) 2018 Javad Shafique")
+parser = argparse.ArgumentParser("hashit", "hashit [options] $path", "hashit is an hashing application...", "MIT License, Copyrigth (c) 2020 Javad Shafique")
 parser.add_argument("-V", "--version", help="Print current version and exit", action="version", version="%(prog)s " + __version__)
 parser.add_argument("-l", "--license", help="Print license and exit", action=Print, text="MIT")
 parser.add_argument("-H", "--hash", help="Select hash use -hl --hash-list for more info")

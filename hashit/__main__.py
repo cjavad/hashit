@@ -141,7 +141,7 @@ def config(parser):
     other.add_argument("-l", "--list", help="Takes a file (list) of strings and hashes each of them", metavar="list")
     other.add_argument("-cl", "--check-list", help="Takes two arguments, hashlist and stringlist", nargs=2, metavar="list")
     # ~ More important ~
-    other.add_argument("-c", "--check", help="Verify checksums from a checksum file", metavar="filename")
+    other.add_argument("-c", "--check", help="Verify checksums from a checksum file", nargs="?", const=1337, metavar="filename")
     other.add_argument("-o", "--output", help="output output to an output (file)", metavar="filename")
 
     # ~ Formatting ~
@@ -303,11 +303,11 @@ def main_(args):
         # set argv.detect to true
         if "-d" in args or "--detect" in args:
             argv.detect = True
-        # check for file
-        if os.path.exists(argv.check):
+        # check for file or alternativly if no argument was provided
+        if os.path.exists(argv.check) or type(argv.check) == int:
             # then check (return exitcode)
             return check(
-                argv.check,
+                "" if type(argv.check) == int else argv.check,
                 hash_is,
                 argv.color,
                 argv.quiet,

@@ -8,14 +8,14 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="hashit.html"><font color="#ffffff">hashit</font></a>.detection</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/javad/Dropbox/Projekter/hashit/hashit/hashit/detection.py">/Users/javad/Dropbox/Projekter/hashit/hashit/hashit/detection.py</a></font></td></tr></table>
-    <p><tt>Copyrigth&nbsp;(c)&nbsp;2018-present&nbsp;Javad&nbsp;Shafique<br>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/javad/Dropbox/udvikling/projekter/hashit/hashit/hashit/detection.py">/Users/javad/Dropbox/udvikling/projekter/hashit/hashit/hashit/detection.py</a></font></td></tr></table>
+    <p><tt>Copyrigth&nbsp;(c)&nbsp;2020-present&nbsp;Javad&nbsp;Shafique<br>
 &nbsp;<br>
 this&nbsp;module&nbsp;using&nbsp;length&nbsp;and&nbsp;connections&nbsp;to&nbsp;find&nbsp;a&nbsp;match&nbsp;<br>
 for&nbsp;an&nbsp;hashing&nbsp;algorithem.&nbsp;It's&nbsp;basicly&nbsp;a&nbsp;matching&nbsp;algorigtem<br>
 it&nbsp;can&nbsp;be&nbsp;used&nbsp;for&nbsp;almost&nbsp;any&nbsp;pure&nbsp;function&nbsp;in&nbsp;this&nbsp;case&nbsp;for&nbsp;hashes.<br>
 &nbsp;<br>
-#&nbsp;Copyright&nbsp;(c)&nbsp;2018-present&nbsp;Javad&nbsp;Shafique<br>
+#&nbsp;Copyright&nbsp;(c)&nbsp;2020-present&nbsp;Javad&nbsp;Shafique<br>
 #&nbsp;This&nbsp;'Software'&nbsp;can't&nbsp;be&nbsp;used&nbsp;without&nbsp;permission<br>
 #&nbsp;from&nbsp;Javad&nbsp;Shafique.<br>
 &nbsp;<br>
@@ -144,7 +144,9 @@ PRIORITY&nbsp;=&nbsp;{<br>
 <font color="#000000" face="helvetica, arial"><strong>NTUPLE</strong> = <a name="NTUPLE">class Closest</a>(<a href="builtins.html#tuple">builtins.tuple</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>Closest(certain,&nbsp;maybe)<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt><a href="#NTUPLE">NTUPLE</a>(certain,&nbsp;maybe)<br>
+&nbsp;<br>
+Closest(certain,&nbsp;maybe)<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd>Closest</dd>
@@ -163,7 +165,7 @@ Methods defined here:<br>
 
 <hr>
 Class methods defined here:<br>
-<dl><dt><a name="Closest-_make"><strong>_make</strong></a>(iterable, new=&lt;built-in method __new__ of type object at 0x103778010&gt;, len=&lt;built-in function len&gt;)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;Closest&nbsp;object&nbsp;from&nbsp;a&nbsp;sequence&nbsp;or&nbsp;iterable</tt></dd></dl>
+<dl><dt><a name="Closest-_make"><strong>_make</strong></a>(iterable)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;Closest&nbsp;object&nbsp;from&nbsp;a&nbsp;sequence&nbsp;or&nbsp;iterable</tt></dd></dl>
 
 <hr>
 Static methods defined here:<br>
@@ -179,9 +181,11 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
+<dl><dt><strong>_field_defaults</strong> = {}</dl>
+
 <dl><dt><strong>_fields</strong> = ('certain', 'maybe')</dl>
 
-<dl><dt><strong>_source</strong> = "from builtins import property as _property, tupl..._itemgetter(1), doc='Alias for field number 1')<font color="#c040c0">\n\n</font>"</dl>
+<dl><dt><strong>_fields_defaults</strong> = {}</dl>
 
 <hr>
 Methods inherited from <a href="builtins.html#tuple">builtins.tuple</a>:<br>
@@ -209,15 +213,16 @@ Methods inherited from <a href="builtins.html#tuple">builtins.tuple</a>:<br>
 
 <dl><dt><a name="Closest-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
 
-<dl><dt><a name="Closest-__mul__"><strong>__mul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.n</tt></dd></dl>
+<dl><dt><a name="Closest-__mul__"><strong>__mul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.</tt></dd></dl>
 
 <dl><dt><a name="Closest-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
 
-<dl><dt><a name="Closest-__rmul__"><strong>__rmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.</tt></dd></dl>
+<dl><dt><a name="Closest-__rmul__"><strong>__rmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value*self.</tt></dd></dl>
 
-<dl><dt><a name="Closest-count"><strong>count</strong></a>(...)</dt><dd><tt>T.<a href="#NTUPLE-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+<dl><dt><a name="Closest-count"><strong>count</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value.</tt></dd></dl>
 
-<dl><dt><a name="Closest-index"><strong>index</strong></a>(...)</dt><dd><tt>T.<a href="#NTUPLE-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value.<br>
+<dl><dt><a name="Closest-index"><strong>index</strong></a>(self, value, start=0, stop=9223372036854775807, /)</dt><dd><tt>Return&nbsp;first&nbsp;index&nbsp;of&nbsp;value.<br>
+&nbsp;<br>
 Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
 
 </td></tr></table></td></tr></table><p>
