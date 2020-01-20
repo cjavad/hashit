@@ -1,4 +1,6 @@
-hashit (3.4.5) stable; urgency=low
+hashit (3.5.0) stable; urgency=low
+    * 3.5.0 Standerdized input/output
+
     * 3.4.5 - Added support for mdc2 hash
 
     * 3.4.4 - Fixed a bug with splitpath and added a removal for * appended by md5sum.

@@ -137,7 +137,7 @@ def config(parser):
     # other, things that are optinional such as detect and string hashes
     # other.add_argument("-a", "--all", help="Calculate all hashes for a single file", metavar="filename") NOTE: Removed for now
     other.add_argument("-s", "--string", nargs="?", help="hash a string or a piece of text", default=False, metavar="string")
-    other.add_argument("-d", "--detect", nargs="?", help="Enable hash detection for check", metavar="hash", default=GLOBAL["DEFAULTS"]["DETECT"])
+    other.add_argument("-d", "--detect", nargs="?", help="Enable hash detection for check, or it can take a hash and decect hash algorithm", metavar="hash", default=GLOBAL["DEFAULTS"]["DETECT"])
     other.add_argument("-l", "--list", help="Takes a file (list) of strings and hashes each of them", metavar="list")
     other.add_argument("-cl", "--check-list", help="Takes two arguments, hashlist and stringlist", nargs=2, metavar="list")
     # ~ More important ~
