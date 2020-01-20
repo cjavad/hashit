@@ -5,3 +5,4 @@ include snapcraft.yaml
 include changelog
 include docs/*.md
 include tests/*.py
+include hashit.spec
