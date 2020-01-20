@@ -631,6 +631,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
     """Uses check_() to print the error messages and statuses corrent (for CLI)
     they are seperated so that you can use the python api, if you so please.
     """
+
     # set "global" colors
     RED = ""
     GREEN = ""
@@ -650,6 +651,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
         eprint(RED + GLOBAL["MESSAGES"]["FILE_NOT"] + RESET)
         return 1
 
+    # read check file
     file_read = list(reader(path, "r"))
 
     # get first line from the file or stdin
@@ -720,6 +722,9 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
             # and continue
             continue
 
+        # remove own file from check (so fake checks wont happen)
+        if os.path.normpath(os.path.abspath(path)) in os.path.normpath(c["filename"]):
+            continue
 
         # check if there are any changes in the results end
         # from them that in the file

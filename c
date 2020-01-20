@@ -1,0 +1,12 @@
+c11869fc956d819d2a336c74f4cc6000  ./LICENSE
+4173c282ef085bdf1a51938572d2e243  ./changelog
+8488cf7b3d4ed51d6d6abdcb228f5cfe  ./build.cmd
+14a5e2d9b8b6e7dee7235f6edf960c5c  ./conf.py
+7c1d6b847ebfe6a80f96e7ad4dc3ccf4  ./MANIFEST.in
+efb92c8d62469ce6d07e8f5bef9c1443  ./build.sh
+21324987f5609e1ec324134ebbbb9db8  ./setup.py
+aadd48fb400778112cac6ebd61ba93ac  ./.gitignore
+f13e6cc17f96b58c36aee435deaa5f98  ./.gitattributes
+eedabfdff6e34636d8419596401586d3  ./README.rst
+d41d8cd98f00b204e9800998ecf8427e  ./c
+1c7d39415d7c6f3a7f5cc4772e6e1a7b  ./snapcraft.yaml
