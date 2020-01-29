@@ -1,7 +1,5 @@
 hashit (3.5.2) stable; urgency=low
-    * 3.5.3 - Fixed issue with #5 
-
-    * 3.5.2 - Skipped due to lack of testing
+    * 3.5.2 - Fixed issue with #5 
 
     * 3.5.1 - Standerdized input/output
 
