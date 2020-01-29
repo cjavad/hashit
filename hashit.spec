@@ -1,5 +1,5 @@
 Name:       hashit
-Version:    3.5.1
+Version:    3.5.3
 Release:    1
 Summary:    hashit, a hashing application.
 License:    LICENSE

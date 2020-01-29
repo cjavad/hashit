@@ -631,7 +631,6 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
     """Uses check_() to print the error messages and statuses corrent (for CLI)
     they are seperated so that you can use the python api, if you so please.
     """
-
     # set "global" colors
     RED = ""
     GREEN = ""
@@ -723,7 +722,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
             continue
 
         # remove own file from check (so fake checks wont happen)
-        if os.path.normpath(os.path.abspath(path)) in os.path.normpath(os.path.abspath(c["filename"])):
+        if os.path.normpath(os.path.abspath(path)) == os.path.normpath(os.path.abspath(c["filename"])):
             continue
 
         # check if there are any changes in the results end

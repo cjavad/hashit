@@ -1,5 +1,9 @@
-hashit (3.5.1) stable; urgency=low
-    * 3.5.1 Standerdized input/output
+hashit (3.5.2) stable; urgency=low
+    * 3.5.3 - Fixed issue with #5 
+
+    * 3.5.2 - Skipped due to lack of testing
+
+    * 3.5.1 - Standerdized input/output
 
     * 3.4.5 - Added support for mdc2 hash
 

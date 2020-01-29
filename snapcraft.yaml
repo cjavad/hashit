@@ -1,5 +1,5 @@
 name: hashit
-version: 3.5.1
+version: 3.5.3
 summary: hashit is an replacement for (md5sum, sha1sum, and so on)
 icon: img/icon.png
 description: |
