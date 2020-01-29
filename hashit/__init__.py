@@ -723,7 +723,7 @@ def check(path, hashit, usecolors=False, be_quiet=False, detecthash=True, sfv=Fa
             continue
 
         # remove own file from check (so fake checks wont happen)
-        if os.path.normpath(os.path.abspath(path)) in os.path.normpath(c["filename"]):
+        if os.path.normpath(os.path.abspath(path)) in os.path.normpath(os.path.abspath(c["filename"])):
             continue
 
         # check if there are any changes in the results end
